@@ -29,7 +29,7 @@ namespace Talent.GraphEditor.Unity.Runtime.Demo
                 new ActionData("Анализатор.СбросЦели", new List<ActionParameter>()),
                 new ActionData("Движение.КЦели", new List<ActionParameter> { new ActionParameter("Скорость", "float") }),
                 new ActionData("Движение.Стоп", new List<ActionParameter>()),
-                new ActionData("Таймер.Запуск", new List<ActionParameter> { new ActionParameter("Время", "int") }),
+                new ActionData("Таймер.Запуск", new List<ActionParameter> { new ActionParameter("Время", "float") }),
                 new ActionData("Таймер.Стоп", new List<ActionParameter>())
             };
         }
