@@ -135,6 +135,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public void Delete()
         {
+            _runtimeGraphEditor.RequestCreateUndoState();
             _runtimeGraphEditor.GraphEditor.RemoveNodeEvent(_nodeView, this);
         }
 
