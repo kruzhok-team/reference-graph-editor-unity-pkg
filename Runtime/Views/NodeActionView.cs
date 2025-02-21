@@ -47,6 +47,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             _iconProvider = iconProvider;
 
             UpdateIcons(actionID);
+            
+            _eventView.IncrementActionCount();
         }
 
         private void UpdateIcons(string id)
@@ -92,6 +94,11 @@ namespace Talent.GraphEditor.Unity.Runtime
 
                 _parameterTMP.text = parametersName;
             }
+        }
+
+        private void OnDestroy()
+        {
+            _eventView.DecrementActionCount();
         }
     }
 }

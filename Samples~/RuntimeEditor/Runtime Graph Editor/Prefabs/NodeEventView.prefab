@@ -407,7 +407,7 @@ MonoBehaviour:
   m_StartAxis: 0
   m_CellSize: {x: 146, y: 64}
   m_Spacing: {x: 16, y: 16}
-  m_Constraint: 0
+  m_Constraint: 1
   m_ConstraintCount: 4
 --- !u!114 &4417698856542677341
 MonoBehaviour:
@@ -682,6 +682,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _triggerIDTMP: {fileID: 0}
+  _gridLayoutGroup: {fileID: 1454557004623107985}
   _actionsContainer: {fileID: 1726533503233268794}
   _conditionTMP: {fileID: 0}
   _outlineImage: {fileID: 9113533874153202696}
@@ -692,6 +693,7 @@ MonoBehaviour:
   _singleIconPrefab: {fileID: 544015883005291837, guid: f34f56d0db5e7c345871b7b525a41449, type: 3}
   _doubleIconPrefab: {fileID: 544015883005291837, guid: 1a5cbc6d4349fd246956fcfbf44d6a08, type: 3}
   _deleteKeyCode: 127
+  _maxColumnsInActionContainer: 3
 --- !u!114 &2367120986003265323
 MonoBehaviour:
   m_ObjectHideFlags: 0

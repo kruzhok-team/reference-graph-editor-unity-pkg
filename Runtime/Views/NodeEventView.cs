@@ -12,6 +12,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     public class NodeEventView : MonoBehaviour, INodeEventView, IElementSelectable
     {
         [SerializeField] private TextMeshProUGUI _triggerIDTMP;
+        [SerializeField] private GridLayoutGroup _gridLayoutGroup;
         [SerializeField] private Transform _actionsContainer;
         [SerializeField] private TextMeshProUGUI _conditionTMP;
         [SerializeField] private Image _outlineImage;
@@ -24,6 +25,8 @@ namespace Talent.GraphEditor.Unity.Runtime
         [SerializeField] private Icon _doubleIconPrefab;
         [Header("Hotkeys")]
         [SerializeField] private KeyCode _deleteKeyCode = KeyCode.Delete;
+        [Header("Settings")]
+        [SerializeField] private int _maxColumnsInActionContainer = 3;
 
         private string _triggerID;
         private NodeView _nodeView;
@@ -55,6 +58,8 @@ namespace Talent.GraphEditor.Unity.Runtime
         private SelectionContextSource _selectionContextSource;
         /// <inheritdoc/>
         public ISelectionContextSource SelectionContextSource => _selectionContextSource;
+
+        private int _actionCount;
 
         private void Awake()
         {
@@ -99,6 +104,24 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             UpdateIcons(triggerID);
+        }
+
+        /// <summary>
+        /// Увеличивает счетчик количества поведений
+        /// </summary>
+        public void IncrementActionCount()
+        {
+            _actionCount++;
+            _gridLayoutGroup.constraintCount = Mathf.Min(_actionCount, _maxColumnsInActionContainer);
+        }
+
+        /// <summary>
+        /// Уменьшает счетчик количества поведений
+        /// </summary>
+        public void DecrementActionCount()
+        {
+            _actionCount--;
+            _gridLayoutGroup.constraintCount = Mathf.Min(_actionCount, _maxColumnsInActionContainer);
         }
 
         private void OnDoubleClick(PointerEventData eventData)
