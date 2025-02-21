@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
 namespace Talent.GraphEditor.Unity.Runtime
 {
     /// <summary>
@@ -9,7 +10,6 @@ namespace Talent.GraphEditor.Unity.Runtime
     public class EditNodeNamePopUp : MonoBehaviour
     {
         private const string NotUniqueNameError = "Состояние с таким именем уже существует на этом уровне";
-        private const string EmptyNameError = "Имя состояния не может быть пустым";
 
         [Header("Scene Context")]
         [SerializeField] private PanZoom _panZoom;
@@ -54,6 +54,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             _nodeView.SetName(_nodeNameInputField.text);
             gameObject.SetActive(false);
+
             if (_needRebuild)
             {
                 _runtimeGraphEditor.Rebuild();
@@ -65,9 +66,8 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             if (string.IsNullOrEmpty(value))
             {
-                _errorMessage.SetActive(true);
-                _applyButton.gameObject.SetActive(false);
-                _errorText.SetText(EmptyNameError);
+                _applyButton.gameObject.SetActive(true);
+                _applyButton.interactable = false;
                 return;
             }
 
@@ -81,6 +81,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             _errorMessage.SetActive(false);
             _applyButton.gameObject.SetActive(true);
+            _applyButton.interactable = true;
         }
     }
 }
