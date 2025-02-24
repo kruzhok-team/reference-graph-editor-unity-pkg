@@ -34,6 +34,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         private IconSpriteProviderAsset _iconProvider;
         private GameObject _currentIcon;
         private List<GameObject> _currentIcons = new();
+        private int _actionCount;
 
         /// <summary>
         /// Идентификатор события
@@ -58,8 +59,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         private SelectionContextSource _selectionContextSource;
         /// <inheritdoc/>
         public ISelectionContextSource SelectionContextSource => _selectionContextSource;
-
-        private int _actionCount;
 
         private void Awake()
         {
