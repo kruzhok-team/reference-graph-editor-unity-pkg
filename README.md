@@ -17,12 +17,12 @@
 Внутри ```Assets\Samples\Reference Editor Package\0.0.1-dev\Runtime\Runtime Graph Editor``` будет находиться сцена с редактором графов.
 
 ### Зависимости пакета
-| Название пакета                             | Версия пакета    |
-|---------------------------------------------|------------------|
-| ```org.kruzhok.talent.logic```              | ```v0.2.4```     |
-| ```com.unity.ugui```                        | ```v1.0.0```     |
-| ```com.unity.textmeshpro```                 | ```v3.0.6```     |
-| ```com.unity.uiextensions.git```            | ```v2.3.2```     |
-| ```com.unity.nuget.newtonsoft-json```       | ```v3.2.1```     |
+| Название пакета                             | Версия пакета |
+|---------------------------------------------|---------------|
+| ```org.kruzhok.talent.logic```              | ```v0.2.5```  |
+| ```com.unity.ugui```                        | ```v1.0.0```  |
+| ```com.unity.textmeshpro```                 | ```v3.0.6```  |
+| ```com.unity.uiextensions.git```            | ```v2.3.2```  |
+| ```com.unity.nuget.newtonsoft-json```       | ```v3.2.1```  |
 ## © 2025 Кружковое движение  
 
