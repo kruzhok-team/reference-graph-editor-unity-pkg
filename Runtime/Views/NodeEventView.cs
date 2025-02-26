@@ -27,15 +27,16 @@ namespace Talent.GraphEditor.Unity.Runtime
         [SerializeField] private KeyCode _deleteKeyCode = KeyCode.Delete;
         [Header("Settings")]
         [SerializeField] private int _maxColumnsInActionContainer = 3;
-
+        
+        private readonly List<GameObject> _currentIcons = new List<GameObject>();
+        private readonly List<NodeActionView> _actionViews = new List<NodeActionView>();
+        
         private string _triggerID;
         private NodeView _nodeView;
         private RuntimeGraphEditor _runtimeGraphEditor;
         private IconSpriteProviderAsset _iconProvider;
         private GameObject _currentIcon;
-        private List<GameObject> _currentIcons = new();
-        private int _actionCount;
-
+        
         /// <summary>
         /// Идентификатор события
         /// </summary>
@@ -48,10 +49,11 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// Условие
         /// </summary>
         public string Condition { get; private set; }
+        
         /// <summary>
-        /// Контейнер поведений
+        /// Перечисление представлений поведений
         /// </summary>
-        public Transform ActionsContainer => _actionsContainer;
+        public IEnumerable<NodeActionView> ActionViews => _actionViews;
 
         /// <inheritdoc/>
         public GameObject SelectedObject => gameObject;
@@ -104,23 +106,42 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             UpdateIcons(triggerID);
         }
-
+        
         /// <summary>
-        /// Увеличивает счетчик количества поведений
+        /// Добавляет представление поведения в перехоже
         /// </summary>
-        public void IncrementActionCount()
+        /// <param name="actionView">Представление поведения</param>
+        public void AddActionView(NodeActionView actionView)
         {
-            _actionCount++;
-            _gridLayoutGroup.constraintCount = Mathf.Min(_actionCount, _maxColumnsInActionContainer);
+            actionView.transform.SetParent(_actionsContainer, false);
+            _actionViews.Add(actionView);
+            _gridLayoutGroup.constraintCount = Mathf.Clamp(_actionViews.Count, 0, _maxColumnsInActionContainer);
+            _actionsContainer.gameObject.SetActive(true);
         }
 
         /// <summary>
-        /// Уменьшает счетчик количества поведений
+        /// Удаляет представление поведения из перехода
         /// </summary>
-        public void DecrementActionCount()
+        /// <param name="actionView">Представление поведения</param>
+        public void RemoveActionView(NodeActionView actionView)
         {
-            _actionCount--;
-            _gridLayoutGroup.constraintCount = Mathf.Min(_actionCount, _maxColumnsInActionContainer);
+            _actionViews.Remove(actionView);
+            _gridLayoutGroup.constraintCount = Mathf.Clamp(_actionViews.Count, 0, _maxColumnsInActionContainer);
+
+            if (_actionViews.Count == 0)
+            {
+                _actionsContainer.gameObject.SetActive(false);
+            }
+        }
+
+        /// <summary>
+        /// Очищает список поведений
+        /// </summary>
+        public void ClearActionViews()
+        {
+            _actionViews.Clear();
+            _gridLayoutGroup.constraintCount = 0;
+            _actionsContainer.gameObject.SetActive(false);
         }
 
         private void OnDoubleClick(PointerEventData eventData)
@@ -132,7 +153,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             if (_currentIcon != null)
             {
-                GameObject.Destroy(_currentIcon);
+                Destroy(_currentIcon);
             }
 
             _currentIcon = _iconProvider.GetIconInstance(id, changeSeparatorColor: true);
@@ -213,7 +234,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             for (int i = 0; i < _currentIcons.Count; i++)
             {
-                GameObject.Destroy(_currentIcons[i]);
+                Destroy(_currentIcons[i]);
             }
 
             _currentIcons.Clear();

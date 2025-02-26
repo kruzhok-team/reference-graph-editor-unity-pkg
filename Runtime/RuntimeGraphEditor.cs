@@ -210,16 +210,17 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             if (nodeEvent == null)
             {
-                nodeEvent = GraphEditor.CreateNewNodeEvent(node, trigger) as NodeEventView;
+                nodeEvent = (NodeEventView)GraphEditor.CreateNewNodeEvent(node, trigger);
             }
 
             GraphEditor.ChangeNodeEventCondition(node, nodeEvent, string.IsNullOrEmpty(condition) ? "" : condition);
-
-            nodeEvent.ActionsContainer.gameObject.SetActive(false);
-            foreach (NodeActionView actionView in nodeEvent.ActionsContainer.GetComponentsInChildren<NodeActionView>())
+            
+            foreach (NodeActionView actionView in nodeEvent.ActionViews)
             {
                 GraphEditor.RemoveNodeAction(nodeEvent, actionView);
             }
+
+            nodeEvent.ClearActionViews();
 
             foreach (var action in actions)
             {
@@ -642,13 +643,12 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <returns>Представление поведения</returns>
         public INodeActionView CreateNodeActionView(INodeEventView eventView, string actionID)
         {
-            NodeEventView view = eventView as NodeEventView;
+            NodeEventView view = (NodeEventView)eventView;
+            NodeActionView actionView = Instantiate(_nodeActionPrefab);
+            actionView.Init(actionID, this, view, _iconSpriteProviderAsset);
+            view.AddActionView(actionView);
 
-            view.ActionsContainer.gameObject.SetActive(true);
-            NodeActionView actionInstance = Instantiate(_nodeActionPrefab, view.ActionsContainer);
-            actionInstance.Init(actionID, this, view, _iconSpriteProviderAsset);
-
-            return actionInstance;
+            return actionView;
         }
 
         /// <summary>

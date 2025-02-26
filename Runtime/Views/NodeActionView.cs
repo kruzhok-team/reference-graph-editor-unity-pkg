@@ -33,6 +33,11 @@ namespace Talent.GraphEditor.Unity.Runtime
         public List<Tuple<string, string>> ParameterValue => _parameterValue;
 
         /// <summary>
+        /// Представление событие, в котором содержится данное поведение
+        /// </summary>
+        public NodeEventView EventView => _eventView;
+
+        /// <summary>
         /// Инициализирует <see cref="NodeActionView"/>
         /// </summary>
         /// <param name="actionID">Идентификатор поведения</param>
@@ -47,8 +52,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             _iconProvider = iconProvider;
 
             UpdateIcons(actionID);
-            
-            _eventView.IncrementActionCount();
         }
 
         private void UpdateIcons(string id)
@@ -68,6 +71,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         public void Delete()
         {
             _runtimeGraphEditor.GraphEditor.RemoveNodeAction(_eventView, this);
+            EventView.RemoveActionView(this);
         }
 
         /// <summary>
@@ -94,11 +98,6 @@ namespace Talent.GraphEditor.Unity.Runtime
 
                 _parameterTMP.text = parametersName;
             }
-        }
-
-        private void OnDestroy()
-        {
-            _eventView.DecrementActionCount();
         }
     }
 }
