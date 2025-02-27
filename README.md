@@ -14,7 +14,7 @@
 
 | Название пакета                       | Ссылка на репозиторий                                         |
 |---------------------------------------|---------------------------------------------------------------|
-| ```CyberiadaLogic```                  | URL-WILL-BE-HERE                                            |
+| ```CyberiadaLogic```                  | https://github.com/kruzhok-team/cyberiada-logic-unity-pkg     |
 | ```Unity UI Extensions```             | https://github.com/Unity-UI-Extensions/com.unity.uiextensions |
 
 Версии пакетов представлены в таблице ниже.
@@ -25,10 +25,11 @@
 ### Зависимости пакета
 | Название пакета                             | Версия пакета |
 |---------------------------------------------|---------------|
-| ```org.kruzhok.talent.logic```              | ```v0.2.5```  |
+| ```org.kruzhok.talent.logic```              | ```v1.0.0```  |
 | ```com.unity.ugui```                        | ```v1.0.0```  |
 | ```com.unity.textmeshpro```                 | ```v3.0.6```  |
 | ```com.unity.uiextensions.git```            | ```v2.3.2```  |
 | ```com.unity.nuget.newtonsoft-json```       | ```v3.2.1```  |
+
 ## © 2025 Кружковое движение  
 
