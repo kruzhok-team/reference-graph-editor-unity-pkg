@@ -156,7 +156,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             string[] iconKeys = key.Split('.', System.StringSplitOptions.RemoveEmptyEntries);
 
-            if (iconKeys.Length == 1 && int.TryParse(iconKeys[0], out _) && float.TryParse(iconKeys[0], out _))
+            if (iconKeys.Length == 1 && int.TryParse(iconKeys[0], out _) || float.TryParse(iconKeys[0], out _))
             {
                 currentIcon = GameObject.Instantiate(singleIconPrefab == null ? _singleIconPrefab : singleIconPrefab);
                 currentIcon.SetText(iconKeys[0]);

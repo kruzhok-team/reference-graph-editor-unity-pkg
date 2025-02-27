@@ -101,7 +101,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <inheritdoc/>
         public ISelectionContextSource SelectionContextSource => _selectionContextSource;
 
-
         private void Awake()
         {
             _selectionContextSource = new SelectionContextSource();
@@ -403,6 +402,8 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public void Delete()
         {
+            _runtimeGraphEditor.RequestCreateUndoState();
+
             if (IsPreview)
             {
                 _runtimeGraphEditor.DestroyElementView(this);

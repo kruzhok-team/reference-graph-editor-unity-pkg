@@ -1,7 +1,7 @@
 {
-  "name": "org.kruzhok.referenceeditor",
+  "name": "org.kruzhok.talent.referenceeditor",
   "displayName": "Reference Editor Package",
-  "version": "0.0.1-dev",
+  "version": "1.0.1",
   "unity": "2021.3",
   "description": "Reference Editor Package",
   "author": {
