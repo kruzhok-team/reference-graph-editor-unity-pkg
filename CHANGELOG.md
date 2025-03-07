@@ -1,0 +1,21 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+<!-- Headers should be listed in this order: Added, Changed, Deprecated, Removed, Fixed, Security -->
+
+## [1.0.1] - 27.02.2025
+## First public release
+### Changed
+ - Dropdowns scrolling adjusted
+ - Float numbers support in icons and timer module
+ - Various layout changes
+### Fixed
+ - Terminology fixes
+ - Undo fix for node and edge deletion
+
+## [1.0.0] - 13.02.2025
+### Added
+ - Initial release of editor used in Arena as separate package

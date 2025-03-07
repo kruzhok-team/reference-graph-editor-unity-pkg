@@ -22,7 +22,7 @@ MonoBehaviour:
   - key: exit
     icon: {fileID: 21300000, guid: fec7fa524960b02479d5eac135415b39, type: 3}
     OutlineColor: {r: 0.8862745, g: 0.2, b: 0.20392157, a: 1}
-  - key: ==
+  - key: =
     icon: {fileID: 21300000, guid: 543a8b9e470a63d47b49c130d1ad42c9, type: 3}
     OutlineColor: {r: 0.98039216, g: 0.8039216, b: 0.34509805, a: 1}
   - key: '>'

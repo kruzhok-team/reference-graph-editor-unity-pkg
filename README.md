@@ -11,18 +11,25 @@
 
 ### Инструкция для интеграции в проект
 Для использования данного пакета необходимо дополнительно установить пакет ```CyberiadaLogic```, ```Unity UI Extensions```.
+
+| Название пакета                       | Ссылка на репозиторий                                         |
+|---------------------------------------|---------------------------------------------------------------|
+| ```CyberiadaLogic```                  | https://github.com/kruzhok-team/cyberiada-logic-unity-pkg     |
+| ```Unity UI Extensions```             | https://github.com/Unity-UI-Extensions/com.unity.uiextensions |
+
 Версии пакетов представлены в таблице ниже.
 Также необходимо импортировать ```TMP Essential Resources``` для корректной работы редактора.
 Далее необходимо импортировать ```Runtime``` sample. Внутри него содержится вся логика работы редактора, а также дополнительные материалы.
 Внутри ```Assets\Samples\Reference Editor Package\0.0.1-dev\Runtime\Runtime Graph Editor``` будет находиться сцена с редактором графов.
 
 ### Зависимости пакета
-| Название пакета                             | Версия пакета    |
-|---------------------------------------------|------------------|
-| ```org.kruzhok.talent.logic```              | ```v0.2.4```     |
-| ```com.unity.ugui```                        | ```v1.0.0```     |
-| ```com.unity.textmeshpro```                 | ```v3.0.6```     |
-| ```com.unity.uiextensions.git```            | ```v2.3.2```     |
-| ```com.unity.nuget.newtonsoft-json```       | ```v3.2.1```     |
+| Название пакета                             | Версия пакета |
+|---------------------------------------------|---------------|
+| ```org.kruzhok.talent.logic```              | ```v1.0.0```  |
+| ```com.unity.ugui```                        | ```v1.0.0```  |
+| ```com.unity.textmeshpro```                 | ```v3.0.6```  |
+| ```com.unity.uiextensions.git```            | ```v2.3.2```  |
+| ```com.unity.nuget.newtonsoft-json```       | ```v3.2.1```  |
+
 ## © 2025 Кружковое движение  
 

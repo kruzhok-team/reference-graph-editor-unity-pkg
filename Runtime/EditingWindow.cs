@@ -40,7 +40,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         [SerializeField] private KeyCode _closeKeyCode = KeyCode.Escape;
 
         private IconSpriteProviderAsset _iconProvider;
-        private string[] _conditionSymbols = new string[6] { "!=", ">=", "<=", ">", "<", "=" };
+        private string[] _conditionSymbols = new string[6] { "!=", ">=", "<=", ">", "<", "==" };
         private NodeView _startNodeView;
         private NodeView _endNodeView;
         private EdgeView _edgeView;
