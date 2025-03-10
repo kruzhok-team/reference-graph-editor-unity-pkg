@@ -128,7 +128,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             RequestCreateUndoState();
 
-            NodeView view = (NodeView)GraphEditor.CreateNewNode("New Node");
+            NodeView view = (NodeView)GraphEditor.CreateNewNode("Новое состояние");
             if (EditingEdge == null)
             {
                 view.Select(false);
@@ -145,7 +145,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             RequestCreateUndoState();
 
-            INodeView child = GraphEditor.CreateNewNode("ChildNode");
+            INodeView child = GraphEditor.CreateNewNode("Дочернее состояние");
             GraphEditor.SetParent(child, parent, true);
             OpenNodeNamePopUp(child.ID);
         }
