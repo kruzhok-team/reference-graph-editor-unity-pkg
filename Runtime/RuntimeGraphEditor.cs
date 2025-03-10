@@ -56,6 +56,10 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public EdgeView EditingEdge { get; set; }
         /// <summary>
+        /// Компонент, обрабатывающий нажатия на линии
+        /// </summary>
+        public LineClickListener LineClickListener => _lineClickListener;
+        /// <summary>
         /// Ядро логики редактора графа
         /// </summary>
         public Core.GraphEditor GraphEditor { get; private set; }

@@ -6,7 +6,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// </summary>
     public class HotkeyListener : MonoBehaviour
     {
-        [SerializeField] RuntimeGraphEditor _runtimeGraphEditor;
+        [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
 
         private IElementSelectionProvider _elementSelectionProvider;
 

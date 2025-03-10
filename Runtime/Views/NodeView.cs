@@ -13,7 +13,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// <summary>
     /// Представление узла
     /// </summary>
-    public class NodeView : MonoBehaviour, INodeView, IElementSelectable
+    public class NodeView : MonoBehaviour, INodeView, IElementSelectable, IPointerDownHandler, IPointerUpHandler
     {
         [SerializeField] private TMP_InputField _nameTMP;
         [SerializeField] private InteractArea _bodyArea;

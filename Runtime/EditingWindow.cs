@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using Talent.Graphs;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 namespace Talent.GraphEditor.Unity.Runtime
 {
@@ -74,18 +73,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <inheritdoc/>
         public ISelectionContextSource SelectionContextSource => _selectionContextSource;
 
-        /// <summary>
-        /// Функция обратного вызова, срабатывающая при нажатии указателя на элемент  
-        /// </summary>
-        /// <param name="eventData">Полезная нагрузка события связанного с указателем</param>
-        public void OnPointerDown(PointerEventData eventData) { }
-
-        /// <summary>
-        /// Функция обратного вызова, срабатывающая при отпускании указателя с элемента
-        /// </summary>
-        /// <param name="eventData">Полезная нагрузка события связанного с указателем</param>
-        public void OnPointerUp(PointerEventData eventData) { }
-
         private void Awake()
         {
             _selectionContextSource = new();
@@ -112,6 +99,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             _runtimeGraphEditor.ElementSelectionProvider.Select(this);
             _runtimeGraphEditor.UndoController.LockUndoable(this);
+            _runtimeGraphEditor.LineClickListener.enabled = false;
 
             SubscribeListeners();
         }
@@ -121,6 +109,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             _currentUndoState = null;
 
             _runtimeGraphEditor.UndoController.LockUndoable(null);
+            _runtimeGraphEditor.LineClickListener.enabled = true;
 
             UnsubscribeListeners();
 

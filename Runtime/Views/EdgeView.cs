@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 namespace Talent.GraphEditor.Unity.Runtime
 {
-    public class EdgeView : MonoBehaviour, IEdgeView, IElementSelectable
+    public class EdgeView : MonoBehaviour, IEdgeView, IElementSelectable, IPointerDownHandler, IPointerUpHandler
     {
         /// <summary>
         /// Начальное представление узла
