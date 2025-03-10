@@ -89,19 +89,19 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             if (_parameterTMP != null)
             {
-                string parametersName = "";
+                string parameterValues = "";
 
                 foreach (Tuple<string, string> parameter in parameters)
                 {
-                    if (!string.IsNullOrEmpty(parametersName))
+                    if (!string.IsNullOrEmpty(parameterValues))
                     {
-                        parametersName += ", ";
+                        parameterValues += ", ";
                     }
 
-                    parametersName += parameter.Item1;
+                    parameterValues += parameter.Item2;
                 }
 
-                _parameterTMP.text = parametersName;
+                _parameterTMP.text = parameterValues;
             }
         }
     }
