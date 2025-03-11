@@ -445,6 +445,11 @@ namespace Talent.GraphEditor.Unity.Runtime
                 OpenNodeNamePopUp(ParentingingNode.ID, ParentingingNode.VisualData.Name);
             }
 
+            foreach (EdgeView edgeView in GraphEditor.GetAdjacentEdges(ParentingingNode))
+            {
+                edgeView.RecalculateParent();
+            }
+
             ParentingingNode = null;
         }
 

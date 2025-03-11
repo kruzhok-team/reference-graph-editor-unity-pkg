@@ -201,7 +201,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 _content.SetActive(false);
                 _outLine.localScale = Vector3.zero;
 
-                if (!TryGetComponent<LayoutElement>(out LayoutElement element))
+                if (!TryGetComponent(out LayoutElement element))
                 {
                     element = gameObject.AddComponent<LayoutElement>();
 
@@ -231,8 +231,8 @@ namespace Talent.GraphEditor.Unity.Runtime
 
                 RefreshConditionAndActionsContainer();
             }
-
-            transform.SetParent(GetCommonDeepestParent(SourceView, TargetView), false);
+            
+            RecalculateParent();
         }
     
         private void Update()
@@ -328,6 +328,11 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             return null;
+        }
+
+        public void RecalculateParent()
+        {
+            transform.SetParent(GetCommonDeepestParent(SourceView, TargetView), false);
         }
     
         private Transform GetCommonDeepestParent(NodeView sourceView, NodeView targetView)
