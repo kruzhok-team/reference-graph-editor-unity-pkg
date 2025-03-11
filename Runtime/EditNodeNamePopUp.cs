@@ -56,6 +56,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             _panZoom.FocusOnRectTransform(_nodeView.transform as RectTransform);
             _applyButton.onClick.AddListener(ApplyNodeName);
             _nodeNameInputField.onValueChanged.AddListener(OnInputFieldValueChanged);
+            _runtimeGraphEditor.ElementSelectionProvider.Select(this);
             _runtimeGraphEditor.UndoController.CreateUndoState(this);
             _runtimeGraphEditor.UndoController.LockUndoable(this);
             _runtimeGraphEditor.LineClickListener.enabled = false;
@@ -65,6 +66,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             _applyButton.onClick.RemoveListener(ApplyNodeName);
             _nodeNameInputField.onValueChanged.RemoveListener(OnInputFieldValueChanged);
+            _nodeView.Select(false);
             _runtimeGraphEditor.UndoController.LockUndoable(null);
             _runtimeGraphEditor.LineClickListener.enabled = true;
         }
