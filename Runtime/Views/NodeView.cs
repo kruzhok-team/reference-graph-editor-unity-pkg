@@ -99,6 +99,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             _bodyArea.RightClick += OnPointerUp;
             _bodyArea.BeginDrag += OnBeginDragElement;
             _bodyArea.Drag += OnDragElement;
+            _bodyArea.EndDrag += OnEndDragElement;
 
             SetSelection(false, false);
         }
@@ -109,6 +110,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             _bodyArea.RightClick -= OnPointerUp;
             _bodyArea.BeginDrag -= OnBeginDragElement;
             _bodyArea.Drag -= OnDragElement;
+            _bodyArea.EndDrag -= OnEndDragElement;
         
             _runtimeGraphEditor.ElementSelectionProvider.Unselect(this);
         }
@@ -304,20 +306,38 @@ namespace Talent.GraphEditor.Unity.Runtime
         private void OnBeginDragElement(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left)
+            {
                 return;
+            }
 
             _runtimeGraphEditor.RequestCreateUndoState();
+            
+            _buttonsCanvasGroup.alpha = 0;
+            _buttonsCanvasGroup.interactable = false;
         }
 
         private void OnDragElement(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left)
+            {
                 return;
+            }
 
             transform.position += (Vector3)eventData.delta;
             VisualData.Position = transform.localPosition;
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent.transform as RectTransform);
+        }
+
+        private void OnEndDragElement(PointerEventData eventData)
+        {
+            if (eventData.button != PointerEventData.InputButton.Left)
+            {
+                return;
+            }
+
+            _buttonsCanvasGroup.alpha = 1;
+            _buttonsCanvasGroup.interactable = true;
         }
 
         /// <summary>
