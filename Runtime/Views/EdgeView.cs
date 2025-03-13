@@ -551,6 +551,11 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             _runtimeGraphEditor.OpenEdgeEditor(this);
         }
+        
+        public void Duplicate()
+        {
+            _runtimeGraphEditor.DuplicateEdgeView(this);
+        }
 
         private void OnDrag(PointerEventData eventData)
         {
