@@ -112,8 +112,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             _runtimeGraphEditor.LineClickListener.enabled = true;
 
             UnsubscribeListeners();
-
-            Unselect();
         }
 
         private void OnConditionInputsChanged(string text)

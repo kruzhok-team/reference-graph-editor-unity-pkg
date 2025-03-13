@@ -672,7 +672,6 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private void OnDestroy()
         {
-            Unselect();
             if (!IsPreview)
             {
                 _lineClickListener.RemoveLine(_line);
