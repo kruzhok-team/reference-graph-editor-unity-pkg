@@ -255,7 +255,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f86e6ac66b259de43a1b8f100b346a8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  edgeLines: {fileID: 2256437316112035177}
 --- !u!114 &6335553764106923046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -271,7 +270,7 @@ MonoBehaviour:
   m_Padding:
     m_Left: 32
     m_Right: 32
-    m_Top: 32
+    m_Top: 5
     m_Bottom: 32
   m_ChildAlignment: 4
   moveTransform: {fileID: 0}
