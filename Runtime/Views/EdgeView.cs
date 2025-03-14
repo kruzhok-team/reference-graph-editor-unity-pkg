@@ -91,6 +91,11 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// Контейнер действий представления ребра
         /// </summary>
         public Transform ActionsContainer => _actionsContainer;
+        
+        /// <summary>
+        /// Линия, проходящая через ребро
+        /// </summary>
+        public EdgeLine Line => _line;
 
         /// <inheritdoc/>
         public GameObject SelectedObject => _bodyArea.gameObject;
@@ -100,7 +105,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         private LineClickListener _lineClickListener;
         /// <inheritdoc/>
         public ISelectionContextSource SelectionContextSource => _selectionContextSource;
-
+        
         private void Awake()
         {
             _selectionContextSource = new SelectionContextSource();

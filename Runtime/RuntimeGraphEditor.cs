@@ -538,7 +538,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             NodeView nodeView = parentNodeView as NodeView;
             GraphView graphView = Instantiate(_graphPrefab, nodeView.ChildsContainer);
             graphView.ParentNode = nodeView;
-            graphView.GetComponent<GraphLayoutGroup>().moveTransform = nodeView.transform as RectTransform;
+            graphView.GetComponent<GraphLayoutGroup>().ParentNode = nodeView;
 
             return graphView;
         }

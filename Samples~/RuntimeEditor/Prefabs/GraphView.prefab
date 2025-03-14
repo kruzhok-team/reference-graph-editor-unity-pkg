@@ -273,7 +273,7 @@ MonoBehaviour:
     m_Top: 5
     m_Bottom: 32
   m_ChildAlignment: 4
-  moveTransform: {fileID: 0}
+  _layoutElement: {fileID: 1101209233}
   sizeTransform: {fileID: 6290086046137204442}
 --- !u!1 &7336173691317745742
 GameObject:

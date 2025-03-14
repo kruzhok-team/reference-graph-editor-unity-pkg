@@ -311,9 +311,12 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             _runtimeGraphEditor.RequestCreateUndoState();
-            
-            _buttonsCanvasGroup.alpha = 0;
-            _buttonsCanvasGroup.interactable = false;
+
+            if (_buttonsCanvasGroup != null)
+            {
+                _buttonsCanvasGroup.alpha = 0;
+                _buttonsCanvasGroup.interactable = false;
+            }
         }
 
         private void OnDragElement(PointerEventData eventData)
@@ -336,8 +339,11 @@ namespace Talent.GraphEditor.Unity.Runtime
                 return;
             }
 
-            _buttonsCanvasGroup.alpha = 1;
-            _buttonsCanvasGroup.interactable = true;
+            if (_buttonsCanvasGroup != null)
+            {
+                _buttonsCanvasGroup.alpha = 1;
+                _buttonsCanvasGroup.interactable = true;
+            }
         }
 
         /// <summary>
