@@ -78,6 +78,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                     Vector2 localMin = transform.InverseTransformPoint(edgeView.Line.Bounds.min);
                     Vector2 localMax = transform.InverseTransformPoint(edgeView.Line.Bounds.max);
                     left = Mathf.Min(localMin.x, left);
+                    top = Mathf.Max(localMax.y, top);
                     right = Mathf.Max(localMax.x, right);
                     bottom = Mathf.Min(localMin.y, bottom);
                 }
