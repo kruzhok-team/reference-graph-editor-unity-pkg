@@ -104,8 +104,9 @@ namespace Talent.GraphEditor.Unity.Runtime
         private void Awake()
         {
             _selectionContextSource = new SelectionContextSource();
-            _selectionContextSource.AddHotkeyAction(new(_cancelKeyCode, OnCancelHotkeyPressed));
-            _selectionContextSource.AddHotkeyAction(new(_deleteKeyCode, Delete));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(OnCancelHotkeyPressed, _cancelKeyCode));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Delete, _deleteKeyCode));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Duplicate,  KeyCode.LeftControl, KeyCode.D));
         }
 
         private void OnEnable()

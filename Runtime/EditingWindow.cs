@@ -88,8 +88,8 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private void Awake()
         {
-            _selectionContextSource = new();
-            _selectionContextSource.AddHotkeyAction(new(_closeKeyCode, () => Cancel()));
+            _selectionContextSource = new SelectionContextSource();
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Cancel, _closeKeyCode));
         }
 
         /// <inheritdoc/>

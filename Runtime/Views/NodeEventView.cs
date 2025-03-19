@@ -65,7 +65,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         private void Awake()
         {
             _selectionContextSource = new SelectionContextSource();
-            _selectionContextSource.AddHotkeyAction(new(_deleteKeyCode, () => Delete()));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Delete, _deleteKeyCode));
         }
 
         private void OnEnable()
