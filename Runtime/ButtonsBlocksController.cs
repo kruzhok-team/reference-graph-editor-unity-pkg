@@ -103,17 +103,21 @@ namespace Talent.GraphEditor.Unity.Runtime
         }
 
         /// <summary>
-        /// Функция обратного вызова, срабатывающая при нажатии на кнопку "Дублировать узел"
+        /// Функция обратного вызова, срабатывающая при нажатии на кнопку "Дублировать"
         /// </summary>
         public void OnDuplicateButtonPressed()
         {
-            if (_selectedElement is NodeView nodeView)
+            switch (_selectedElement)
             {
-                nodeView.Duplicate();
-            }
-            else
-            {
-                OnElementDeselected(null);
+                case NodeView nodeView:
+                    nodeView.Duplicate();
+                    break;
+                case EdgeView edgeView:
+                    edgeView.Duplicate();
+                    break;
+                default:
+                    OnElementDeselected(null);
+                    break;
             }
         }
 

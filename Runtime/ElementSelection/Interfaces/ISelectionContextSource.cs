@@ -11,13 +11,14 @@ namespace Talent.GraphEditor.Unity.Runtime
 
     public class HotkeyAction
     {
-        public KeyCode Hotkey { get; }
-        private Action HotkeyPressed;
+        private readonly Action HotkeyPressed;
 
-        public HotkeyAction(KeyCode hotkey, Action hotkeyPressed)
+        public IReadOnlyList<KeyCode> Hotkeys { get; }
+        
+        public HotkeyAction(Action hotkeyPressed, params KeyCode[] hotkeys)
         {
-            Hotkey = hotkey;
             HotkeyPressed = hotkeyPressed;
+            Hotkeys = hotkeys;
         }
 
         public void OnHotkeyPressed()

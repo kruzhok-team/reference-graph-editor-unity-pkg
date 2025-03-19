@@ -505,6 +505,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         [Header("Factory")]
         [SerializeField] private Vector2 _newNodeOffset;
         [SerializeField] private Vector2 _dublicateNodeOffset;
+        [SerializeField] private Vector2 _duplicatedEdgeOffset;
         [SerializeField] private float _newEdgeOffset;
         [Header("Prefabs")]
         [SerializeField] private GraphView _graphPrefab;
@@ -587,13 +588,13 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <param name="layoutAutomatically"></param>
         public void DuplicateNodeView(NodeView nodeView, bool layoutAutomatically)
         {
-            RequestCreateUndoState();
-
             if (!GraphEditor.TryDuplicateNode(nodeView, out INodeView temp))
             {
                 return;
             }
-
+            
+            RequestCreateUndoState();
+            
             NodeView duplicatedNode = temp as NodeView;
 
             if (duplicatedNode == null)
@@ -616,6 +617,26 @@ namespace Talent.GraphEditor.Unity.Runtime
             duplicatedNode.VisualData.Position += offset;
 
             OpenNodeNamePopUp(duplicatedNode.ID, duplicatedNode.VisualData.Name, true);
+        }
+        
+        /// <summary>
+        /// Дублирует представление ребра
+        /// </summary>
+        /// <param name="edgeView">Оригинальное представление ребра</param>
+        public void DuplicateEdgeView(EdgeView edgeView)
+        {
+            if (!GraphEditor.TryDuplicateEdge(edgeView, out IEdgeView temp))
+            {
+                return;
+            }
+            
+            RequestCreateUndoState();
+            
+            EdgeView duplicatedEdge = (EdgeView) temp;
+            float yPos = ((RectTransform)edgeView.transform).sizeDelta.y;
+            Vector2 offset = Vector2.Scale(_duplicatedEdgeOffset, duplicatedEdge.transform.parent.lossyScale) - new Vector2(0, yPos);
+            duplicatedEdge.transform.localPosition += (Vector3)offset;
+            duplicatedEdge.VisualData.Position += offset;
         }
 
         /// <summary>
