@@ -634,7 +634,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             
             EdgeView duplicatedEdge = (EdgeView) temp;
             float yPos = ((RectTransform)edgeView.transform).sizeDelta.y;
-            Vector2 offset = new Vector2(0, yPos) + Vector2.Scale(_duplicatedEdgeOffset, duplicatedEdge.transform.parent.lossyScale);
+            Vector2 offset = Vector2.Scale(_duplicatedEdgeOffset, duplicatedEdge.transform.parent.lossyScale) - new Vector2(0, yPos);
             duplicatedEdge.transform.localPosition += (Vector3)offset;
             duplicatedEdge.VisualData.Position += offset;
         }

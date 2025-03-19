@@ -1544,7 +1544,7 @@ MonoBehaviour:
   _undoController: {fileID: 1189319027}
   _newNodeOffset: {x: 330, y: 0}
   _dublicateNodeOffset: {x: 125, y: 0}
-  _duplicatedEdgeOffset: {x: 50, y: 0}
+  _duplicatedEdgeOffset: {x: 0, y: -50}
   _newEdgeOffset: 115
   _graphPrefab: {fileID: -5874834263531308240, guid: a6eb67d913473ae4484f982caa5a5144, type: 3}
   _initialNodePrefab: {fileID: 2795905872169831563, guid: 22b93fd23f1f83149be9c9b7e6f87753, type: 3}
