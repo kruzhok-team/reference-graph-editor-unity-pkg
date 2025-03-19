@@ -140,7 +140,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             (Vector2[] firstPath, Vector2[] secondPath) = GetPaths(sourceBounds, edgeBounds, targetBounds);
 
-            Bounds bounds = default;
+            Bounds bounds;
             
             if (source.IsDescendant(target))
             {
@@ -148,21 +148,23 @@ namespace Talent.GraphEditor.Unity.Runtime
                 {
                     secondPath[0], (Vector2)targetBounds.ClosestPoint(secondPath[1])
                 };
-            }
-            else
-            {
+                
                 bounds = RecalculateSegmentBounds(firstPath);
             }
 
-            if (target.IsDescendant(source))
+            else if (target.IsDescendant(source))
             {
                 firstPath = new[]
                 {
                     (Vector2)sourceBounds.ClosestPoint(firstPath[^2]), firstPath[^1]
                 };
+                
+                bounds = RecalculateSegmentBounds(secondPath);
             }
             else
             {
+                bounds = RecalculateSegmentBounds(firstPath);
+                
                 if (bounds.extents == Vector3.zero)
                 {
                     bounds = RecalculateSegmentBounds(firstPath);
