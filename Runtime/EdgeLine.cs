@@ -23,6 +23,11 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// Конечная точка линии
         /// </summary>
         public Vector2 EndPoint { get; private set; }
+        
+        /// <summary>
+        /// Границы линии в глобальных координатах
+        /// </summary>
+        public Bounds Bounds { get; private set; }
 
         [SerializeField] private UILineRenderer _lineRenderer;
         [SerializeField] private float _cornerOffset = 35;
@@ -135,21 +140,42 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             (Vector2[] firstPath, Vector2[] secondPath) = GetPaths(sourceBounds, edgeBounds, targetBounds);
 
+            Bounds bounds;
+            
             if (source.IsDescendant(target))
             {
                 secondPath = new[]
                 {
                     secondPath[0], (Vector2)targetBounds.ClosestPoint(secondPath[1])
                 };
+                
+                bounds = RecalculateSegmentBounds(firstPath);
             }
 
-            if (target.IsDescendant(source))
+            else if (target.IsDescendant(source))
             {
                 firstPath = new[]
                 {
                     (Vector2)sourceBounds.ClosestPoint(firstPath[^2]), firstPath[^1]
                 };
+                
+                bounds = RecalculateSegmentBounds(secondPath);
             }
+            else
+            {
+                bounds = RecalculateSegmentBounds(firstPath);
+                
+                if (bounds.extents == Vector3.zero)
+                {
+                    bounds = RecalculateSegmentBounds(firstPath);
+                }
+                else
+                {
+                    bounds.Encapsulate(RecalculateSegmentBounds(secondPath));
+                }
+            }
+
+            Bounds = bounds;
 
             DrawLines(firstPath, secondPath);
         }
@@ -318,6 +344,29 @@ namespace Talent.GraphEditor.Unity.Runtime
             AddBoarders(firstPath, secondPath);
             StartPoint = firstPath[0];
             EndPoint = secondPath[^1];
+        }
+
+        private Bounds RecalculateSegmentBounds(Vector2[] segment)
+        {
+            if (segment.Length == 0)
+            {
+                return default;
+            }
+            
+            Vector2 min = segment[0];
+            Vector2 max = segment[0];
+
+            for (int i = 0; i < segment.Length; i++)
+            {
+                min = Vector2.Min(min, segment[i]);
+                max = Vector2.Max(max, segment[i]);
+            }
+            
+            Vector2 containerMin = _container.TransformPoint(min);
+            Vector2 containerMax = _container.TransformPoint(max);
+            Bounds segmentBounds = new Bounds { min = containerMin, max = containerMax };
+
+            return segmentBounds;
         }
 
         private Bounds GetBoundsInContainerSpace(RectTransform element)
@@ -860,7 +909,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             _edgeLineBoarders.Segments = new List<Vector2[]>() { firstBoarder, secondBoarder };
         }
 
-        private void OnDrawGizmos()
+        private void OnDrawGizmosSelected()
         {
             if (_lineRenderer == null)
             {
@@ -873,6 +922,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 return;
             }
+            
+            Gizmos.DrawWireCube(Bounds.center, Bounds.size);
 
             foreach (Vector2 point in _lineRenderer.Segments[0])
             {

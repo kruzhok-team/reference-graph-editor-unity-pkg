@@ -56,6 +56,10 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public EdgeView EditingEdge { get; set; }
         /// <summary>
+        /// Компонент, обрабатывающий нажатия на линии
+        /// </summary>
+        public LineClickListener LineClickListener => _lineClickListener;
+        /// <summary>
         /// Ядро логики редактора графа
         /// </summary>
         public Core.GraphEditor GraphEditor { get; private set; }
@@ -128,7 +132,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             RequestCreateUndoState();
 
-            NodeView view = (NodeView)GraphEditor.CreateNewNode("New Node");
+            NodeView view = (NodeView)GraphEditor.CreateNewNode("Новое состояние");
             if (EditingEdge == null)
             {
                 view.Select(false);
@@ -145,7 +149,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             RequestCreateUndoState();
 
-            INodeView child = GraphEditor.CreateNewNode("ChildNode");
+            INodeView child = GraphEditor.CreateNewNode("Дочернее состояние");
             GraphEditor.SetParent(child, parent, true);
             OpenNodeNamePopUp(child.ID);
         }
@@ -441,6 +445,11 @@ namespace Talent.GraphEditor.Unity.Runtime
                 OpenNodeNamePopUp(ParentingingNode.ID, ParentingingNode.VisualData.Name);
             }
 
+            foreach (EdgeView edgeView in GraphEditor.GetAdjacentEdges(ParentingingNode))
+            {
+                edgeView.RecalculateParent();
+            }
+
             ParentingingNode = null;
         }
 
@@ -530,7 +539,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             NodeView nodeView = parentNodeView as NodeView;
             GraphView graphView = Instantiate(_graphPrefab, nodeView.ChildsContainer);
             graphView.ParentNode = nodeView;
-            graphView.GetComponent<GraphLayoutGroup>().moveTransform = nodeView.transform as RectTransform;
+            graphView.GetComponent<GraphLayoutGroup>().ParentNode = nodeView;
 
             return graphView;
         }

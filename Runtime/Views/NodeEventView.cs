@@ -9,7 +9,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// <summary>
     /// Представление перехода в узле
     /// </summary>
-    public class NodeEventView : MonoBehaviour, INodeEventView, IElementSelectable
+    public class NodeEventView : MonoBehaviour, INodeEventView, IElementSelectable, IPointerDownHandler, IPointerUpHandler
     {
         [SerializeField] private TextMeshProUGUI _triggerIDTMP;
         [SerializeField] private GridLayoutGroup _gridLayoutGroup;

@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 namespace Talent.GraphEditor.Unity.Runtime
 {
-    public class EdgeView : MonoBehaviour, IEdgeView, IElementSelectable
+    public class EdgeView : MonoBehaviour, IEdgeView, IElementSelectable, IPointerDownHandler, IPointerUpHandler
     {
         /// <summary>
         /// Начальное представление узла
@@ -91,6 +91,11 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// Контейнер действий представления ребра
         /// </summary>
         public Transform ActionsContainer => _actionsContainer;
+        
+        /// <summary>
+        /// Линия, проходящая через ребро
+        /// </summary>
+        public EdgeLine Line => _line;
 
         /// <inheritdoc/>
         public GameObject SelectedObject => _bodyArea.gameObject;
@@ -100,7 +105,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         private LineClickListener _lineClickListener;
         /// <inheritdoc/>
         public ISelectionContextSource SelectionContextSource => _selectionContextSource;
-
+        
         private void Awake()
         {
             _selectionContextSource = new SelectionContextSource();
@@ -202,7 +207,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 _content.SetActive(false);
                 _outLine.localScale = Vector3.zero;
 
-                if (!TryGetComponent<LayoutElement>(out LayoutElement element))
+                if (!TryGetComponent(out LayoutElement element))
                 {
                     element = gameObject.AddComponent<LayoutElement>();
 
@@ -232,8 +237,8 @@ namespace Talent.GraphEditor.Unity.Runtime
 
                 RefreshConditionAndActionsContainer();
             }
-
-            transform.SetParent(GetCommonDeepestParent(SourceView, TargetView), false);
+            
+            RecalculateParent();
         }
     
         private void Update()
@@ -329,6 +334,11 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             return null;
+        }
+
+        public void RecalculateParent()
+        {
+            transform.SetParent(GetCommonDeepestParent(SourceView, TargetView), false);
         }
     
         private Transform GetCommonDeepestParent(NodeView sourceView, NodeView targetView)
@@ -673,7 +683,6 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private void OnDestroy()
         {
-            Unselect();
             if (!IsPreview)
             {
                 _lineClickListener.RemoveLine(_line);
