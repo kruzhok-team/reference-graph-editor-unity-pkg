@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- Headers should be listed in this order: Added, Changed, Deprecated, Removed, Fixed, Security -->
 
+## [1.0.2] - 20.03.2025
+### Added
+ - Edge duplication action
+ - Duplication hotkey (ctrl+D) for nodes and edges
+### Changed
+ - Updated action's parameter view
+ - Updated selection dropdowns scrolling
+### Fixed
+ - Node layout now accounts nested graph edges
+ - Proper default names for nodes
+
 ## [1.0.1] - 27.02.2025
 ## First public release
 ### Changed
