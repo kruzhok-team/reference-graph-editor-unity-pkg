@@ -48,7 +48,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         private void Awake()
         {
             _selectionContextSource = new SelectionContextSource();
-            _selectionContextSource.AddHotkeyAction(new HotkeyAction(KeyCode.Escape, () => { gameObject.SetActive(false); }));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(() => { gameObject.SetActive(false); }, KeyCode.Escape));
         }
 
         private void OnEnable()
