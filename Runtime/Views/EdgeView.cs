@@ -413,6 +413,11 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public void Delete()
         {
+            if (SourceView.Vertex == NodeData.Vertex_Initial)
+            {
+                return;
+            }
+            
             _runtimeGraphEditor.RequestCreateUndoState();
 
             if (IsPreview)
