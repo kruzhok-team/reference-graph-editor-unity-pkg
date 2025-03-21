@@ -240,8 +240,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             
             RecalculateParent();
         }
-    
-        private void Update()
+
+        public void DrawLine()
         {
             if (SourceView == null || TargetView == null)
             {

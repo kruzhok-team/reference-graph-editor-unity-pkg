@@ -15,7 +15,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         public override void CalculateLayoutInputVertical()
         {
-            if (rectChildren.Count <= 0 || ParentNode == null || _layoutElement == null)
+            if (rectChildren.Count <= 0 || _layoutElement == null)
             {
                 return;
             }
@@ -31,14 +31,18 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             Vector3 position = new Vector3((right + left) / 2, (top + bottom) / 2);
             Vector2 size = new Vector2(Mathf.Abs(right - left), Mathf.Abs(bottom - top));
-            ParentNode.transform.position += position;
 
-            if (ParentNode.TryGetComponent(out NodeView nodeView) && nodeView.VisualData != null)
+            if (ParentNode != null)
             {
-                nodeView.VisualData.Position = ParentNode.transform.localPosition;
-            }
+                ParentNode.transform.position += position;
 
-            LayoutRebuilder.MarkLayoutForRebuild(ParentNode.transform.parent as RectTransform);
+                if (ParentNode.TryGetComponent(out NodeView nodeView) && nodeView.VisualData != null)
+                {
+                    nodeView.VisualData.Position = ParentNode.transform.localPosition;
+                }
+
+                LayoutRebuilder.MarkLayoutForRebuild(ParentNode.transform.parent as RectTransform);
+            }
 
             _layoutElement.preferredWidth = size.x / transform.lossyScale.x;
             _layoutElement.preferredHeight = size.y / transform.lossyScale.y;
@@ -47,7 +51,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 rectChildren[i].position = childrenWorldPos[i];
 
-                if (rectChildren[i].TryGetComponent(out nodeView) && nodeView.VisualData != null)
+                if (rectChildren[i].TryGetComponent(out NodeView nodeView) && nodeView.VisualData != null)
                 {
                     nodeView.VisualData.Position = rectChildren[i].localPosition;
                 }
@@ -73,8 +77,19 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (RectTransform rect in rectChildren)
             {
-                if (rect.TryGetComponent(out EdgeView edgeView))
+                Vector3 position = rect.localPosition;
+                rect.GetLocalCorners(corners);
+                left = Mathf.Min(corners[1].x + position.x, left);
+                top = Mathf.Max(corners[1].y + position.y, top);
+                right = Mathf.Max(corners[3].x + position.x, right);
+                bottom = Mathf.Min(corners[3].y + position.y, bottom);
+            }
+
+            foreach (Transform child in transform)
+            {
+                if (child.TryGetComponent(out EdgeView edgeView))
                 {
+                    edgeView.DrawLine();
                     Vector2 localMin = transform.InverseTransformPoint(edgeView.Line.Bounds.min);
                     Vector2 localMax = transform.InverseTransformPoint(edgeView.Line.Bounds.max);
                     left = Mathf.Min(localMin.x, left);
@@ -82,14 +97,6 @@ namespace Talent.GraphEditor.Unity.Runtime
                     right = Mathf.Max(localMax.x, right);
                     bottom = Mathf.Min(localMin.y, bottom);
                 }
-                
-                Vector3 position = rect.localPosition;
-                rect.GetLocalCorners(corners);
-
-                left = Mathf.Min(corners[1].x + position.x, left);
-                top = Mathf.Max(corners[1].y + position.y, top);
-                right = Mathf.Max(corners[3].x + position.x, right);
-                bottom = Mathf.Min(corners[3].y + position.y, bottom);
             }
 
             if (left == float.MaxValue)

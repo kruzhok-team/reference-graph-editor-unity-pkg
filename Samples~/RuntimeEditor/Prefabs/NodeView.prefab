@@ -2755,6 +2755,7 @@ GameObject:
   - component: {fileID: 6696858662708259381}
   - component: {fileID: 6696858662708259371}
   - component: {fileID: 6696858662708259380}
+  - component: {fileID: 6432873933674929754}
   m_Layer: 5
   m_Name: Outline
   m_TagString: Untagged
@@ -2820,6 +2821,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &6432873933674929754
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6696858662708259382}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6696858662858092609
 GameObject:
   m_ObjectHideFlags: 0
@@ -2898,7 +2911,7 @@ MonoBehaviour:
   - {fileID: 8378488754909401961}
   - {fileID: 8765427135722599737}
   - {fileID: 3434346997136011106}
-  _outline: {fileID: 6696858662708259380}
+  _outlineCanvasGroup: {fileID: 6432873933674929754}
   _contextSelection: {fileID: 7280830853296895044}
   _nodeViewContextMenu: {fileID: 1893497528683224465}
   _actionContextMenu: {fileID: 5374534437795998134}

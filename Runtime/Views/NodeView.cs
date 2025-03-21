@@ -22,7 +22,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         [SerializeField] private CanvasGroup _buttonsCanvasGroup;
         [SerializeField] private GameObject _nameEditButton;
         [SerializeField] private EdgeCreationButton[] _connectionButtons;
-        [SerializeField] private Image _outline;
+        [SerializeField] private CanvasGroup _outlineCanvasGroup;
 
         [Header("ContextMenu")]
         [SerializeField] private GameObject _contextSelection;
@@ -465,7 +465,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <param name="isVisible">Нужно ли включить обводку</param>
         public void SetOutlineVisibility(bool isVisible)
         {
-            _outline.gameObject.SetActive(isVisible);
+            _outlineCanvasGroup.alpha = isVisible ? 1 : 0;
         }
 
         /// <summary>
