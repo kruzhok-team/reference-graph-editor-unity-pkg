@@ -1565,7 +1565,6 @@ MonoBehaviour:
   _newNodeOffset: {x: 330, y: 0}
   _dublicateNodeOffset: {x: 125, y: 0}
   _duplicatedEdgeOffset: {x: 0, y: -50}
-  _newEdgeOffset: 115
   _graphPrefab: {fileID: -5874834263531308240, guid: a6eb67d913473ae4484f982caa5a5144, type: 3}
   _initialNodePrefab: {fileID: 2795905872169831563, guid: 22b93fd23f1f83149be9c9b7e6f87753, type: 3}
   _nodePrefab: {fileID: 6696858662858092613, guid: c886e19a2dd089d4886878ea7bde98f9, type: 3}
@@ -1739,7 +1738,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!1 &1256248041
 GameObject:
