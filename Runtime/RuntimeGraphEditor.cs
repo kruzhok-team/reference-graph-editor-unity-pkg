@@ -515,7 +515,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         [SerializeField] private Vector2 _newNodeOffset;
         [SerializeField] private Vector2 _dublicateNodeOffset;
         [SerializeField] private Vector2 _duplicatedEdgeOffset;
-        [SerializeField] private float _newEdgeOffset;
         [Header("Prefabs")]
         [SerializeField] private GraphView _graphPrefab;
         [SerializeField] private NodeView _initialNodePrefab;

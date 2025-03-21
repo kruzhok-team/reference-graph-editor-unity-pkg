@@ -47,8 +47,9 @@ namespace Talent.GraphEditor.Unity.Runtime
                 return;
             }
 
-            Vector3 position = _sourceNode.transform.position + 
-                _runtimeGraphEditor.GraphElementViewsContainer.transform.TransformVector(_edgeSpawnOffset);
+            RectTransform sourceNodeRectTransform = (RectTransform)_sourceNode.transform;
+            Vector3 position = sourceNodeRectTransform.position + 
+                _runtimeGraphEditor.GraphElementViewsContainer.transform.TransformVector(Vector2.Scale(sourceNodeRectTransform.sizeDelta / 2, _edgeSpawnOffset.normalized) + _edgeSpawnOffset);
             _runtimeGraphEditor.CreateEdgePreview(_sourceNode, position);
             _runtimeGraphEditor.EditingEdge.IsDraggableMode = true;
         }
@@ -102,9 +103,11 @@ namespace Talent.GraphEditor.Unity.Runtime
                 return;
             }
 
-            Vector3 position = _sourceNode.transform.position + 
-                _runtimeGraphEditor.GraphElementViewsContainer.transform.TransformVector(_edgeSpawnOffset);
+            RectTransform sourceNodeRectTransform = (RectTransform)_sourceNode.transform;
+            Vector3 position = sourceNodeRectTransform.position + 
+                _runtimeGraphEditor.GraphElementViewsContainer.transform.TransformVector(Vector2.Scale(sourceNodeRectTransform.sizeDelta / 2, _edgeSpawnOffset.normalized) + _edgeSpawnOffset);
             _runtimeGraphEditor.CreateEdgePreview(_sourceNode, position);
+
         }
     }
 }

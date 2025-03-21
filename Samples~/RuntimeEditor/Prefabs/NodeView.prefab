@@ -1953,7 +1953,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _canvasGroup: {fileID: 936356198977432622}
   _sourceNode: {fileID: 6696858662858092613}
-  _edgeSpawnOffset: {x: 370, y: 0}
+  _edgeSpawnOffset: {x: 230, y: 0}
 --- !u!1 &5907555590759531362
 GameObject:
   m_ObjectHideFlags: 0
@@ -3204,7 +3204,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
+  m_GlobalFontAsset: {fileID: 0}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -3390,7 +3390,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _canvasGroup: {fileID: 936356198977432622}
   _sourceNode: {fileID: 6696858662858092613}
-  _edgeSpawnOffset: {x: -370, y: 0}
+  _edgeSpawnOffset: {x: -230, y: 0}
 --- !u!1 &7560627390088672541
 GameObject:
   m_ObjectHideFlags: 0

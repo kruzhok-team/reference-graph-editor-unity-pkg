@@ -26,8 +26,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 childrenWorldPos.Add(child.position);
             }
-
-            GetGraphCorners(out float left, out float top, out float right, out float bottom);
+            
+            GetGraphCornersInternal(out float left, out float top, out float right, out float bottom, false);
 
             Vector3 position = new Vector3((right + left) / 2, (top + bottom) / 2);
             Vector2 size = new Vector2(Mathf.Abs(right - left), Mathf.Abs(bottom - top));
@@ -68,12 +68,25 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         public void GetGraphCorners(out float left, out float top, out float right, out float bottom)
         {
-            Vector3[] corners = new Vector3[4];
+            GetGraphCornersInternal(out left, out top, out right, out bottom, true);
+        }
 
+        private void GetGraphCornersInternal(out float left, out float top, out float right, out float bottom, bool ignoreLines)
+        {
             left = float.MaxValue;
             top = float.MinValue;
             right = float.MinValue;
             bottom = float.MaxValue;
+            
+            Vector3[] corners = new Vector3[4];
+            
+            if (rectChildren.Count == 0)
+            {
+                left = 0;
+                top = 0;
+                right = 0;
+                bottom = 0;
+            }
 
             foreach (RectTransform rect in rectChildren)
             {
@@ -85,38 +98,21 @@ namespace Talent.GraphEditor.Unity.Runtime
                 bottom = Mathf.Min(corners[3].y + position.y, bottom);
             }
 
-            foreach (Transform child in transform)
+            if (!ignoreLines)
             {
-                if (child.TryGetComponent(out EdgeView edgeView))
+                foreach (Transform child in transform)
                 {
-                    edgeView.DrawLine();
-                    Vector2 localMin = transform.InverseTransformPoint(edgeView.Line.Bounds.min);
-                    Vector2 localMax = transform.InverseTransformPoint(edgeView.Line.Bounds.max);
-                    left = Mathf.Min(localMin.x, left);
-                    top = Mathf.Max(localMax.y, top);
-                    right = Mathf.Max(localMax.x, right);
-                    bottom = Mathf.Min(localMin.y, bottom);
+                    if (child.TryGetComponent(out EdgeView edgeView))
+                    {
+                        edgeView.DrawLine();
+                        Vector2 localMin = transform.InverseTransformPoint(edgeView.Line.Bounds.min);
+                        Vector2 localMax = transform.InverseTransformPoint(edgeView.Line.Bounds.max);
+                        left = Mathf.Min(localMin.x, left);
+                        top = Mathf.Max(localMax.y, top);
+                        right = Mathf.Max(localMax.x, right);
+                        bottom = Mathf.Min(localMin.y, bottom);
+                    }
                 }
-            }
-
-            if (left == float.MaxValue)
-            {
-                left = 0;
-            }
-
-            if (top == float.MinValue)
-            {
-                top = 0;
-            }
-
-            if (right == float.MinValue)
-            {
-                right = 0;
-            }
-
-            if (bottom == float.MaxValue)
-            {
-                bottom = 0;
             }
 
             left -= padding.left;

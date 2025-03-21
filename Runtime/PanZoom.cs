@@ -284,7 +284,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 _targetRectTransform.localScale = _defaultScale;
                 _targetRectTransform.localPosition = _defaultPosition;
 
-                _graphLayoutGroup.GetGraphCorners(out var left, out var top, out var right, out var bottom);
+                _graphLayoutGroup.GetGraphCorners(out float left, out float top, out float right, out float bottom);
 
                 CalculateFocusWithResolutionFactor(ref left, ref bottom, ref right, ref top, out float resolutionFactor);
 
