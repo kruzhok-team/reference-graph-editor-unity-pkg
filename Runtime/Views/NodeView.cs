@@ -210,8 +210,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 edge.UpdateSourceParent();
             }
-
-            parentGraphView.RebuildInLateUpdate = true;
         }
 
         /// <summary>

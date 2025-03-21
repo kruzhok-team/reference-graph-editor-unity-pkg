@@ -863,7 +863,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 310967965}
-  - component: {fileID: 310967966}
   m_Layer: 5
   m_Name: Graph
   m_TagString: Untagged
@@ -893,18 +892,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &310967966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 310967964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f86e6ac66b259de43a1b8f100b346a8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &349227675
 GameObject:
   m_ObjectHideFlags: 0
@@ -1257,6 +1244,7 @@ GameObject:
   - component: {fileID: 865487872}
   - component: {fileID: 865487873}
   - component: {fileID: 865487874}
+  - component: {fileID: 865487875}
   m_Layer: 5
   m_Name: Graph Element Views Container
   m_TagString: Untagged
@@ -1323,6 +1311,18 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &865487875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 865487871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f86e6ac66b259de43a1b8f100b346a8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &956608014
 GameObject:
   m_ObjectHideFlags: 0

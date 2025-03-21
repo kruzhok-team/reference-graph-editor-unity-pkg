@@ -15,6 +15,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         public override void CalculateLayoutInputVertical()
         {
+            Debug.Log("RecalculateLayoutInputVertical");
             if (rectChildren.Count <= 0 || _layoutElement == null)
             {
                 return;

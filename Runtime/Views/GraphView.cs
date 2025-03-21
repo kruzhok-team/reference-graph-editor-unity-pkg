@@ -12,17 +12,10 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// Родительский узел
         /// </summary>
         public NodeView ParentNode { get; set; }
-        /// <summary>
-        /// Должен ли макет перестраиваться в LateUpdate
-        /// </summary>
-        public bool RebuildInLateUpdate { get; set; }
 
         private void LateUpdate()
         {
-            if (RebuildInLateUpdate)
-            {
-                LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
-            }
+            LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
         }
     }
 }
