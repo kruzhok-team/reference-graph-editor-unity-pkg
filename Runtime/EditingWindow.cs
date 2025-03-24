@@ -11,7 +11,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// <summary>
     /// Окно редактирования элементов графа
     /// </summary>
-    public class EditingWindow : MonoBehaviour, IElementSelectable, IUndoable
+    public class EditingWindow : MonoBehaviour, IElementSelectable, IUndoable, IPanZoomIgnorer
     {
         [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
         [SerializeField] private Button _saveButton;

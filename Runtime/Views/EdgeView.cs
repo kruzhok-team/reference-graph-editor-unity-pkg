@@ -112,6 +112,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             _selectionContextSource.AddHotkeyAction(new HotkeyAction(OnCancelHotkeyPressed, _cancelKeyCode));
             _selectionContextSource.AddHotkeyAction(new HotkeyAction(Delete, _deleteKeyCode));
             _selectionContextSource.AddHotkeyAction(new HotkeyAction(Duplicate,  KeyCode.LeftControl, KeyCode.D));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Focus, KeyCode.F));
         }
 
         private void OnEnable()
@@ -684,6 +685,11 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
         
             _line.SetColor(isSelected ? _edgeSelectedColor : _edgeUnselectedColor);
+        }
+
+        private void Focus()
+        {
+            _runtimeGraphEditor.PanZoom.FocusOnRectTransform(transform as RectTransform);
         }
 
         private void OnDestroy()

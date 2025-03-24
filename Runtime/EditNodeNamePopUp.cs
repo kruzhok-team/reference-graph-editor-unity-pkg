@@ -7,7 +7,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// <summary>
     /// Класс, отвечающий за редактор имени узла
     /// </summary>
-    public class EditNodeNamePopUp : MonoBehaviour, IUndoable, IElementSelectable
+    public class EditNodeNamePopUp : MonoBehaviour, IUndoable, IElementSelectable, IPanZoomIgnorer
     {
         private const string NotUniqueNameError = "Состояние с таким именем уже существует на этом уровне";
 

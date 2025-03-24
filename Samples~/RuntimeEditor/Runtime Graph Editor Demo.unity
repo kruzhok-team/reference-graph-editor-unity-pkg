@@ -757,6 +757,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3000608384555930426, guid: 3d159e29f64f46d448c3796fb60358d1, type: 3}
   m_PrefabInstance: {fileID: 3000608384455365857}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &116190122 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2662989428516750508, guid: d248dcbfaf2ca434bab8c52b4accd7d0, type: 3}
+  m_PrefabInstance: {fileID: 2662989427887603772}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &157087564 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2662989427730577264, guid: d248dcbfaf2ca434bab8c52b4accd7d0, type: 3}
@@ -838,7 +849,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -2017,10 +2028,10 @@ RectTransform:
   m_Father: {fileID: 1256248045}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 7680, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1540009689
 MonoBehaviour:
@@ -2035,7 +2046,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _runtimeGraphEditor: {fileID: 1189319020}
-  _editNodeNamePopUp: {fileID: 1452886810}
   _renderController: {fileID: 1189319025}
   _zoomValueText: {fileID: 558814564}
   _targetRectTransform: {fileID: 310967965}
@@ -2376,24 +2386,32 @@ PrefabInstance:
     m_TransformParent: {fileID: 2046070611}
     m_Modifications:
     - target: {fileID: 2662989427730577264, guid: d248dcbfaf2ca434bab8c52b4accd7d0, type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2662989427730577264, guid: d248dcbfaf2ca434bab8c52b4accd7d0, type: 3}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2662989427730577264, guid: d248dcbfaf2ca434bab8c52b4accd7d0, type: 3}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1189319020}
+      objectReference: {fileID: 116190122}
     - target: {fileID: 2662989427730577264, guid: d248dcbfaf2ca434bab8c52b4accd7d0, type: 3}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2662989427730577264, guid: d248dcbfaf2ca434bab8c52b4accd7d0, type: 3}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetGraphDocumentName
+      value: set_interactable
       objectReference: {fileID: 0}
     - target: {fileID: 2662989427730577264, guid: d248dcbfaf2ca434bab8c52b4accd7d0, type: 3}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: RuntimeGraphEditor, Assembly-CSharp
+      value: UnityEngine.UI.Selectable, UnityEngine.UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 2662989427730577264, guid: d248dcbfaf2ca434bab8c52b4accd7d0, type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2662989427730577264, guid: d248dcbfaf2ca434bab8c52b4accd7d0, type: 3}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
@@ -2527,6 +2545,10 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2778652110931259111, guid: d248dcbfaf2ca434bab8c52b4accd7d0, type: 3}
+      propertyPath: _runtimeGraphEditor
+      value: 
+      objectReference: {fileID: 1189319020}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d248dcbfaf2ca434bab8c52b4accd7d0, type: 3}
 --- !u!1001 &3000608384455365857
