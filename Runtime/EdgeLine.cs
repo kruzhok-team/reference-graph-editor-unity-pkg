@@ -711,7 +711,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         private Bounds GetDirectAccessArea(ConnectionElement connectionElement, Bounds commonBounds)
         {
             Vector2 startBoxPoint = (Vector2)connectionElement.Bounds.center + connectionElement.Direction *
-                (connectionElement.Bounds.extents[connectionElement.MainAxisIndex] + _edgeDistanceThreshold);
+                (connectionElement.Bounds.extents[connectionElement.MainAxisIndex] + _edgeDistanceThreshold / 2);
 
             Vector2 endBoxPoint = startBoxPoint + connectionElement.Direction * commonBounds.size[connectionElement.MainAxisIndex];
 
