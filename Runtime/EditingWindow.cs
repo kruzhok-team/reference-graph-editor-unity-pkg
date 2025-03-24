@@ -99,7 +99,6 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             _runtimeGraphEditor.ElementSelectionProvider.Select(this);
             _runtimeGraphEditor.UndoController.LockUndoable(this);
-            _runtimeGraphEditor.LineClickListener.enabled = false;
 
             SubscribeListeners();
         }
@@ -109,7 +108,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             _currentUndoState = null;
 
             _runtimeGraphEditor.UndoController.LockUndoable(null);
-            _runtimeGraphEditor.LineClickListener.enabled = true;
 
             UnsubscribeListeners();
         }
@@ -613,7 +611,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             string currentCondition = $"{firstVar} {_conditionSymbolsDropdown.captionText.text} {secondVar}";
 
-            _runtimeGraphEditor.CancelEdgeEditor();
+            _runtimeGraphEditor.CancelEditingWindow();
             switch (_editTarget)
             {
                 case EditTarget.Edge:
@@ -635,7 +633,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public void Cancel()
         {
-            _runtimeGraphEditor.CancelEdgeEditor();
+            _runtimeGraphEditor.CancelEditingWindow();
         }
 
         /// <summary>
@@ -665,7 +663,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                     break;
             }
 
-            _runtimeGraphEditor.CancelEdgeEditor();
+            _runtimeGraphEditor.CancelEditingWindow();
         }
 
         private void OnModuleChanged(int moduleIndex)

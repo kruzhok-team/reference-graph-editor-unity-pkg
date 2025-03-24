@@ -59,7 +59,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             _runtimeGraphEditor.ElementSelectionProvider.Select(this);
             _runtimeGraphEditor.UndoController.CreateUndoState(this);
             _runtimeGraphEditor.UndoController.LockUndoable(this);
-            _runtimeGraphEditor.LineClickListener.enabled = false;
         }
 
         private void OnDisable()
@@ -68,7 +67,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             _nodeNameInputField.onValueChanged.RemoveListener(OnInputFieldValueChanged);
             _nodeView.Select(false);
             _runtimeGraphEditor.UndoController.LockUndoable(null);
-            _runtimeGraphEditor.LineClickListener.enabled = true;
         }
         
         /// <inheritdoc/>

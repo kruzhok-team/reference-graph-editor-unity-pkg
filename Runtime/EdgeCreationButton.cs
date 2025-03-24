@@ -107,7 +107,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             Vector3 position = sourceNodeRectTransform.position + 
                 _runtimeGraphEditor.GraphElementViewsContainer.transform.TransformVector(Vector2.Scale(sourceNodeRectTransform.sizeDelta / 2, _edgeSpawnOffset.normalized) + _edgeSpawnOffset);
             _runtimeGraphEditor.CreateEdgePreview(_sourceNode, position);
-
         }
     }
 }

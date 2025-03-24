@@ -700,6 +700,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             Destroy(_line.gameObject);
+            Unselect();
         }
     }
 }

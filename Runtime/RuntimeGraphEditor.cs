@@ -56,10 +56,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public EdgeView EditingEdge { get; set; }
         /// <summary>
-        /// Компонент, обрабатывающий нажатия на линии
-        /// </summary>
-        public LineClickListener LineClickListener => _lineClickListener;
-        /// <summary>
         /// Класс для перемещения и передвижения графа
         /// </summary>
         public PanZoom PanZoom => _zoomPan;
@@ -187,8 +183,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             _edgeEditorWindow.gameObject.SetActive(true);
             _edgeEditorWindow.Init(node, nodeEvent, _iconSpriteProviderAsset);
-
-            _zoomPan.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -199,8 +193,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             _edgeEditorWindow.gameObject.SetActive(true);
             _edgeEditorWindow.Init(edgeView.SourceView, edgeView.TargetView, _iconSpriteProviderAsset, edgeView);
-
-            _zoomPan.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -287,15 +279,13 @@ namespace Talent.GraphEditor.Unity.Runtime
         }
 
         /// <summary>
-        /// Закрывает редактор представление ребра
+        /// Закрывает окно редактирования
         /// </summary>
-        public void CancelEdgeEditor()
+        public void CancelEditingWindow()
         {
             _edgeEditorWindow.gameObject.SetActive(false);
-
+            ElementSelectionProvider.Unselect(_edgeEditorWindow);
             UndoController.DeleteAllUndo(_edgeEditorWindow);
-
-            _zoomPan.gameObject.SetActive(true);
         }
 
         /// <summary>
