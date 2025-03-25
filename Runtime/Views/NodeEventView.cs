@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Talent.GraphEditor.Core;
 using TMPro;
@@ -308,6 +309,11 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 _nodeView.OpenEventContextMenu(this);
             }
+        }
+
+        private void OnDestroy()
+        {
+            Unselect();
         }
     }
 }
