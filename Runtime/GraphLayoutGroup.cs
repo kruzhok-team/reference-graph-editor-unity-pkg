@@ -27,7 +27,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 childrenWorldPos.Add(child.position);
             }
             
-            GetGraphCornersInternal(out float left, out float top, out float right, out float bottom, false);
+            GetGraphCorners(out float left, out float top, out float right, out float bottom);
 
             Vector3 position = new Vector3((right + left) / 2, (top + bottom) / 2);
             Vector2 size = new Vector2(Mathf.Abs(right - left), Mathf.Abs(bottom - top));
@@ -68,11 +68,6 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         public void GetGraphCorners(out float left, out float top, out float right, out float bottom)
         {
-            GetGraphCornersInternal(out left, out top, out right, out bottom, true);
-        }
-
-        private void GetGraphCornersInternal(out float left, out float top, out float right, out float bottom, bool ignoreLines)
-        {
             left = float.MaxValue;
             top = float.MinValue;
             right = float.MinValue;
@@ -96,22 +91,16 @@ namespace Talent.GraphEditor.Unity.Runtime
                 top = Mathf.Max(corners[1].y + position.y, top);
                 right = Mathf.Max(corners[3].x + position.x, right);
                 bottom = Mathf.Min(corners[3].y + position.y, bottom);
-            }
-
-            if (!ignoreLines)
-            {
-                foreach (Transform child in transform)
+                
+                if (rect.TryGetComponent(out EdgeView edgeView))
                 {
-                    if (child.TryGetComponent(out EdgeView edgeView))
-                    {
-                        edgeView.DrawLine();
-                        Bounds localBounds = new Bounds(transform.InverseTransformPoint(edgeView.Line.Bounds.center),
-                            transform.InverseTransformVector(edgeView.Line.Bounds.size));
-                        left = Mathf.Min(localBounds.center.x - localBounds.extents.x, left);
-                        top = Mathf.Max(localBounds.center.y + localBounds.extents.y, top);
-                        right = Mathf.Max(localBounds.center.x + localBounds.extents.x, right);
-                        bottom = Mathf.Min(localBounds.center.y - localBounds.extents.y, bottom);
-                    }
+                    edgeView.DrawLine();
+                    Bounds localBounds = new Bounds(transform.InverseTransformPoint(edgeView.Line.WorldBounds.center),
+                        transform.InverseTransformVector(edgeView.Line.WorldBounds.size));
+                    left = Mathf.Min(localBounds.center.x - localBounds.extents.x, left);
+                    top = Mathf.Max(localBounds.center.y + localBounds.extents.y, top);
+                    right = Mathf.Max(localBounds.center.x + localBounds.extents.x, right);
+                    bottom = Mathf.Min(localBounds.center.y - localBounds.extents.y, bottom);
                 }
             }
 
@@ -141,11 +130,11 @@ namespace Talent.GraphEditor.Unity.Runtime
                 {
                     if (lineBounds.extents == Vector3.zero)
                     {
-                        lineBounds = edgeView.Line.Bounds;
+                        lineBounds = edgeView.Line.WorldBounds;
                     }
                     else
                     {
-                        lineBounds.Encapsulate(edgeView.Line.Bounds);
+                        lineBounds.Encapsulate(edgeView.Line.WorldBounds);
                     }
                 }
             }

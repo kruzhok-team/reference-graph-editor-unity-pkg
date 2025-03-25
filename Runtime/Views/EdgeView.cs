@@ -207,13 +207,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 _content.SetActive(false);
                 _outLine.localScale = Vector3.zero;
-
-                if (!TryGetComponent(out LayoutElement element))
-                {
-                    element = gameObject.AddComponent<LayoutElement>();
-
-                    element.ignoreLayout = true;
-                }
             }
             else
             {
