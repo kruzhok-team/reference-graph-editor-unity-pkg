@@ -28,7 +28,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// Границы линии в глобальных координатах
         /// </summary>
         public Bounds Bounds { get; private set; }
-
+        
         [SerializeField] private UILineRenderer _lineRenderer;
         [SerializeField] private float _cornerOffset = 35;
         [SerializeField] private float _edgeDistanceThreshold = 50;
@@ -47,7 +47,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         [SerializeField] private int _stepsPerUnit = 1;
 
         private Transform _container;
-
+        
         private Bounds _previousSourceBounds;
         private Bounds _previousTargetBounds;
         private Bounds _previousEdgeBounds;
@@ -140,7 +140,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             (Vector2[] firstPath, Vector2[] secondPath) = GetPaths(sourceBounds, edgeBounds, targetBounds);
 
-            Bounds bounds;
+            Bounds localBounds;
             
             if (source.IsDescendant(target))
             {
@@ -149,7 +149,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                     secondPath[0], (Vector2)targetBounds.ClosestPoint(secondPath[1])
                 };
                 
-                bounds = RecalculateSegmentBounds(firstPath);
+                localBounds = RecalculateSegmentBounds(firstPath);
             }
 
             else if (target.IsDescendant(source))
@@ -159,23 +159,24 @@ namespace Talent.GraphEditor.Unity.Runtime
                     (Vector2)sourceBounds.ClosestPoint(firstPath[^2]), firstPath[^1]
                 };
                 
-                bounds = RecalculateSegmentBounds(secondPath);
+                localBounds = RecalculateSegmentBounds(secondPath);
             }
             else
             {
-                bounds = RecalculateSegmentBounds(firstPath);
+                localBounds = RecalculateSegmentBounds(secondPath);
                 
-                if (bounds.extents == Vector3.zero)
+                if (localBounds.extents == Vector3.zero)
                 {
-                    bounds = RecalculateSegmentBounds(firstPath);
+                    localBounds = RecalculateSegmentBounds(firstPath);
                 }
                 else
                 {
-                    bounds.Encapsulate(RecalculateSegmentBounds(secondPath));
+                    localBounds.Encapsulate(RecalculateSegmentBounds(firstPath));
                 }
             }
 
-            Bounds = bounds;
+            Bounds worldBounds = new Bounds(_container.TransformPoint(localBounds.center), _container.TransformVector(localBounds.size));
+            Bounds = worldBounds;
 
             DrawLines(firstPath, secondPath);
         }
@@ -362,9 +363,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 max = Vector2.Max(max, segment[i]);
             }
             
-            Vector2 containerMin = _container.TransformPoint(min);
-            Vector2 containerMax = _container.TransformPoint(max);
-            Bounds segmentBounds = new Bounds { min = containerMin, max = containerMax };
+            Bounds segmentBounds = new Bounds{min = min, max = max};
 
             return segmentBounds;
         }

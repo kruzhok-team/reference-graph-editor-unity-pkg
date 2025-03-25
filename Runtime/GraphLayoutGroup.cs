@@ -105,12 +105,12 @@ namespace Talent.GraphEditor.Unity.Runtime
                     if (child.TryGetComponent(out EdgeView edgeView))
                     {
                         edgeView.DrawLine();
-                        Vector2 localMin = transform.InverseTransformPoint(edgeView.Line.Bounds.min);
-                        Vector2 localMax = transform.InverseTransformPoint(edgeView.Line.Bounds.max);
-                        left = Mathf.Min(localMin.x, left);
-                        top = Mathf.Max(localMax.y, top);
-                        right = Mathf.Max(localMax.x, right);
-                        bottom = Mathf.Min(localMin.y, bottom);
+                        Bounds localBounds = new Bounds(transform.InverseTransformPoint(edgeView.Line.Bounds.center),
+                            transform.InverseTransformVector(edgeView.Line.Bounds.size));
+                        left = Mathf.Min(localBounds.center.x - localBounds.extents.x, left);
+                        top = Mathf.Max(localBounds.center.y + localBounds.extents.y, top);
+                        right = Mathf.Max(localBounds.center.x + localBounds.extents.x, right);
+                        bottom = Mathf.Min(localBounds.center.y - localBounds.extents.y, bottom);
                     }
                 }
             }
@@ -135,7 +135,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             Bounds lineBounds = new Bounds();
             
-            foreach (var child in rectChildren)
+            foreach (Transform child in transform)
             {
                 if (child.TryGetComponent(out EdgeView edgeView))
                 {
@@ -154,12 +154,19 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             Vector2 position = (Vector2)transform.position + new Vector2((right + left) / 2, (top + bottom) / 2);
             Vector2 size = new Vector2(Mathf.Abs(right - left), Mathf.Abs(bottom - top));
-            Bounds bounds = new Bounds(position, size);
-            bounds.Encapsulate(lineBounds);
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireCube(lineBounds.center, lineBounds.size);
+            Bounds commonBounds = new Bounds(position, size);
 
+            if (lineBounds.extents != Vector3.zero)
+            {
+                commonBounds.Encapsulate(lineBounds);
+            }
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireCube(commonBounds.center, commonBounds.size);
             Gizmos.color = Color.blue;
             Gizmos.DrawWireCube(position, size);
-            Gizmos.DrawWireCube(bounds.center, bounds.size);
             Gizmos.DrawSphere(position, 10f);
             Gizmos.DrawSphere((Vector2)transform.position + new Vector2(left, top), 10f);
             Gizmos.DrawSphere((Vector2)transform.position + new Vector2(left, bottom), 10f);
