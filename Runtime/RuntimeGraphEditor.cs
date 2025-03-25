@@ -99,8 +99,10 @@ namespace Talent.GraphEditor.Unity.Runtime
             Triggers.AddRange(context.GetEvents().ToList());
             Actions = context.GetActions().ToList();
             Variables = context.GetVariables().ToList();
-
             _graphDocumentNameInput.text = graphDocument.Name;
+            
+            Rebuild();
+            _zoomPan.AdjustView();
         }
 
         /// <summary>
@@ -110,10 +112,10 @@ namespace Talent.GraphEditor.Unity.Runtime
         public void SetGraphDocument(CyberiadaGraphDocument graphDocument)
         {
             GraphEditor.SetGraphDocument(graphDocument);
-
-            LayoutRebuilder.ForceRebuildLayoutImmediate(GraphElementViewsContainer.transform as RectTransform);
-
             _graphDocumentNameInput.text = graphDocument.Name;
+            
+            Rebuild();
+            _zoomPan.AdjustView();
         }
 
         /// <summary>
