@@ -194,7 +194,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
+  m_GlobalFontAsset: {fileID: 0}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -212,6 +212,7 @@ GameObject:
   - component: {fileID: 2662989427788419319}
   - component: {fileID: 2662989427788419312}
   - component: {fileID: 2778652110931259111}
+  - component: {fileID: 2132361293362184311}
   m_Layer: 5
   m_Name: GraphName
   m_TagString: Untagged
@@ -280,6 +281,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _runtimeGraphEditor: {fileID: 0}
   _graphNameInputField: {fileID: 2662989427730577264}
+  _canvasGroup: {fileID: 2132361293362184311}
+--- !u!225 &2132361293362184311
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2662989427788419318}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2662989427803550004
 GameObject:
   m_ObjectHideFlags: 0

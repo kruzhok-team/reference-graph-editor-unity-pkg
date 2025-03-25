@@ -78,13 +78,13 @@ namespace Talent.GraphEditor.Unity.Runtime
             if (otherNode != null)
             {
                 _runtimeGraphEditor.OnClicked(otherNode);
+                _runtimeGraphEditor.EditingEdge.IsDraggableMode = false;
             }
             else
             {
                 _runtimeGraphEditor.DestroyElementView(_runtimeGraphEditor.EditingEdge);
+                _runtimeGraphEditor.EditingEdge = null;
             }
-
-            _runtimeGraphEditor.EditingEdge.IsDraggableMode = false;
         }
 
         /// <summary>

@@ -562,6 +562,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Editing Window
       objectReference: {fileID: 0}
+    - target: {fileID: 6493688574591461621, guid: 3e6ad29ec24fbc645a85a56637af059b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6684842568829360487, guid: 3e6ad29ec24fbc645a85a56637af059b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2306,6 +2310,7 @@ GameObject:
   - component: {fileID: 2046070611}
   - component: {fileID: 2046070613}
   - component: {fileID: 2046070612}
+  - component: {fileID: 2046070614}
   m_Layer: 5
   m_Name: Controls
   m_TagString: Untagged
@@ -2378,6 +2383,18 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 2
   m_TargetDisplay: 0
+--- !u!225 &2046070614
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046070610}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &2662989427887603772
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3327,6 +3344,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BottomBlock
       objectReference: {fileID: 0}
+    - target: {fileID: 4681254142922498429, guid: c3d2a965cd879c24c8d9b00e9f1da469, type: 3}
+      propertyPath: _canvasGroup
+      value: 
+      objectReference: {fileID: 2046070614}
     - target: {fileID: 4681254142922498429, guid: c3d2a965cd879c24c8d9b00e9f1da469, type: 3}
       propertyPath: _runtimeGraphEditor
       value: 

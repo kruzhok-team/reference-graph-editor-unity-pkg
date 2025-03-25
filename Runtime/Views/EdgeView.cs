@@ -471,8 +471,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             SourceView = null;
             _changeTargetConnection.Deactivate();
             _changeSourceConnection.Deactivate();
-        
-
+            
             _runtimeGraphEditor.ElementSelectionProvider.Select(this);
             _runtimeGraphEditor.EditingEdge = this;
             _runtimeGraphEditor.RequestCreateUndoState();

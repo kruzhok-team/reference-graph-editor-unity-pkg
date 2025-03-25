@@ -8,6 +8,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     public class ButtonsBlocksController : MonoBehaviour
     {
         [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
+        [SerializeField] private CanvasGroup _canvasGroup;
 
         [SerializeField] private GameObject _noSelectionBlock;
         [SerializeField] private GameObject _nodeSelectionBlock;
@@ -22,7 +23,8 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             _runtimeGraphEditor.ElementSelectionProvider.Selected += OnElementSelected;
             _runtimeGraphEditor.ElementSelectionProvider.Deselected += OnElementDeselected;
-
+            _runtimeGraphEditor.StartEdgeEditing += OnStartEdgeEditing;
+            _runtimeGraphEditor.EndEdgeEditing += OnEndEdgeEditing;
             OnElementDeselected(null);
         }
 
@@ -30,6 +32,8 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             _runtimeGraphEditor.ElementSelectionProvider.Selected -= OnElementSelected;
             _runtimeGraphEditor.ElementSelectionProvider.Deselected -= OnElementDeselected;
+            _runtimeGraphEditor.StartEdgeEditing -= OnStartEdgeEditing;
+            _runtimeGraphEditor.EndEdgeEditing -= OnEndEdgeEditing;
         }
 
         /// <summary>
@@ -209,6 +213,16 @@ namespace Talent.GraphEditor.Unity.Runtime
             _unparentButton.interactable = false;
 
             _selectedElement = null;
+        }
+
+        private void OnStartEdgeEditing()
+        {
+            _canvasGroup.interactable = false;
+        }
+
+        private void OnEndEdgeEditing()
+        {
+            _canvasGroup.interactable = true;
         }
     }
 }

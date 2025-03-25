@@ -7,6 +7,7 @@ using Talent.Graphs;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Action = System.Action;
 using Event = Talent.Graphs.Event;
 
 namespace Talent.GraphEditor.Unity.Runtime
@@ -54,7 +55,23 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <summary>
         /// Редактируемое ребро
         /// </summary>
-        public EdgeView EditingEdge { get; set; }
+        public EdgeView EditingEdge
+        {
+            get => _editingEdge;
+            set
+            {
+                _editingEdge = value;
+                
+                if (_editingEdge != null)
+                {
+                    StartEdgeEditing?.Invoke();
+                }
+                else
+                {
+                    EndEdgeEditing?.Invoke();
+                }
+            }
+        }
         /// <summary>
         /// Класс для перемещения и передвижения графа
         /// </summary>
@@ -63,8 +80,18 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// Ядро логики редактора графа
         /// </summary>
         public Core.GraphEditor GraphEditor { get; private set; }
+
+        /// <summary>
+        /// Событие, срабатывающее при начале редактирования ребра
+        /// </summary>
+        public event Action StartEdgeEditing;
+        /// <summary>
+        /// Событие, срабатывающее при окончании редактирования ребра
+        /// </summary>
+        public event Action EndEdgeEditing;
     
         private CyberiadaGraphMLConverter _converter;
+        private EdgeView _editingEdge;
     
         private void Awake()
         {
@@ -75,6 +102,26 @@ namespace Talent.GraphEditor.Unity.Runtime
         void Start()
         {
             _edgeEditorWindow.gameObject.SetActive(false);
+        }
+        
+        private void Update()
+        {
+            if (EditingEdge != null && !EditingEdge.IsDraggableMode && ElementSelectionProvider.CurrentSelectedElement == EditingEdge && Input.GetMouseButton(0))
+            {
+                if (EditingEdge.FindOtherNode() == null)
+                {
+                    if (EditingEdge.IsPreview)
+                    {
+                        DestroyElementView(EditingEdge);
+                    }
+                    else
+                    {
+                        UndoController.Undo();
+                    }
+
+                    EditingEdge = null;
+                }
+            }
         }
 
         /// <summary>
@@ -115,7 +162,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             _graphDocumentNameInput.text = graphDocument.Name;
             
             Rebuild();
-            _zoomPan.AdjustView();
         }
 
         /// <summary>
@@ -261,6 +307,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                     end, trigger, condition,
                     _iconSpriteProviderAsset, _lineClickListener);
                 EditingEdge = null;
+                edgeView.Select(false);
             }
 
             GraphEditor.ChangeEdgeTrigger(edgeView, trigger);
@@ -414,6 +461,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                         }
 
                         EditingEdge.Delete();
+                        EditingEdge = null;
                     }
                 }
             }
