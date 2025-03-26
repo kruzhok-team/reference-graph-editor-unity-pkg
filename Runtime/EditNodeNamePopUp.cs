@@ -48,7 +48,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         private void Awake()
         {
             _selectionContextSource = new SelectionContextSource();
-            _selectionContextSource.AddHotkeyAction(new HotkeyAction(() => { gameObject.SetActive(false); }, KeyCode.Escape));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(OnCancelHotkeyPressed, KeyCode.Escape));
         }
 
         private void OnEnable()
@@ -68,7 +68,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             _nodeView.Select(false);
             _runtimeGraphEditor.UndoController.LockUndoable(null);
         }
-        
+
         /// <inheritdoc/>
         public void Undo(string context)
         {
@@ -120,6 +120,16 @@ namespace Talent.GraphEditor.Unity.Runtime
             _errorMessage.SetActive(false);
             _applyButton.gameObject.SetActive(true);
             _applyButton.interactable = true;
+        }
+
+        private void OnCancelHotkeyPressed()
+        {
+            if (string.IsNullOrEmpty(_nodeNameInputField.text) || !_nodeView.IsUniqueNodeName(_nodeNameInputField.text) || string.IsNullOrEmpty(_desiredInitialName))
+            {
+                return;
+            }
+
+            gameObject.SetActive(false);
         }
     }
 }

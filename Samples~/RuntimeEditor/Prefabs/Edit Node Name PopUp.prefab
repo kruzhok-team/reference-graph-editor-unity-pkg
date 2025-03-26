@@ -139,10 +139,10 @@ MonoBehaviour:
   m_CaretWidth: 3
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
-  m_RestoreOriginalTextOnEscape: 1
+  m_RestoreOriginalTextOnEscape: 0
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
