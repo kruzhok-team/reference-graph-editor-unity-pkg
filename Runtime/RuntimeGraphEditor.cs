@@ -460,7 +460,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                             GraphEditor.ChangeEdgeActionParameter(GraphEditor.CreateNewEdgeAction(edgeView, actionView.ActionID), actionView.ParameterValue);
                         }
 
-                        EditingEdge.Delete();
+                        GraphEditor.RemoveEdge(EditingEdge);
                         EditingEdge = null;
                     }
                 }
