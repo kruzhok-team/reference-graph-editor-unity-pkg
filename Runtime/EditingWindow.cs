@@ -633,6 +633,12 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public void Cancel()
         {
+            if (_runtimeGraphEditor.EditingEdge != null && _runtimeGraphEditor.EditingEdge.IsPreview)
+            {
+                _runtimeGraphEditor.EditingEdge.Delete();
+                _runtimeGraphEditor.EditingEdge = null;
+            }
+            
             _runtimeGraphEditor.CancelEditingWindow();
         }
 
