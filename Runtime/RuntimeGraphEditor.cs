@@ -17,6 +17,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// </summary>
     public class RuntimeGraphEditor : MonoBehaviour, IGraphElementViewFactory, IUndoable
     {
+        [SerializeField] private Canvas _rootCanvas;
         [SerializeField] private TMP_InputField _graphDocumentNameInput;
         [SerializeField] private EditingWindow _edgeEditorWindow;
         [SerializeField] private EditNodeNamePopUp _editNodeNamePopUp;
@@ -556,7 +557,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     #region Factory Realization
 
         [Header("Factory")]
-        [SerializeField] private Vector2 _newNodeOffset;
+        [SerializeField] private Vector2 _initialNodeOffset;
         [SerializeField] private Vector2 _dublicateNodeOffset;
         [SerializeField] private Vector2 _duplicatedEdgeOffset;
         [Header("Prefabs")]
@@ -600,27 +601,14 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             if (layoutAutomatically)
             {
-                GraphElementViewsContainer.GetGraphCorners(out float left, out float top, out float right, out float bottom);
-
-                RectTransform nodeRectTransform = view.transform as RectTransform;
-
-                LayoutRebuilder.ForceRebuildLayoutImmediate(nodeRectTransform);
-
-                float xPos;
-                float yPos = (top + bottom) / 2;
+                Vector3 worldPoint = _rootCanvas.pixelRect.center;
 
                 if (vertex == NodeData.Vertex_Initial)
                 {
-                    xPos = left - nodeRectTransform.sizeDelta.x / 2 * nodeRectTransform.lossyScale.x;
+                    worldPoint += GraphElementViewsContainer.transform.TransformVector(_initialNodeOffset);
                 }
-                else
-                {
-                    xPos = right + nodeRectTransform.sizeDelta.x / 2 * nodeRectTransform.lossyScale.x;
-                }
-
-                Vector3 scaledOffset = Vector2.Scale(_newNodeOffset, GraphElementViewsContainer.transform.lossyScale);
-
-                view.transform.position = (Vector2)GraphElementViewsContainer.transform.position + new Vector2(xPos, yPos) + (vertex == NodeData.Vertex_Initial ? Vector2.zero : (Vector2)scaledOffset);
+                
+                view.transform.position = worldPoint;
                 nodeVisualData.Position = view.transform.localPosition;
             }
 
@@ -805,7 +793,6 @@ namespace Talent.GraphEditor.Unity.Runtime
                 LayoutRebuilder.ForceRebuildLayoutImmediate(parent as RectTransform);
             }
         }
-
     #endregion
     }
 }
