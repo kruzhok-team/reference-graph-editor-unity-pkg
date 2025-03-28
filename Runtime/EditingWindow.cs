@@ -99,6 +99,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             _runtimeGraphEditor.ElementSelectionProvider.Select(this);
             _runtimeGraphEditor.UndoController.LockUndoable(this);
+            _runtimeGraphEditor.LineClickListener.enabled = false;
 
             SubscribeListeners();
         }
@@ -108,6 +109,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             _currentUndoState = null;
 
             _runtimeGraphEditor.UndoController.LockUndoable(null);
+            _runtimeGraphEditor.LineClickListener.enabled = true;
 
             UnsubscribeListeners();
         }

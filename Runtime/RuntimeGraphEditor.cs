@@ -78,6 +78,10 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public PanZoom PanZoom => _zoomPan;
         /// <summary>
+        /// Компонент, обрабатывающий нажатия на линии
+        /// </summary>
+        public LineClickListener LineClickListener => _lineClickListener;
+        /// <summary>
         /// Ядро логики редактора графа
         /// </summary>
         public Core.GraphEditor GraphEditor { get; private set; }
