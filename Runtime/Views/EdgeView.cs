@@ -239,7 +239,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             if (SourceView == null || TargetView == null)
             {
-                _otherNode?.SetOutlineVisibility(false);
                 NodeView otherNode = FindOtherNode();
                 if (otherNode != null)
                 {
@@ -255,9 +254,11 @@ namespace Talent.GraphEditor.Unity.Runtime
                         Transform parent = GetCommonDeepestParent(SourceView, otherNode);
                         transform.SetParent(parent);
                     }
-                
-                    otherNode.SetOutlineVisibility(true);
-                    _otherNode = otherNode;
+
+                    if (otherNode != _otherNode)
+                    {
+                        otherNode.SetOutlineVisibility(true);
+                    }
                 }
                 else
                 {
@@ -271,7 +272,10 @@ namespace Talent.GraphEditor.Unity.Runtime
                     }
 
                     transform.SetParent(_runtimeGraphEditor.GraphElementViewsContainer.transform);
+                    _otherNode?.SetOutlineVisibility(false);
                 }
+                
+                _otherNode = otherNode;
             }
             else
             {

@@ -428,7 +428,6 @@ namespace Talent.GraphEditor.Unity.Runtime
                 if (EditingEdge.IsPreview && EditingEdge.SourceView != nodeView)
                 {
                     EditingEdge.ConnectTargetView(nodeView);
-                    nodeView.SetOutlineVisibility(false);
                     OpenEdgeEditor(EditingEdge);
                 }
                 else
