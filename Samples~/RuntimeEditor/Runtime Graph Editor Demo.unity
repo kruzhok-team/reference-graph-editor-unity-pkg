@@ -1578,7 +1578,7 @@ MonoBehaviour:
   _iconSpriteProviderAsset: {fileID: 11400000, guid: 4657f08c1c699dd4abcd6fc98a0fbd20, type: 2}
   _zoomPan: {fileID: 1540009689}
   _undoController: {fileID: 1189319027}
-  _newNodeOffset: {x: 330, y: 0}
+  _initialNodeOffset: {x: -500, y: 0}
   _dublicateNodeOffset: {x: 125, y: 0}
   _duplicatedEdgeOffset: {x: 0, y: -50}
   _graphPrefab: {fileID: -5874834263531308240, guid: a6eb67d913473ae4484f982caa5a5144, type: 3}
