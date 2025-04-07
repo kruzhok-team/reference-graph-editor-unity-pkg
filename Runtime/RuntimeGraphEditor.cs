@@ -111,7 +111,9 @@ namespace Talent.GraphEditor.Unity.Runtime
         
         private void Update()
         {
+#pragma warning disable CS0252
             if (EditingEdge != null && !EditingEdge.IsDraggableMode && ElementSelectionProvider.CurrentSelectedElement == EditingEdge && Input.GetMouseButton(0))
+#pragma warning restore CS0252
             {
                 if (EditingEdge.FindOtherNode() == null)
                 {

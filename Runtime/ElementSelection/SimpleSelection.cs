@@ -35,7 +35,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             if (_runtimeGraphEditor == null)
             {
-                _runtimeGraphEditor = FindObjectOfType<RuntimeGraphEditor>();
+                _runtimeGraphEditor = FindAnyObjectByType<RuntimeGraphEditor>();
 
                 if (_runtimeGraphEditor == null)
                 {
