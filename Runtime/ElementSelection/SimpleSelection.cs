@@ -6,7 +6,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// <summary>
     /// Класс, реализующий <see cref="IElementSelectable"/>
     /// </summary>
-    public class SimpleSelection : MonoBehaviour, IElementSelectable
+    public class SimpleSelection : MonoBehaviour, IElementSelectable, IPointerDownHandler, IPointerUpHandler
     {
         /// <summary>
         /// Событие, срабатывающее при выборе элемента
@@ -35,7 +35,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             if (_runtimeGraphEditor == null)
             {
-                _runtimeGraphEditor = FindObjectOfType<RuntimeGraphEditor>();
+                _runtimeGraphEditor = FindAnyObjectByType<RuntimeGraphEditor>();
 
                 if (_runtimeGraphEditor == null)
                 {

@@ -1,4 +1,5 @@
 using UnityEngine;
+
 namespace Talent.GraphEditor.Unity.Runtime
 {
     /// <summary>
@@ -6,7 +7,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// </summary>
     public class HotkeyListener : MonoBehaviour
     {
-        [SerializeField] RuntimeGraphEditor _runtimeGraphEditor;
+        [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
 
         private IElementSelectionProvider _elementSelectionProvider;
 
@@ -49,21 +50,40 @@ namespace Talent.GraphEditor.Unity.Runtime
                     {
                         _runtimeGraphEditor.UndoController.Undo();
                     }
-
-                    return;
                 }
-
-                return;
             }
 
             if (_selectionContextSource == null)
             {
                 return;
             }
-        
+            
             foreach (HotkeyAction hotkeyAction in _selectionContextSource.HotkeyActions)
             {
-                if (Input.GetKeyDown(hotkeyAction.Hotkey))
+                bool isValidCombination = true;
+
+                for (int i = 0; i < hotkeyAction.Hotkeys.Count; i++)
+                {
+                    KeyCode key = hotkeyAction.Hotkeys[i];
+
+                    if (i < hotkeyAction.Hotkeys.Count - 1)
+                    {
+                        if (!Input.GetKey(key))
+                        {
+                            isValidCombination = false;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (!Input.GetKeyDown(key))
+                        {
+                            isValidCombination = false;
+                        }
+                    }
+                }
+
+                if (isValidCombination)
                 {
                     hotkeyAction.OnHotkeyPressed();
                 }

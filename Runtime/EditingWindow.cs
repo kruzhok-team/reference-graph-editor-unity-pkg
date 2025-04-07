@@ -5,14 +5,13 @@ using Newtonsoft.Json;
 using Talent.Graphs;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 namespace Talent.GraphEditor.Unity.Runtime
 {
     /// <summary>
     /// Окно редактирования элементов графа
     /// </summary>
-    public class EditingWindow : MonoBehaviour, IElementSelectable, IUndoable
+    public class EditingWindow : MonoBehaviour, IElementSelectable, IUndoable, IPanZoomIgnorer
     {
         [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
         [SerializeField] private Button _saveButton;
@@ -74,22 +73,10 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <inheritdoc/>
         public ISelectionContextSource SelectionContextSource => _selectionContextSource;
 
-        /// <summary>
-        /// Функция обратного вызова, срабатывающая при нажатии указателя на элемент  
-        /// </summary>
-        /// <param name="eventData">Полезная нагрузка события связанного с указателем</param>
-        public void OnPointerDown(PointerEventData eventData) { }
-
-        /// <summary>
-        /// Функция обратного вызова, срабатывающая при отпускании указателя с элемента
-        /// </summary>
-        /// <param name="eventData">Полезная нагрузка события связанного с указателем</param>
-        public void OnPointerUp(PointerEventData eventData) { }
-
         private void Awake()
         {
-            _selectionContextSource = new();
-            _selectionContextSource.AddHotkeyAction(new(_closeKeyCode, () => Cancel()));
+            _selectionContextSource = new SelectionContextSource();
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Cancel, _closeKeyCode));
         }
 
         /// <inheritdoc/>
@@ -112,6 +99,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             _runtimeGraphEditor.ElementSelectionProvider.Select(this);
             _runtimeGraphEditor.UndoController.LockUndoable(this);
+            _runtimeGraphEditor.LineClickListener.enabled = false;
 
             SubscribeListeners();
         }
@@ -121,10 +109,9 @@ namespace Talent.GraphEditor.Unity.Runtime
             _currentUndoState = null;
 
             _runtimeGraphEditor.UndoController.LockUndoable(null);
+            _runtimeGraphEditor.LineClickListener.enabled = true;
 
             UnsubscribeListeners();
-
-            Unselect();
         }
 
         private void OnConditionInputsChanged(string text)
@@ -626,7 +613,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             string currentCondition = $"{firstVar} {_conditionSymbolsDropdown.captionText.text} {secondVar}";
 
-            _runtimeGraphEditor.CancelEdgeEditor();
+            _runtimeGraphEditor.CancelEditingWindow();
             switch (_editTarget)
             {
                 case EditTarget.Edge:
@@ -648,7 +635,13 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public void Cancel()
         {
-            _runtimeGraphEditor.CancelEdgeEditor();
+            if (_runtimeGraphEditor.EditingEdge != null && _runtimeGraphEditor.EditingEdge.IsPreview)
+            {
+                _runtimeGraphEditor.EditingEdge.Delete();
+                _runtimeGraphEditor.EditingEdge = null;
+            }
+            
+            _runtimeGraphEditor.CancelEditingWindow();
         }
 
         /// <summary>
@@ -678,7 +671,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                     break;
             }
 
-            _runtimeGraphEditor.CancelEdgeEditor();
+            _runtimeGraphEditor.CancelEditingWindow();
         }
 
         private void OnModuleChanged(int moduleIndex)

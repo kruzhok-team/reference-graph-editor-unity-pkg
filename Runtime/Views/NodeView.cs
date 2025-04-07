@@ -13,7 +13,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// <summary>
     /// Представление узла
     /// </summary>
-    public class NodeView : MonoBehaviour, INodeView, IElementSelectable
+    public class NodeView : MonoBehaviour, INodeView, IElementSelectable, IPointerDownHandler, IPointerUpHandler
     {
         [SerializeField] private TMP_InputField _nameTMP;
         [SerializeField] private InteractArea _bodyArea;
@@ -22,7 +22,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         [SerializeField] private CanvasGroup _buttonsCanvasGroup;
         [SerializeField] private GameObject _nameEditButton;
         [SerializeField] private EdgeCreationButton[] _connectionButtons;
-        [SerializeField] private Image _outline;
+        [SerializeField] private CanvasGroup _outlineCanvasGroup;
 
         [Header("ContextMenu")]
         [SerializeField] private GameObject _contextSelection;
@@ -87,8 +87,10 @@ namespace Talent.GraphEditor.Unity.Runtime
         private void Awake()
         {
             _selectionContextSource = new SelectionContextSource();
-            _selectionContextSource.AddHotkeyAction(new(_cancelKeyCode, OnCancelHotkeyPressed));
-            _selectionContextSource.AddHotkeyAction(new(_deleteKeyCode, Delete));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(OnCancelHotkeyPressed, _cancelKeyCode));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Delete, _deleteKeyCode));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Duplicate,  KeyCode.LeftControl, KeyCode.D));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Focus, KeyCode.F));
         }
 
         private void OnEnable()
@@ -99,6 +101,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             _bodyArea.RightClick += OnPointerUp;
             _bodyArea.BeginDrag += OnBeginDragElement;
             _bodyArea.Drag += OnDragElement;
+            _bodyArea.EndDrag += OnEndDragElement;
 
             SetSelection(false, false);
         }
@@ -109,6 +112,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             _bodyArea.RightClick -= OnPointerUp;
             _bodyArea.BeginDrag -= OnBeginDragElement;
             _bodyArea.Drag -= OnDragElement;
+            _bodyArea.EndDrag -= OnEndDragElement;
         
             _runtimeGraphEditor.ElementSelectionProvider.Unselect(this);
         }
@@ -207,8 +211,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 edge.UpdateSourceParent();
             }
-
-            parentGraphView.RebuildInLateUpdate = true;
         }
 
         /// <summary>
@@ -304,20 +306,44 @@ namespace Talent.GraphEditor.Unity.Runtime
         private void OnBeginDragElement(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left)
+            {
                 return;
+            }
 
             _runtimeGraphEditor.RequestCreateUndoState();
+
+            if (_buttonsCanvasGroup != null)
+            {
+                _buttonsCanvasGroup.alpha = 0;
+                _buttonsCanvasGroup.interactable = false;
+            }
         }
 
         private void OnDragElement(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left)
+            {
                 return;
+            }
 
             transform.position += (Vector3)eventData.delta;
             VisualData.Position = transform.localPosition;
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent.transform as RectTransform);
+        }
+
+        private void OnEndDragElement(PointerEventData eventData)
+        {
+            if (eventData.button != PointerEventData.InputButton.Left)
+            {
+                return;
+            }
+
+            if (_buttonsCanvasGroup != null)
+            {
+                _buttonsCanvasGroup.alpha = 1;
+                _buttonsCanvasGroup.interactable = true;
+            }
         }
 
         /// <summary>
@@ -438,7 +464,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <param name="isVisible">Нужно ли включить обводку</param>
         public void SetOutlineVisibility(bool isVisible)
         {
-            _outline.gameObject.SetActive(isVisible);
+            _outlineCanvasGroup.alpha = isVisible ? 1 : 0;
         }
 
         /// <summary>
@@ -492,6 +518,11 @@ namespace Talent.GraphEditor.Unity.Runtime
         private void OnClicked(PointerEventData eventData)
         {
             _runtimeGraphEditor.OnClicked(this);
+        }
+
+        private void Focus()
+        {
+            _runtimeGraphEditor.PanZoom.FocusOnRectTransform(transform as RectTransform);
         }
     }
 }

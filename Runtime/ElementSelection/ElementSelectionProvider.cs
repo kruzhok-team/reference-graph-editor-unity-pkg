@@ -1,4 +1,5 @@
 using System;
+
 namespace Talent.GraphEditor.Unity.Runtime
 {
     /// <summary>
@@ -33,7 +34,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 return;
             }
 
-            if (!ReferenceEquals(_runtimeGraphEditor.EditingEdge, selectable) && _runtimeGraphEditor.EditingEdge != null)
+            if (!ReferenceEquals(_runtimeGraphEditor.EditingEdge, selectable) && _runtimeGraphEditor.EditingEdge != null && selectable is not EditingWindow)
             {
                 return;
             }

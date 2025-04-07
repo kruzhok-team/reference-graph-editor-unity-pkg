@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 namespace Talent.GraphEditor.Unity.Runtime
 {
-    public class EdgeView : MonoBehaviour, IEdgeView, IElementSelectable
+    public class EdgeView : MonoBehaviour, IEdgeView, IElementSelectable, IPointerDownHandler, IPointerUpHandler
     {
         /// <summary>
         /// Начальное представление узла
@@ -91,6 +91,11 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// Контейнер действий представления ребра
         /// </summary>
         public Transform ActionsContainer => _actionsContainer;
+        
+        /// <summary>
+        /// Линия, проходящая через ребро
+        /// </summary>
+        public EdgeLine Line => _line;
 
         /// <inheritdoc/>
         public GameObject SelectedObject => _bodyArea.gameObject;
@@ -100,12 +105,14 @@ namespace Talent.GraphEditor.Unity.Runtime
         private LineClickListener _lineClickListener;
         /// <inheritdoc/>
         public ISelectionContextSource SelectionContextSource => _selectionContextSource;
-
+        
         private void Awake()
         {
             _selectionContextSource = new SelectionContextSource();
-            _selectionContextSource.AddHotkeyAction(new(_cancelKeyCode, OnCancelHotkeyPressed));
-            _selectionContextSource.AddHotkeyAction(new(_deleteKeyCode, Delete));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(OnCancelHotkeyPressed, _cancelKeyCode));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Delete, _deleteKeyCode));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Duplicate,  KeyCode.LeftControl, KeyCode.D));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Focus, KeyCode.F));
         }
 
         private void OnEnable()
@@ -200,13 +207,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 _content.SetActive(false);
                 _outLine.localScale = Vector3.zero;
-
-                if (!TryGetComponent<LayoutElement>(out LayoutElement element))
-                {
-                    element = gameObject.AddComponent<LayoutElement>();
-
-                    element.ignoreLayout = true;
-                }
             }
             else
             {
@@ -231,15 +231,14 @@ namespace Talent.GraphEditor.Unity.Runtime
 
                 RefreshConditionAndActionsContainer();
             }
-
-            transform.SetParent(GetCommonDeepestParent(SourceView, TargetView), false);
+            
+            RecalculateParent();
         }
-    
-        private void Update()
+
+        public void DrawLine()
         {
             if (SourceView == null || TargetView == null)
             {
-                _otherNode?.SetOutlineVisibility(false);
                 NodeView otherNode = FindOtherNode();
                 if (otherNode != null)
                 {
@@ -255,9 +254,11 @@ namespace Talent.GraphEditor.Unity.Runtime
                         Transform parent = GetCommonDeepestParent(SourceView, otherNode);
                         transform.SetParent(parent);
                     }
-                
-                    otherNode.SetOutlineVisibility(true);
-                    _otherNode = otherNode;
+
+                    if (otherNode != _otherNode)
+                    {
+                        otherNode.SetOutlineVisibility(true);
+                    }
                 }
                 else
                 {
@@ -271,7 +272,10 @@ namespace Talent.GraphEditor.Unity.Runtime
                     }
 
                     transform.SetParent(_runtimeGraphEditor.GraphElementViewsContainer.transform);
+                    _otherNode?.SetOutlineVisibility(false);
                 }
+                
+                _otherNode = otherNode;
             }
             else
             {
@@ -328,6 +332,11 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             return null;
+        }
+
+        public void RecalculateParent()
+        {
+            transform.SetParent(GetCommonDeepestParent(SourceView, TargetView), false);
         }
     
         private Transform GetCommonDeepestParent(NodeView sourceView, NodeView targetView)
@@ -402,6 +411,11 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public void Delete()
         {
+            if (SourceView?.Vertex == NodeData.Vertex_Initial)
+            {
+                return;
+            }
+            
             _runtimeGraphEditor.RequestCreateUndoState();
 
             if (IsPreview)
@@ -461,8 +475,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             SourceView = null;
             _changeTargetConnection.Deactivate();
             _changeSourceConnection.Deactivate();
-        
-
+            
             _runtimeGraphEditor.ElementSelectionProvider.Select(this);
             _runtimeGraphEditor.EditingEdge = this;
             _runtimeGraphEditor.RequestCreateUndoState();
@@ -500,6 +513,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 _runtimeGraphEditor.UndoController.Undo();
             }
+
+            _runtimeGraphEditor.EditingEdge = null;
         }
 
         private void UpdateTriggerIcon(string id)
@@ -550,6 +565,11 @@ namespace Talent.GraphEditor.Unity.Runtime
         public void OpenEdgeEditor()
         {
             _runtimeGraphEditor.OpenEdgeEditor(this);
+        }
+        
+        public void Duplicate()
+        {
+            _runtimeGraphEditor.DuplicateEdgeView(this);
         }
 
         private void OnDrag(PointerEventData eventData)
@@ -665,15 +685,20 @@ namespace Talent.GraphEditor.Unity.Runtime
             _line.SetColor(isSelected ? _edgeSelectedColor : _edgeUnselectedColor);
         }
 
+        private void Focus()
+        {
+            _runtimeGraphEditor.PanZoom.FocusOnRectTransform(transform as RectTransform);
+        }
+
         private void OnDestroy()
         {
-            Unselect();
             if (!IsPreview)
             {
                 _lineClickListener.RemoveLine(_line);
             }
 
             Destroy(_line.gameObject);
+            Unselect();
         }
     }
 }

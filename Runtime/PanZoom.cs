@@ -12,7 +12,6 @@ namespace Talent.GraphEditor.Unity.Runtime
     public class PanZoom : MonoBehaviour
     {
         [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
-        [SerializeField] private EditNodeNamePopUp _editNodeNamePopUp;
         [SerializeField] private RenderController _renderController;
         [SerializeField] private TextMeshProUGUI _zoomValueText;
         [SerializeField] private RectTransform _targetRectTransform;
@@ -41,7 +40,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         private Vector2 _defaultMinMaxZoom;
         private Canvas _canvas;
 
-        private GameObject _selectedElement;
+        private IElementSelectable _selectedElement;
 
         private bool _isPanning;
         private bool _isAnimating;
@@ -87,19 +86,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private void OnElementSelected(IElementSelectable element)
         {
-            if (element == null)
-            {
-                return;
-            }
-
-            if (element.SelectedObject == _background.gameObject)
-            {
-                _selectedElement = null;
-
-                return;
-            }
-
-            _selectedElement = element.SelectedObject;
+            _selectedElement = element;
         }
 
         private void OnElementDeselected(IElementSelectable element)
@@ -109,7 +96,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private void Update()
         {
-            if (!Application.isFocused || _isAnimating)
+            if (!Application.isFocused || _isAnimating || _selectedElement is IPanZoomIgnorer)
             {
                 return;
             }
@@ -119,28 +106,13 @@ namespace Talent.GraphEditor.Unity.Runtime
                 return;
             }
 
-            if (_editNodeNamePopUp.gameObject.activeSelf)
-            {
-                return;
-            }
-
             if (Input.GetKeyDown(_focusHotkey))
             {
-                if (_runtimeGraphEditor.ElementSelectionProvider.CurrentSelectedElement == null || _runtimeGraphEditor.ElementSelectionProvider.CurrentSelectedElement.SelectedObject == _background.gameObject || Input.GetKey(_focusGraph))
+                if (_selectedElement == null || _selectedElement?.SelectedObject == _background.gameObject || Input.GetKey(_focusGraph))
                 {
                     AdjustView();
 
                     return;
-                }
-
-                switch (_runtimeGraphEditor.ElementSelectionProvider.CurrentSelectedElement)
-                {
-                    case EdgeView edgeView:
-                        FocusOnRectTransform(edgeView.transform as RectTransform, edgeView.SourceView.transform as RectTransform, edgeView.TargetView.transform as RectTransform);
-                        break;
-                    default:
-                        FocusOnRectTransform(_runtimeGraphEditor.ElementSelectionProvider.CurrentSelectedElement.SelectedObject.transform as RectTransform);
-                        break;
                 }
             }
 
@@ -160,9 +132,9 @@ namespace Talent.GraphEditor.Unity.Runtime
                 return;
             }
 
-            if (Input.GetMouseButtonDown(0) && !IsCusrorOverBlockZoomElement() &&
-                (_selectedElement == null && IsCursorOverElement(_background.gameObject) ||
-                    _selectedElement != null && !IsCursorOverElement(_selectedElement)))
+            if (Input.GetMouseButtonDown(0) && !IsCursorOverBlockZoomElement() &&
+                (_selectedElement == null || _selectedElement?.SelectedObject == _background.gameObject ||
+                    _selectedElement?.SelectedObject != null && !IsCursorOverElement(_selectedElement.SelectedObject)))
             {
                 _lastMousePos = Input.mousePosition;
 
@@ -200,7 +172,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             return false;
         }
 
-        private bool IsCusrorOverBlockZoomElement()
+        private bool IsCursorOverBlockZoomElement()
         {
             PointerEventData pointer = new(EventSystem.current);
             pointer.position = Input.mousePosition;
@@ -258,8 +230,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             backgroundUVRect.width = _defaultBackgroundWidth / currentScale;
             backgroundUVRect.height = _defaultBackgroundHeight / currentScale;
 
-            backgroundUVRect.x = (_defaultBackgroundWidth / 2) - (currentPosition.x + width / 2) * backgroundUVRect.width / width;
-            backgroundUVRect.y = (_defaultBackgroundHeight / 2) - (currentPosition.y + height / 2) * backgroundUVRect.height / height;
+            backgroundUVRect.x = _defaultBackgroundWidth / 2 - (currentPosition.x + width / 2) * backgroundUVRect.width / width;
+            backgroundUVRect.y = _defaultBackgroundHeight / 2 - (currentPosition.y + height / 2) * backgroundUVRect.height / height;
 
             _background.uvRect = backgroundUVRect;
         }
@@ -284,7 +256,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 _targetRectTransform.localScale = _defaultScale;
                 _targetRectTransform.localPosition = _defaultPosition;
 
-                _graphLayoutGroup.GetGraphCorners(out var left, out var top, out var right, out var bottom);
+                _graphLayoutGroup.GetGraphCorners(out float left, out float top, out float right, out float bottom);
 
                 CalculateFocusWithResolutionFactor(ref left, ref bottom, ref right, ref top, out float resolutionFactor);
 

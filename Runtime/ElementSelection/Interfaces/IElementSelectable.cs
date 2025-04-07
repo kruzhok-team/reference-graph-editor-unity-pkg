@@ -1,11 +1,10 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 namespace Talent.GraphEditor.Unity.Runtime
 {
     /// <summary>
     /// Интерфейс, описывающий объект, который можно выделить
     /// </summary>
-    public interface IElementSelectable : IPointerDownHandler, IPointerUpHandler
+    public interface IElementSelectable
     {
         /// <summary>
         /// Игровой объект, который считается выбранным при выделении

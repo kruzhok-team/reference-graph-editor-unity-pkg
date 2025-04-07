@@ -11,6 +11,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     public class NodeActionView : MonoBehaviour, INodeActionView
     {
         [SerializeField] private TextMeshProUGUI _parameterTMP;
+        [SerializeField] private GameObject _parameterContainer;
         [Header("Icons")]
         [SerializeField] private Transform _iconsContainer;
         [SerializeField] private Icon _singleIconPrefab;
@@ -50,6 +51,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             _runtimeGraphEditor = runtimeGraphEditor;
             _eventView = nodeEventView;
             _iconProvider = iconProvider;
+            _parameterContainer.SetActive(false);
 
             UpdateIcons(actionID);
         }
@@ -82,21 +84,22 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             _parameterValue = parameters;
 
-            if (_parameterTMP != null)
+            if (_parameterTMP != null && parameters.Count > 0)
             {
-                string parametersName = "";
+                string parameterValues = "";
 
                 foreach (Tuple<string, string> parameter in parameters)
                 {
-                    if (!string.IsNullOrEmpty(parametersName))
+                    if (!string.IsNullOrEmpty(parameterValues))
                     {
-                        parametersName += ", ";
+                        parameterValues += ", ";
                     }
 
-                    parametersName += parameter.Item2;
+                    parameterValues += parameter.Item2;
                 }
 
-                _parameterTMP.text = parametersName;
+                _parameterTMP.text = parameterValues;
+                _parameterContainer.SetActive(true);
             }
         }
     }

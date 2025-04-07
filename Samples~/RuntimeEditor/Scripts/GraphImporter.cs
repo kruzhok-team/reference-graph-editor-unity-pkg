@@ -24,6 +24,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             CyberiadaGraphDocument graphDocument = _converter.DeserializeFromFile(Path.Combine(Application.dataPath, "../", "test.xml"));
             _runtimeGraphEditor.SetGraphDocument(graphDocument);
             _runtimeGraphEditor.UndoController.DeleteAllUndo();
+            _runtimeGraphEditor.PanZoom.AdjustView();
         }
 
         /// <summary>

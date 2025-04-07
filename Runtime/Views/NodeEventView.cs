@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Talent.GraphEditor.Core;
 using TMPro;
@@ -9,7 +10,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// <summary>
     /// Представление перехода в узле
     /// </summary>
-    public class NodeEventView : MonoBehaviour, INodeEventView, IElementSelectable
+    public class NodeEventView : MonoBehaviour, INodeEventView, IElementSelectable, IPointerDownHandler, IPointerUpHandler
     {
         [SerializeField] private TextMeshProUGUI _triggerIDTMP;
         [SerializeField] private GridLayoutGroup _gridLayoutGroup;
@@ -65,7 +66,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         private void Awake()
         {
             _selectionContextSource = new SelectionContextSource();
-            _selectionContextSource.AddHotkeyAction(new(_deleteKeyCode, () => Delete()));
+            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Delete, _deleteKeyCode));
         }
 
         private void OnEnable()
@@ -308,6 +309,11 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 _nodeView.OpenEventContextMenu(this);
             }
+        }
+
+        private void OnDestroy()
+        {
+            Unselect();
         }
     }
 }

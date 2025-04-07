@@ -342,7 +342,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -1, y: 0}
+  m_SizeDelta: {x: -10, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &4080564332770732998
 MonoBehaviour:
@@ -540,7 +540,7 @@ MonoBehaviour:
   m_text: Option A
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
-  m_sharedMaterial: {fileID: 8107093715635093364, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
+  m_sharedMaterial: {fileID: 8107093715635093364, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -890,7 +890,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 3
+  m_ScrollSensitivity: 20
   m_Viewport: {fileID: 622547746285958367}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 1837811459936823337}
@@ -1127,7 +1127,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 2
 --- !u!1 &7242817232600256576
 GameObject:
   m_ObjectHideFlags: 0

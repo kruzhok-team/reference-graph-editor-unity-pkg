@@ -270,7 +270,7 @@ MonoBehaviour:
   _buttonsCanvasGroup: {fileID: 0}
   _nameEditButton: {fileID: 0}
   _connectionButtons: []
-  _outline: {fileID: 6962190809154929232}
+  _outlineCanvasGroup: {fileID: 2807646332727306189}
   _contextSelection: {fileID: 0}
   _nodeViewContextMenu: {fileID: 0}
   _actionContextMenu: {fileID: 0}
@@ -398,6 +398,7 @@ GameObject:
   - component: {fileID: 691980903579346450}
   - component: {fileID: 6165238592308883907}
   - component: {fileID: 6962190809154929232}
+  - component: {fileID: 2807646332727306189}
   m_Layer: 5
   m_Name: Outline
   m_TagString: Untagged
@@ -463,3 +464,15 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &2807646332727306189
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8800135468754673974}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
