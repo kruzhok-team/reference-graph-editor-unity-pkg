@@ -13,9 +13,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
  - Updated action's parameter view
  - Updated selection dropdowns scrolling
+ - Edge lines going into nested graph from its parent and back are included in parent layout now
+ - Various small UX/UI tweaks
+ - New nodes are spawning in view center now
 ### Fixed
  - Node layout now accounts nested graph edges
  - Proper default names for nodes
+ - Various clicking-through scenarios
 
 ## [1.0.1] - 27.02.2025
 ## First public release
