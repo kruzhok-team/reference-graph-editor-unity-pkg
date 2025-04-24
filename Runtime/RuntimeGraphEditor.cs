@@ -358,7 +358,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             _editNodeNamePopUp.Init(nodeView, desiredInitialName, needRebuild);
-            _editNodeNamePopUp.gameObject.SetActive(true);
         }
 
         /// <summary>
