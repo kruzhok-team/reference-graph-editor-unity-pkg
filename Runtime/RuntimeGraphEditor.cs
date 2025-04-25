@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using Talent.GraphEditor.Core;
 using Talent.Graphs;
 using TMPro;
+using UI.Focusing;
 using UnityEngine;
 using UnityEngine.UI;
 using Action = System.Action;
@@ -108,28 +109,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             _edgeEditorWindow.gameObject.SetActive(false);
         }
-        
-        private void Update()
-        {
-#pragma warning disable CS0252
-            if (EditingEdge != null && !EditingEdge.IsDraggableMode && ElementSelectionProvider.CurrentSelectedElement == EditingEdge && Input.GetMouseButton(0))
-#pragma warning restore CS0252
-            {
-                if (EditingEdge.FindOtherNode() == null)
-                {
-                    if (EditingEdge.IsPreview)
-                    {
-                        DestroyElementView(EditingEdge);
-                    }
-                    else
-                    {
-                        UndoController.Undo();
-                    }
-
-                    EditingEdge = null;
-                }
-            }
-        }
 
         /// <summary>
         /// Устанавливает ассет для получения спрайтов
@@ -190,7 +169,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             NodeView view = (NodeView)GraphEditor.CreateNewNode("Новое состояние");
             if (EditingEdge == null)
             {
-                view.Select(false);
+                view.Select();
             }
 
             OpenNodeNamePopUp(view.ID);
@@ -314,7 +293,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                     end, trigger, condition,
                     _iconSpriteProviderAsset, _lineClickListener);
                 EditingEdge = null;
-                edgeView.Select(false);
+                edgeView.Select();
             }
 
             GraphEditor.ChangeEdgeTrigger(edgeView, trigger);
@@ -340,7 +319,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         public void CancelEditingWindow()
         {
             _edgeEditorWindow.gameObject.SetActive(false);
-            ElementSelectionProvider.Unselect(_edgeEditorWindow);
             UndoController.DeleteAllUndo(_edgeEditorWindow);
         }
 
@@ -407,7 +385,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             EditingEdge.ConnectSourceView(sourceView);
             LayoutRebuilder.ForceRebuildLayoutImmediate(EditingEdge.transform as RectTransform);
             EditingEdge.transform.position = position;
-            ElementSelectionProvider.Select(EditingEdge);
         }
 
         /// <summary>
@@ -507,7 +484,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             if (ParentingingNode == nodeView)
             {
                 ParentingingNode = null;
-                nodeView.Unselect();
             }
         }
 

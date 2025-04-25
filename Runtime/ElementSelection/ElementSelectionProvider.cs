@@ -64,12 +64,12 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             if (_runtimeGraphEditor.TryGetEdgeViewById(id, out EdgeView edgeView))
             {
-                edgeView.Select(false);
+                edgeView.Select();
             }
 
             if (_runtimeGraphEditor.TryGetNodeViewById(id, out NodeView nodeView))
             {
-                nodeView.Select(false);
+                nodeView.Select();
             }
         }
 

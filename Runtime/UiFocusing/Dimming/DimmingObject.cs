@@ -44,6 +44,8 @@ namespace UI.Focusing
 
                 canvas.overrideSorting = true;
                 canvas.sortingOrder = _sortOrder + 1;
+
+                graphicRaycaster.enabled = true;
             }
         }
 
@@ -51,14 +53,9 @@ namespace UI.Focusing
         {
             foreach (GameObject element in excludeElements)
             {
-                if (element.TryGetComponent(out GraphicRaycaster graphicRaycaster))
-                {
-                    Destroy(graphicRaycaster);
-                }
-
                 if (element.TryGetComponent(out Canvas canvas))
                 {
-                    Destroy(canvas);
+                    canvas.overrideSorting = false;
                 }
             }
 

@@ -1,3 +1,4 @@
+using UI.Focusing;
 using UnityEngine;
 using UnityEngine.UI;
 namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
@@ -7,6 +8,7 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
     /// </summary>
     public class ActionContextMenu : MonoBehaviour
     {
+        [SerializeField] private SimpleContextLevel _context;
         [SerializeField] private NodeView _nodeView;
 
         [Space]
@@ -23,6 +25,8 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
         public void Init(NodeEventView eventView)
         {
             _eventView = eventView;
+
+            _context.PushLayer();
         }
 
         private void OnEnable()
@@ -35,24 +39,18 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
         {
             _editButton.onClick.RemoveListener(OnEditClicked);
             _deleteButton.onClick.RemoveListener(OnDeleteClicked);
-
-            if (_eventView != null)
-            {
-                _eventView.Unselect();
-            }
         }
 
         private void OnEditClicked()
         {
             _eventView.OpenEventEditor();
-            _nodeView.Select(false);
-            _eventView.Select(false);
+            _nodeView.Select();
         }
 
         private void OnDeleteClicked()
         {
             _eventView.Delete();
-            _nodeView.Select(false);
+            _nodeView.Select();
         }
     }
 }

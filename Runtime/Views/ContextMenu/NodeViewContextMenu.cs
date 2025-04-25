@@ -1,3 +1,4 @@
+using UI.Focusing;
 using UnityEngine;
 using UnityEngine.UI;
 namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
@@ -7,6 +8,7 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
     /// </summary>
     public class NodeViewContextMenu : MonoBehaviour
     {
+        [SerializeField] private SimpleContextLevel _context;
         [SerializeField] private NodeView _nodeView;
 
         [Space]
@@ -19,6 +21,11 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
         [SerializeField] private Button _childNodeButton;
         [SerializeField] private Button _dublicateButton;
         [SerializeField] private Button _deleteButton;
+
+        public void Init()
+        {
+            _context.PushLayer();
+        }
 
         private void OnEnable()
         {
@@ -45,19 +52,19 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
         private void OnNewActionClicked()
         {
             _nodeView.AddEvent();
-            _nodeView.Select(false);
+            _nodeView.Select();
         }
 
         private void OnUnparentClicked()
         {
             _nodeView.Unparent();
-            _nodeView.Select(false);
+            _nodeView.Select();
         }
 
         private void OnParentClicked()
         {
             _nodeView.ConnectParent();
-            _nodeView.Select(false);
+            _nodeView.Select();
             gameObject.SetActive(false);
             _container.SetActive(false);
         }
@@ -65,19 +72,18 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
         private void OnChildNodeClicked()
         {
             _nodeView.AddChildNode();
-            _nodeView.Select(false);
+            _nodeView.Select();
         }
 
         private void OnDublicateClicked()
         {
             _nodeView.Duplicate();
-            _nodeView.Select(false);
+            _nodeView.Select();
         }
 
         private void OnDeleteClicked()
         {
             _nodeView.Delete();
-            _nodeView.Unselect();
         }
     }
 }

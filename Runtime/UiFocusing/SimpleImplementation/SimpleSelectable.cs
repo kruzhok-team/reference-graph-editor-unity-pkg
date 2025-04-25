@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 namespace UI.Focusing
 {
@@ -14,8 +14,11 @@ namespace UI.Focusing
 
         [SerializeField] private SelectionBinding[] _bindings = new SelectionBinding[0];
         [SerializeField] private bool _isSingleSelection = true;
+        [SerializeField] private GameObject _overrideSelectionObject;
 
         public bool IsSingleSelection => _isSingleSelection;
+        public GameObject Object => _overrideSelectionObject ?? gameObject;
+
 
         private HashSet<SelectionBinding> _cashedBindings = new();
 
@@ -61,7 +64,7 @@ namespace UI.Focusing
                     UIFocusingSystem.Instance.Select(this);
 
                     binding.OnPerformed?.Invoke();
-
+                    
                     break;
                 }
             }

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace UI.Focusing
 {
     public interface ISelectable
@@ -6,5 +8,6 @@ namespace UI.Focusing
         void Deselect();
 
         bool IsSingleSelection { get; }
+        GameObject Object { get; }
     }
 }

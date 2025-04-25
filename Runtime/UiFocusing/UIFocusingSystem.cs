@@ -8,7 +8,7 @@ namespace UI.Focusing
     {
         private IHotkeyHandler _hotkeyHandler;
         private IDimmingHandler _dimmingHandler;
-        private ISelectionHandler _selectionHandler;
+        public ISelectionHandler SelectionHandler { get; private set; }
 
         private Stack<IContextLayer> _contextStack = new();
         public IEnumerable<IContextLayer> ContextsInOrder => _contextStack.Reverse();
@@ -19,7 +19,7 @@ namespace UI.Focusing
         {
             _hotkeyHandler = hotkeyHandler;
             _dimmingHandler = dimmingHandler;
-            _selectionHandler = selectionHandler;
+            SelectionHandler = selectionHandler;
 
             Instance = this;
         }
@@ -28,11 +28,13 @@ namespace UI.Focusing
 
         public void PushContextLayer(IContextLayer context)
         {
-            if (!_contextStack.Contains(context))
+            if (_contextStack.Contains(context))
             {
-                _contextStack.Push(context);
-                _hotkeyHandler.RegisterHotkeysMapping(context);
+                return;
             }
+
+            _contextStack.Push(context);
+            _hotkeyHandler.RegisterHotkeysMapping(context);
 
             context.Activate();
 
@@ -104,12 +106,12 @@ namespace UI.Focusing
 
         public void Select(ISelectable selectable)
         {
-            _selectionHandler.Select(selectable);
+            SelectionHandler.Select(selectable);
         }
 
         public void Deselect(ISelectable selectable)
         {
-            _selectionHandler.Deselect(selectable);
+            SelectionHandler.Deselect(selectable);
         }
 
         #endregion

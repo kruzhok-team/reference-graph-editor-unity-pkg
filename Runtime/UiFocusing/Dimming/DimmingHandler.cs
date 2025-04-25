@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace UI.Focusing
@@ -15,15 +16,14 @@ namespace UI.Focusing
 
         private IEnumerable<GameObject> _currentFocused;
 
-        public void EnableDimming(IEnumerable<GameObject> FocusedElements)
+        public void EnableDimming(IEnumerable<GameObject> focusedElements)
         {
             if (_currentFocused != null)
             {
                 DisableDimming();
             }
 
-            _currentFocused = FocusedElements;
-
+            _currentFocused = focusedElements;
             _dimmingObject.EnableDimming(_currentFocused);
         }
 

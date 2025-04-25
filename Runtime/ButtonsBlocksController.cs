@@ -1,5 +1,7 @@
+using UI.Focusing;
 using UnityEngine;
 using UnityEngine.UI;
+
 namespace Talent.GraphEditor.Unity.Runtime
 {
     /// <summary>
@@ -17,55 +19,78 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         [SerializeField] private Button _unparentButton;
 
-        private IElementSelectable _selectedElement;
+        private ISelectable _selectedElement;
 
         private void Start()
         {
-            _runtimeGraphEditor.ElementSelectionProvider.Selected += OnElementSelected;
-            _runtimeGraphEditor.ElementSelectionProvider.Deselected += OnElementDeselected;
+            UIFocusingSystem.Instance.SelectionHandler.ElementSelected += OnElementSelected;
+            UIFocusingSystem.Instance.SelectionHandler.ElementDeselected += OnElementDeselected;
+
             _runtimeGraphEditor.StartEdgeEditing += OnStartEdgeEditing;
             _runtimeGraphEditor.EndEdgeEditing += OnEndEdgeEditing;
+
             OnElementDeselected(null);
         }
 
         private void OnDestroy()
         {
-            _runtimeGraphEditor.ElementSelectionProvider.Selected -= OnElementSelected;
-            _runtimeGraphEditor.ElementSelectionProvider.Deselected -= OnElementDeselected;
+            UIFocusingSystem.Instance.SelectionHandler.ElementSelected -= OnElementSelected;
+            UIFocusingSystem.Instance.SelectionHandler.ElementDeselected -= OnElementDeselected;
+
             _runtimeGraphEditor.StartEdgeEditing -= OnStartEdgeEditing;
             _runtimeGraphEditor.EndEdgeEditing -= OnEndEdgeEditing;
         }
 
         /// <summary>
-        /// Функция обратного вызова, срабатывающее при нажатии на кнопек редактирования
+        /// Универсальный метод: пытается получить компонент View указанного типа T
+        /// из текущего выбранного ISelectable.
         /// </summary>
-        public void OnEditButtonPressed()
+        private bool TryGetView<T>(out T view) where T : Component
         {
-            switch (_selectedElement)
-            {
-                case NodeEventView nodeEventView:
-                    nodeEventView.OpenEventEditor();
-                    break;
-                case EdgeView edgeView:
-                    if (_runtimeGraphEditor.EditingEdge != null && _runtimeGraphEditor.EditingEdge.IsPreview)
-                    {
-                        return;
-                    }
+            view = null;
 
-                    edgeView.OpenEdgeEditor();
-                    break;
-                default:
-                    OnElementDeselected(null);
-                    break;
+            if (_selectedElement == null || _selectedElement.Object == null)
+            {
+                return false;
             }
+
+            return _selectedElement.Object.TryGetComponent(out view);
         }
 
         /// <summary>
-        /// Функция обратного вызова, срабатывающая при нажатии на кнопку создания узла
+        /// Вызывается при нажатии кнопки "Редактировать"
+        /// Открывает редактор события или редактор ребра.
+        /// </summary>
+        public void OnEditButtonPressed()
+        {
+            if (TryGetView(out NodeEventView nodeEventView))
+            {
+                nodeEventView.OpenEventEditor();
+
+                return;
+            }
+
+            if (TryGetView(out EdgeView edgeView))
+            {
+                if (_runtimeGraphEditor.EditingEdge != null && _runtimeGraphEditor.EditingEdge.IsPreview)
+                {
+                    return;
+                }
+
+                edgeView.OpenEdgeEditor();
+
+                return;
+            }
+
+            OnElementDeselected(null);
+        }
+
+        /// <summary>
+        /// Вызывается при нажатии кнопки "Добавить событие" на узле
         /// </summary>
         public void OnCreateNodeButtonPressed()
         {
-            if (_selectedElement is NodeView nodeView)
+            if (TryGetView(out NodeView nodeView))
             {
                 nodeView.AddEvent();
             }
@@ -76,11 +101,11 @@ namespace Talent.GraphEditor.Unity.Runtime
         }
 
         /// <summary>
-        /// Функция обратного вызова, срабатывающая при нажатии на кнопку "Сделать узел дочерним"
+        /// Вызывается при нажатии кнопки "Сделать узел дочерним"
         /// </summary>
         public void OnChildNodeButtonPressed()
         {
-            if (_selectedElement is NodeView nodeView)
+            if (TryGetView(out NodeView nodeView))
             {
                 nodeView.AddChildNode();
             }
@@ -91,11 +116,11 @@ namespace Talent.GraphEditor.Unity.Runtime
         }
 
         /// <summary>
-        /// Функция обратного вызова, срабатывающая при нажатии на кнопку "Сделать узел родительским"
+        /// Вызывается при нажатии кнопки "Сделать узел родительским"
         /// </summary>
         public void OnParentNodeButtonPressed()
         {
-            if (_selectedElement is NodeView nodeView)
+            if (TryGetView(out NodeView nodeView))
             {
                 nodeView.ConnectParent();
                 _nodeSelectionBlock.SetActive(false);
@@ -107,30 +132,33 @@ namespace Talent.GraphEditor.Unity.Runtime
         }
 
         /// <summary>
-        /// Функция обратного вызова, срабатывающая при нажатии на кнопку "Дублировать"
+        /// Вызывается при нажатии кнопки "Дублировать"
+        /// Дублирует узел или ребро.
         /// </summary>
         public void OnDuplicateButtonPressed()
         {
-            switch (_selectedElement)
+            if (TryGetView(out NodeView nodeView))
             {
-                case NodeView nodeView:
-                    nodeView.Duplicate();
-                    break;
-                case EdgeView edgeView:
-                    edgeView.Duplicate();
-                    break;
-                default:
-                    OnElementDeselected(null);
-                    break;
+                nodeView.Duplicate();
+
+                return;
             }
+            if (TryGetView(out EdgeView edgeView))
+            {
+                edgeView.Duplicate();
+
+                return;
+            }
+
+            OnElementDeselected(null);
         }
 
         /// <summary>
-        /// Функция обратного вызова, срабатывающая при нажатии на кнопку, которая делает узел не родительским
+        /// Вызывается при нажатии кнопки "Удалить связь с родителем"
         /// </summary>
         public void OnUnparentButtonPressed()
         {
-            if (_selectedElement is NodeView nodeView)
+            if (TryGetView(out NodeView nodeView))
             {
                 nodeView.Unparent();
             }
@@ -141,30 +169,36 @@ namespace Talent.GraphEditor.Unity.Runtime
         }
 
         /// <summary>
-        /// Функция обратного вызова, срабатывающая при нажатии на кнопку удаления
+        /// Вызывается при нажатии кнопки "Удалить"
+        /// Удаляет узел, событие или ребро в зависимости от выбора.
         /// </summary>
         public void OnDeleteButtonPressed()
         {
-            switch (_selectedElement)
+            if (TryGetView(out NodeView nodeView))
             {
-                case NodeView nodeView:
-                    nodeView.Delete();
-                    break;
-                case NodeEventView nodeEventView:
-                    nodeEventView.Delete();
-                    break;
-                case EdgeView edgeView:
-                    edgeView.Delete();
-                    break;
-                default:
-                    _noSelectionBlock.SetActive(true);
-                    break;
+                nodeView.Delete();
+            }
+            else if (TryGetView(out NodeEventView nodeEventView))
+            {
+                nodeEventView.Delete();
+            }
+            else if (TryGetView(out EdgeView edgeView))
+            {
+                edgeView.Delete();
+            }
+            else
+            {
+                _noSelectionBlock.SetActive(true);
             }
 
             OnElementDeselected(null);
         }
 
-        private void OnElementSelected(IElementSelectable element)
+        /// <summary>
+        /// Обработчик события выбора элемента в системе UIFocusing
+        /// Отображает соответствующий блок кнопок
+        /// </summary>
+        private void OnElementSelected(ISelectable element)
         {
             _selectedElement = element;
 
@@ -173,37 +207,51 @@ namespace Talent.GraphEditor.Unity.Runtime
             _stateSelectionBlock.SetActive(false);
             _edgeSelectionBlock.SetActive(false);
 
-            switch (element)
+            if (_selectedElement == null)
             {
-                case null:
-                    break;
-                case NodeView nodeView:
-
-                    if (nodeView.Vertex == "initial")
-                    {
-                        OnElementDeselected(null);
-                        break;
-                    }
-
-                    _nodeSelectionBlock.SetActive(true);
-                    _unparentButton.interactable = nodeView.HasParent;
-                    break;
-                case NodeEventView _:
-                    _stateSelectionBlock.SetActive(true);
-                    break;
-                case EdgeView edgeView:
-                    if (edgeView.SourceView.Vertex != "initial")
-                    {
-                        _edgeSelectionBlock.SetActive(true);
-                    }
-                    break;
-                default:
-                    _noSelectionBlock.SetActive(true);
-                    break;
+                return;
             }
+
+            if (TryGetView(out NodeView nodeView))
+            {
+                if (nodeView.Vertex == "initial")
+                {
+                    OnElementDeselected(null);
+
+                    return;
+                }
+
+                _nodeSelectionBlock.SetActive(true);
+                _unparentButton.interactable = nodeView.HasParent;
+
+                return;
+            }
+
+            if (TryGetView<NodeEventView>(out _))
+            {
+                _stateSelectionBlock.SetActive(true);
+
+                return;
+            }
+
+            if (TryGetView(out EdgeView edgeView))
+            {
+                if (edgeView.SourceView.Vertex != "initial")
+                {
+                    _edgeSelectionBlock.SetActive(true);
+                }
+
+                return;
+            }
+
+            _noSelectionBlock.SetActive(true);
         }
 
-        private void OnElementDeselected(IElementSelectable element)
+        /// <summary>
+        /// Обработчик события сброса выбора
+        /// Скрывает все блоки, активирует блок "нет выбора"
+        /// </summary>
+        private void OnElementDeselected(ISelectable element)
         {
             _noSelectionBlock.SetActive(true);
             _nodeSelectionBlock.SetActive(false);
@@ -211,15 +259,20 @@ namespace Talent.GraphEditor.Unity.Runtime
             _edgeSelectionBlock.SetActive(false);
 
             _unparentButton.interactable = false;
-
             _selectedElement = null;
         }
 
+        /// <summary>
+        /// Отключает интерактивность кнопок при старте редактирования ребра
+        /// </summary>
         private void OnStartEdgeEditing()
         {
             _canvasGroup.interactable = false;
         }
 
+        /// <summary>
+        /// Включает интерактивность кнопок по завершении редактирования ребра
+        /// </summary>
         private void OnEndEdgeEditing()
         {
             _canvasGroup.interactable = true;
