@@ -31,7 +31,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3039836523217217071}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -107,7 +106,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6297848795511597385}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -183,7 +181,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3039836523217217071}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -259,7 +256,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6297848795511597385}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -336,7 +332,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 736689617151908400}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -416,13 +411,14 @@ GameObject:
   - component: {fileID: 1924083757710034652}
   - component: {fileID: 7981928948848246608}
   - component: {fileID: 6807164492790824938}
+  - component: {fileID: 3478701583425657936}
   m_Layer: 5
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &413716210151685326
 RectTransform:
   m_ObjectHideFlags: 0
@@ -437,7 +433,6 @@ RectTransform:
   m_Children:
   - {fileID: 3153670467557745686}
   m_Father: {fileID: 736689617151908400}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -558,6 +553,96 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 238b9ca111009e34bb26aeb09c308d75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3478701583425657936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4323548875432940802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e600ea56bf0e9fe43990069b08333ff4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Selected:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7682405451896418457}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 6878460867256339330}
+        m_TargetAssemblyTypeName: UI.Focusing.SimpleContextLevel, UiFocusing
+        m_MethodName: PushLayer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  Deselected:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7682405451896418457}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6878460867256339330}
+        m_TargetAssemblyTypeName: UI.Focusing.SimpleContextLevel, UiFocusing
+        m_MethodName: RemoveLayer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _bindings:
+  - MouseButton: 0
+    OnPerformed:
+      m_PersistentCalls:
+        m_Calls: []
+  - MouseButton: 1
+    OnPerformed:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1211686018900066736}
+          m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.NodeEventView,
+            org.kruzhok.talent.grapheditor.unity.runtime
+          m_MethodName: OpenContextMenu
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  _isSingleSelection: 1
+  _overrideSelectionObject: {fileID: 4847937405928801484}
 --- !u!1 &4847937405928801484
 GameObject:
   m_ObjectHideFlags: 0
@@ -570,6 +655,7 @@ GameObject:
   - component: {fileID: 4979684410018208157}
   - component: {fileID: 1211686018900066736}
   - component: {fileID: 2367120986003265323}
+  - component: {fileID: 6878460867256339330}
   m_Layer: 5
   m_Name: NodeEventView
   m_TagString: Untagged
@@ -594,7 +680,6 @@ RectTransform:
   - {fileID: 1726533503233268794}
   - {fileID: 413716210151685326}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -639,6 +724,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea5cdfaaf2a11744bbf94f7aa2c94d99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _context: {fileID: 6878460867256339330}
   _triggerIDTMP: {fileID: 0}
   _gridLayoutGroup: {fileID: 1454557004623107985}
   _actionsContainer: {fileID: 1726533503233268794}
@@ -666,6 +752,60 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
+--- !u!114 &6878460867256339330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4847937405928801484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32f0fecd4e233a14186825b1b4fe0e21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Activated:
+    m_PersistentCalls:
+      m_Calls: []
+  Deactivated:
+    m_PersistentCalls:
+      m_Calls: []
+  _blockOtherHotkeys: 0
+  _bindings:
+  - ActionReference: {fileID: -8471510705306056717, guid: 652f98e79e85c94458c55e86289ddd10, type: 3}
+    OnPerformed:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1211686018900066736}
+          m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.NodeEventView,
+            org.kruzhok.talent.grapheditor.unity.runtime
+          m_MethodName: Delete
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionReference: {fileID: 1418151547802526976, guid: 652f98e79e85c94458c55e86289ddd10, type: 3}
+    OnPerformed:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3478701583425657936}
+          m_TargetAssemblyTypeName: UI.Focusing.SimpleSelectable, UiFocusing
+          m_MethodName: ResetSelection
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  _focusedElements: []
 --- !u!1 &6975571998392073625
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,7 +836,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3039836523217217071}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -746,7 +885,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3153670467557745686
 RectTransform:
   m_ObjectHideFlags: 0
@@ -760,7 +899,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 413716210151685326}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -840,7 +978,6 @@ RectTransform:
   - {fileID: 8168122883725388350}
   - {fileID: 7571959451155506927}
   m_Father: {fileID: 736689617151908400}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -935,7 +1072,6 @@ RectTransform:
   - {fileID: 8916352616748884287}
   - {fileID: 1465158308263172093}
   m_Father: {fileID: 736689617151908400}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
