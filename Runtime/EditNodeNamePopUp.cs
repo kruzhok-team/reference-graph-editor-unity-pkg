@@ -8,7 +8,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// <summary>
     /// Класс, отвечающий за редактор имени узла
     /// </summary>
-    public class EditNodeNamePopUp : MonoBehaviour, IUndoable, IPanZoomIgnorer
+    public class EditNodeNamePopUp : MonoBehaviour, IUndoable
     {
         private const string NotUniqueNameError = "Состояние с таким именем уже существует на этом уровне";
 
@@ -25,12 +25,9 @@ namespace Talent.GraphEditor.Unity.Runtime
         private NodeView _nodeView;
         private bool _needRebuild;
         private string _desiredInitialName;
-        private SelectionContextSource _selectionContextSource;
 
         public string GetUndoContext() => _desiredInitialName;
         public string GetCurrentContext() => _nodeNameInputField.text;
-        public GameObject SelectedObject => gameObject;
-        public ISelectionContextSource SelectionContextSource => _selectionContextSource;
 
         /// <summary>
         /// Инициализирует <see cref="EditNodeNamePopUp"/>
@@ -90,7 +87,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             if (_needRebuild)
             {
                 _runtimeGraphEditor.Rebuild();
-                _runtimeGraphEditor.ElementSelectionProvider.Select(_nodeView.ID);
+                _runtimeGraphEditor.Select(_nodeView.ID);
             }
 
             _contextLayer.RemoveLayer();
@@ -98,8 +95,6 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         public void Cancel()
         {
-            _nodeView.Delete();
-
             _contextLayer.RemoveLayer();
         }
 

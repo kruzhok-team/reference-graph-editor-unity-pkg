@@ -12,7 +12,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// <summary>
     /// Окно редактирования элементов графа
     /// </summary>
-    public class EditingWindow : MonoBehaviour, IUndoable, IPanZoomIgnorer
+    public class EditingWindow : MonoBehaviour, IUndoable
     {
         [SerializeField] private SimpleContextLevel _context;
 
@@ -68,11 +68,6 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private void OnEnable()
         {
-            if (_runtimeGraphEditor.ElementSelectionProvider == null)
-            {
-                return;
-            }
-
             _runtimeGraphEditor.UndoController.LockUndoable(this);
             _runtimeGraphEditor.LineClickListener.enabled = false;
 

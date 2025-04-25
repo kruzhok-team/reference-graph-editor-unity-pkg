@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UI.Focusing;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -11,6 +12,8 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// </summary>
     public class PanZoom : MonoBehaviour
     {
+        [SerializeField] private SimpleContextLevel _context;
+
         [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
         [SerializeField] private RenderController _renderController;
         [SerializeField] private TextMeshProUGUI _zoomValueText;
@@ -24,10 +27,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         [SerializeField] private Vector2 _leftBottomSizeBorders = new Vector2(1500, 1000);
         [SerializeField] private Vector2 _leftBottomSizeOffsets = new Vector2(600, 400);
 
-        [Header("Hotkeys")]
-        [SerializeField] private KeyCode _focusHotkey = KeyCode.F;
-        [SerializeField] private KeyCode _focusGraph = KeyCode.LeftShift;
-
         private RectTransform _backgroundRectTransform;
         private Vector2 _defaultScale;
         private float _defaultWidth;
@@ -40,10 +39,10 @@ namespace Talent.GraphEditor.Unity.Runtime
         private Vector2 _defaultMinMaxZoom;
         private Canvas _canvas;
 
-        private IElementSelectable _selectedElement;
-
         private bool _isPanning;
         private bool _isAnimating;
+
+        private ISelectable _selectedElement;
 
         private const string BlockZoomTag = "BlockZoom";
 
@@ -53,6 +52,17 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 Init();
             }
+
+            UIFocusingSystem.Instance.SelectionHandler.ElementSelected += ElementSelected;
+
+            _context.PushLayer();
+        }
+
+        private void OnDestroy()
+        {
+            UIFocusingSystem.Instance.SelectionHandler.ElementSelected -= ElementSelected;
+
+            _context.RemoveLayer();
         }
 
         private void Init()
@@ -68,9 +78,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             _defaultPosition = _targetRectTransform.localPosition;
 
             _defaultMinMaxZoom = _minMaxZoom;
-
-            _runtimeGraphEditor.ElementSelectionProvider.Selected += OnElementSelected;
-            _runtimeGraphEditor.ElementSelectionProvider.Deselected += OnElementDeselected;
         }
 
         private void OnDisable()
@@ -78,25 +85,14 @@ namespace Talent.GraphEditor.Unity.Runtime
             _isAnimating = false;
         }
 
-        private void OnDestroy()
-        {
-            _runtimeGraphEditor.ElementSelectionProvider.Selected -= OnElementSelected;
-            _runtimeGraphEditor.ElementSelectionProvider.Deselected -= OnElementDeselected;
-        }
-
-        private void OnElementSelected(IElementSelectable element)
+        private void ElementSelected(ISelectable element)
         {
             _selectedElement = element;
         }
 
-        private void OnElementDeselected(IElementSelectable element)
-        {
-            _selectedElement = null;
-        }
-
         private void Update()
         {
-            if (!Application.isFocused || _isAnimating || _selectedElement is IPanZoomIgnorer)
+            if (!Application.isFocused || _isAnimating)
             {
                 return;
             }
@@ -104,16 +100,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             if (!IsCursorWithinScreen(Input.mousePosition))
             {
                 return;
-            }
-
-            if (Input.GetKeyDown(_focusHotkey))
-            {
-                if (_selectedElement == null || _selectedElement?.SelectedObject == _background.gameObject || Input.GetKey(_focusGraph))
-                {
-                    AdjustView();
-
-                    return;
-                }
             }
 
             HandlePan();
@@ -133,8 +119,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             if (Input.GetMouseButtonDown(0) && !IsCursorOverBlockZoomElement() &&
-                (_selectedElement == null || _selectedElement?.SelectedObject == _background.gameObject ||
-                    _selectedElement?.SelectedObject != null && !IsCursorOverElement(_selectedElement.SelectedObject)))
+                (_selectedElement == null || _selectedElement?.Object == _background.gameObject ||
+                    _selectedElement?.Object != null && !IsCursorOverElement(_selectedElement.Object)))
             {
                 _lastMousePos = Input.mousePosition;
 
@@ -236,11 +222,18 @@ namespace Talent.GraphEditor.Unity.Runtime
             _background.uvRect = backgroundUVRect;
         }
 
-        public void AdjustView()
+        public void AdjustView(bool overrideFocusOnGraph = false)
         {
             if (_canvas == null)
             {
                 Init();
+            }
+
+            if (_selectedElement != null && _selectedElement.Object != _background.gameObject && !overrideFocusOnGraph && _selectedElement.Object.TryGetComponent(out RectTransform rectTransform))
+            {
+                FocusOnRectTransform(rectTransform);
+
+                return;
             }
 
             _isAnimating = false;

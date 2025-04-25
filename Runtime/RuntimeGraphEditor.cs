@@ -43,10 +43,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public CyberiadaGraphDocument GraphDocument => GraphEditor.GraphDocument;
         /// <summary>
-        /// Объект, дающий возможность выбирать активный элемент
-        /// </summary>
-        public IElementSelectionProvider ElementSelectionProvider { get; private set; }
-        /// <summary>
         /// Объект, дающий возможность отменять предыдущее действие
         /// </summary>
         public UndoController UndoController => _undoController;
@@ -101,7 +97,6 @@ namespace Talent.GraphEditor.Unity.Runtime
     
         private void Awake()
         {
-            ElementSelectionProvider = new ElementSelectionProvider(this);
             _converter = new CyberiadaGraphMLConverter(Application.productName, Application.version);
         }
 
@@ -200,11 +195,25 @@ namespace Talent.GraphEditor.Unity.Runtime
             if (nodeView.IsUniqueNodeName(nodeView.VisualData.Name))
             {
                 Rebuild();
-                ElementSelectionProvider.Select(nodeView.ID);
+                Select(nodeView.ID);
             }
             else
             {
                 OpenNodeNamePopUp(nodeView.ID, nodeView.VisualData.Name, true);
+            }
+        }
+
+        /// <inheritdoc/>
+        public void Select(string id)
+        {
+            if (TryGetEdgeViewById(id, out EdgeView edgeView))
+            {
+                edgeView.Select();
+            }
+
+            if (TryGetNodeViewById(id, out NodeView nodeView))
+            {
+                nodeView.Select();
             }
         }
 
