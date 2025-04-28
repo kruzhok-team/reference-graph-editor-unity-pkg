@@ -28,6 +28,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         public bool IsDraggableMode { get; set; }
 
         [SerializeField] private SimpleSelectable _selectable;
+        [SerializeField] private SimpleContextLevel _contextMenuLevel;
 
         [SerializeField] private EdgeEditingButton _changeSourceConnection;
         [SerializeField] private EdgeEditingButton _changeTargetConnection;
@@ -208,6 +209,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             
             RecalculateParent();
             RefreshtConnections(false);
+
+            _contextMenuLevel.AddFocusedElements(SourceView.gameObject, TargetView.gameObject, _line.gameObject);
         }
 
         public void Select()
@@ -405,6 +408,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             _runtimeGraphEditor.GraphEditor.RemoveEdge(this);
+
+            SourceView.RemoveEdge(this);
         }
 
         /// <summary>
@@ -497,24 +502,14 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         public void RefreshtConnections(bool isSelected)
         {
-            if (SourceView?.Vertex != NodeData.Vertex_Initial)
+            if (isSelected && SourceView?.Vertex != NodeData.Vertex_Initial)
             {
-                if (isSelected)
-                {
-                    _changeSourceConnection.Activate();
-                }
-                else
-                {
-                    _changeSourceConnection.Deactivate();
-                }
-            }
-
-            if (isSelected)
-            {
+                _changeSourceConnection.Activate();
                 _changeTargetConnection.Activate();
             }
             else
             {
+                _changeSourceConnection.Deactivate();
                 _changeTargetConnection.Deactivate();
             }
 

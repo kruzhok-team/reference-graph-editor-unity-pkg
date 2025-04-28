@@ -1,3 +1,4 @@
+using Talent.GraphEditor.Core;
 using UI.Focusing;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,7 +25,17 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
 
         public void Init()
         {
+            foreach (EdgeView edgeView in _nodeView.EdgeViews)
+            {
+                _context.AddFocusedElements(edgeView.gameObject, edgeView.Line.gameObject);
+            }
+
             _context.PushLayer();
+        }
+
+        public void RemoveEdge(EdgeView edgeView)
+        {
+            _context.RemoveFocusedElements(edgeView.gameObject, edgeView.Line.gameObject);
         }
 
         private void OnEnable()

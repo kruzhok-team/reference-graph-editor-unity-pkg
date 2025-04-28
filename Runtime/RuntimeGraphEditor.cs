@@ -5,7 +5,6 @@ using System.Xml.Linq;
 using Talent.GraphEditor.Core;
 using Talent.Graphs;
 using TMPro;
-using UI.Focusing;
 using UnityEngine;
 using UnityEngine.UI;
 using Action = System.Action;

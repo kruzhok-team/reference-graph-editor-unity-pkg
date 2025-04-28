@@ -31,14 +31,14 @@ namespace Talent.GraphEditor.Unity.Runtime
         [SerializeField] private NodeViewContextMenu _nodeViewContextMenu;
         [SerializeField] private ActionContextMenu _actionContextMenu;
 
-        [Header("Hotkeys")]
-        [SerializeField] private KeyCode _cancelKeyCode = KeyCode.Escape;
-        [SerializeField] private KeyCode _deleteKeyCode = KeyCode.Delete;
-
         private RuntimeGraphEditor _runtimeGraphEditor;
         private Transform _defaultParent;
         private List<EdgeView> _edgeViews = new();
 
+        /// <summary>
+        /// Список переходов из узла
+        /// </summary>
+        public IEnumerable<EdgeView> EdgeViews => _edgeViews;
         /// <summary>
         /// Контейнер дочерних элементов
         /// </summary>
@@ -232,6 +232,8 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <param name="edgeView">Представление ребра</param>
         public void RemoveEdge(EdgeView edgeView)
         {
+            _nodeViewContextMenu.RemoveEdge(edgeView);
+
             _edgeViews.Remove(edgeView);
         }
 

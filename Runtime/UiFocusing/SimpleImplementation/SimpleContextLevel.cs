@@ -42,7 +42,47 @@ namespace UI.Focusing
 
         [Header("Dimming")]
         [SerializeField] private GameObject[] _focusedElements = new GameObject[0];
-        public IEnumerable<GameObject> FocusedElements => _focusedElements;
+        private readonly HashSet<GameObject> _cashedFocusedElements = new();
+        private bool _isFocusedCached;
+
+        public IEnumerable<GameObject> FocusedElements
+        {
+            get
+            {
+                if (!_isFocusedCached)
+                {
+                    foreach (GameObject focusedElement in _focusedElements)
+                    {
+                        _cashedFocusedElements.Add(focusedElement);
+                    }
+
+                    _isFocusedCached = true;
+                }
+
+                return _cashedFocusedElements;
+            }
+        }
+
+        public void AddFocusedElements(params GameObject[] elements)
+        {
+            foreach (GameObject element in elements)
+            {
+                if (_cashedFocusedElements.Contains(element))
+                {
+                    continue;
+                }
+
+                _cashedFocusedElements.Add(element);
+            }
+        }
+
+        public void RemoveFocusedElements(params GameObject[] elements)
+        {
+            foreach (GameObject element in elements)
+            {
+                _cashedFocusedElements.Remove(element);
+            }
+        }
 
         public void PushLayer()
         {
