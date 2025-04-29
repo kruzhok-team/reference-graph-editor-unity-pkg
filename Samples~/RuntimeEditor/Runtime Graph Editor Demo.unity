@@ -1610,7 +1610,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fd2f0e2552b0314281b1f773f2d140a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _context: {fileID: 1189319028}
   _rootCanvas: {fileID: 1256248044}
   _graphDocumentNameInput: {fileID: 157087564}
   _edgeEditorWindow: {fileID: 54747696}
@@ -1700,6 +1699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46ce30d6ce1cdef4db450bd7149b4c5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _context: {fileID: 1189319028}
 --- !u!114 &1189319028
 MonoBehaviour:
   m_ObjectHideFlags: 0
