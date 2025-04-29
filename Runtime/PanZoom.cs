@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UI.Focusing;
 using UnityEngine;
@@ -52,19 +53,23 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 Init();
             }
+        }
 
+        private void OnEnable()
+        {
             UIFocusingSystem.Instance.SelectionHandler.ElementSelected += ElementSelected;
 
             _context.PushLayer();
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             UIFocusingSystem.Instance.SelectionHandler.ElementSelected -= ElementSelected;
 
             _context.RemoveLayer();
-        }
 
+            _isAnimating = false;
+        }
         private void Init()
         {
             _canvas = GetComponentInParent<Canvas>();
@@ -78,11 +83,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             _defaultPosition = _targetRectTransform.localPosition;
 
             _defaultMinMaxZoom = _minMaxZoom;
-        }
-
-        private void OnDisable()
-        {
-            _isAnimating = false;
         }
 
         private void ElementSelected(ISelectable element)
@@ -118,8 +118,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 return;
             }
 
-            if (Input.GetMouseButtonDown(0) && !IsCursorOverBlockZoomElement() &&
-                (_selectedElement == null || _selectedElement?.Object == _background.gameObject ||
+            if (Input.GetMouseButtonDown(0) && !UIFocusingSystem.Instance.ContextsInOrder.Last().BlockOtherHotkeys && (_selectedElement == null || _selectedElement?.Object == _background.gameObject ||
                     _selectedElement?.Object != null && !IsCursorOverElement(_selectedElement.Object)))
             {
                 _lastMousePos = Input.mousePosition;
@@ -149,28 +148,6 @@ namespace Talent.GraphEditor.Unity.Runtime
                 foreach (RaycastResult raycastResult in raycastResults)
                 {
                     if (raycastResult.gameObject == element)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        private bool IsCursorOverBlockZoomElement()
-        {
-            PointerEventData pointer = new(EventSystem.current);
-            pointer.position = Input.mousePosition;
-
-            List<RaycastResult> raycastResults = new();
-            EventSystem.current.RaycastAll(pointer, raycastResults);
-
-            if (raycastResults.Count > 0)
-            {
-                foreach (RaycastResult raycastResult in raycastResults)
-                {
-                    if (raycastResult.gameObject.CompareTag(BlockZoomTag))
                     {
                         return true;
                     }

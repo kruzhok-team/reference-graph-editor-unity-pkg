@@ -48,7 +48,7 @@ namespace UI.Focusing
         {
             if (!_contextStack.Contains(context))
             {
-                Debug.LogError("Can`t remove context layer, because there is no such context in stack!");
+                Debug.LogWarning("Can`t remove context layer, because there is no such context in stack!");
                 return;
             }
 
