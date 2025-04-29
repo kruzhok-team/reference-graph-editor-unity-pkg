@@ -80,8 +80,26 @@ public class HotkeyHandler : IHotkeyHandler
             action.UnsubscribeFrom(inputRef);
         }
 
+        foreach (IContextLayer ctx in UIFocusingSystem.Instance.ContextsInOrder)
+        {
+            if (!ctx.IsUnblockable)
+            {
+                continue;
+            }
+
+            foreach (HotkeyAction action in _mappingToActions[ctx].Where(a => a.Hotkeys.Contains(inputRef)))
+            {
+                action.SubscribeTo(inputRef);
+            }
+        }
+
         foreach (IContextLayer ctx in Enumerable.Reverse(UIFocusingSystem.Instance.ContextsInOrder))
         {
+            if (ctx.IsUnblockable)
+            {
+                continue;
+            }
+
             List<HotkeyAction> actions = _mappingToActions[ctx];
             bool hasThisKey = actions.Any(a => a.Hotkeys.Contains(inputRef));
 
@@ -90,10 +108,9 @@ public class HotkeyHandler : IHotkeyHandler
                 if (hasThisKey)
                 {
                     foreach (HotkeyAction a in actions.Where(a => a.Hotkeys.Contains(inputRef)))
-                    {
                         a.SubscribeTo(inputRef);
-                    }
                 }
+
                 return;
             }
             else if (hasThisKey)
@@ -105,4 +122,5 @@ public class HotkeyHandler : IHotkeyHandler
             }
         }
     }
+
 }

@@ -3063,8 +3063,6 @@ MonoBehaviour:
   - {fileID: 3434346997136011106}
   _nodeViewContextMenu: {fileID: 1893497528683224465}
   _actionContextMenu: {fileID: 5374534437795998134}
-  _cancelKeyCode: 27
-  _deleteKeyCode: 127
 --- !u!114 &1926964593838777583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3500,9 +3498,9 @@ MonoBehaviour:
   OnDisable:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 5079184774529959356}
         m_TargetAssemblyTypeName: UI.Focusing.SimpleSelectable, UiFocusing
-        m_MethodName: Deselect
+        m_MethodName: ResetSelection
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

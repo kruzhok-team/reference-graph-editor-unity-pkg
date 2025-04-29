@@ -1,4 +1,3 @@
-using Talent.GraphEditor.Core;
 using UI.Focusing;
 using UnityEngine;
 using UnityEngine.UI;
@@ -62,18 +61,24 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
 
         private void OnNewActionClicked()
         {
+            _context.RemoveLayer();
+
             _nodeView.AddEvent();
             _nodeView.Select();
         }
 
         private void OnUnparentClicked()
         {
+            _context.RemoveLayer();
+
             _nodeView.Unparent();
             _nodeView.Select();
         }
 
         private void OnParentClicked()
         {
+            _context.RemoveLayer();
+
             _nodeView.ConnectParent();
             _nodeView.Select();
             gameObject.SetActive(false);
@@ -82,12 +87,16 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
 
         private void OnChildNodeClicked()
         {
+            _context.RemoveLayer();
+
             _nodeView.AddChildNode();
             _nodeView.Select();
         }
 
         private void OnDublicateClicked()
         {
+            _context.RemoveLayer();
+
             _nodeView.Duplicate();
             _nodeView.Select();
         }

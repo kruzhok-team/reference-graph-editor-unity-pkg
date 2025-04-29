@@ -10,6 +10,7 @@ namespace UI.Focusing
 
         IEnumerable<HotkeyAction> HotkeysMapping { get; }
         bool BlockOtherHotkeys { get; }
+        bool IsUnblockable { get; }
 
         IEnumerable<GameObject> FocusedElements { get; }
     }

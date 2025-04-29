@@ -43,8 +43,8 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
 
         private void OnEditClicked()
         {
-            _eventView.OpenEventEditor();
             _nodeView.Select();
+            _eventView.OpenEventEditor();
         }
 
         private void OnDeleteClicked()

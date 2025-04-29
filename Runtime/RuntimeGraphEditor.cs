@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using Talent.GraphEditor.Core;
 using Talent.Graphs;
 using TMPro;
+using UI.Focusing;
 using UnityEngine;
 using UnityEngine.UI;
 using Action = System.Action;
@@ -17,6 +18,8 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// </summary>
     public class RuntimeGraphEditor : MonoBehaviour, IGraphElementViewFactory, IUndoable
     {
+        [SerializeField] private SimpleContextLevel _context;
+
         [SerializeField] private Canvas _rootCanvas;
         [SerializeField] private TMP_InputField _graphDocumentNameInput;
         [SerializeField] private EditingWindow _edgeEditorWindow;
@@ -101,6 +104,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         void Start()
         {
+            _context.PushLayer();
             _edgeEditorWindow.gameObject.SetActive(false);
         }
 

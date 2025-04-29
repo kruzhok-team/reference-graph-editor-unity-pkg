@@ -14,6 +14,8 @@ namespace UI.Focusing
         [Header("Hotkeys")]
         [SerializeField] private bool _blockOtherHotkeys;
         public bool BlockOtherHotkeys => _blockOtherHotkeys;
+        [SerializeField] private bool _isUnblockable;
+        public bool IsUnblockable => _isUnblockable;
 
         [SerializeField] private HotkeyBinding[] _bindings = new HotkeyBinding[0];
 

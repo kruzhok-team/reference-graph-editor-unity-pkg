@@ -45,8 +45,6 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private ISelectable _selectedElement;
 
-        private const string BlockZoomTag = "BlockZoom";
-
         private void Start()
         {
             if (_canvas == null)
@@ -58,6 +56,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         private void OnEnable()
         {
             UIFocusingSystem.Instance.SelectionHandler.ElementSelected += ElementSelected;
+            UIFocusingSystem.Instance.SelectionHandler.ElementDeselected += ElementDeselected;
 
             _context.PushLayer();
         }
@@ -65,6 +64,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         private void OnDisable()
         {
             UIFocusingSystem.Instance.SelectionHandler.ElementSelected -= ElementSelected;
+            UIFocusingSystem.Instance.SelectionHandler.ElementDeselected -= ElementDeselected;
 
             _context.RemoveLayer();
 
@@ -88,6 +88,14 @@ namespace Talent.GraphEditor.Unity.Runtime
         private void ElementSelected(ISelectable element)
         {
             _selectedElement = element;
+        }
+
+        private void ElementDeselected(ISelectable element)
+        {
+            if (_selectedElement == element)
+            {
+                _selectedElement = null;
+            }
         }
 
         private void Update()
@@ -117,7 +125,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 _isPanning = false;
                 return;
             }
-
+            
             if (Input.GetMouseButtonDown(0) && !UIFocusingSystem.Instance.ContextsInOrder.Last().BlockOtherHotkeys && (_selectedElement == null || _selectedElement?.Object == _background.gameObject ||
                     _selectedElement?.Object != null && !IsCursorOverElement(_selectedElement.Object)))
             {
