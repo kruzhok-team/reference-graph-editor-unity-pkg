@@ -961,6 +961,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _blockOtherHotkeys: 0
+  _isUnblockable: 0
   _bindings:
   - ActionReference: {fileID: 1418151547802526976, guid: 652f98e79e85c94458c55e86289ddd10, type: 3}
     OnPerformed:
@@ -997,6 +998,22 @@ MonoBehaviour:
         - m_Target: {fileID: 3039324280211331704}
           m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.EdgeView, org.kruzhok.talent.grapheditor.unity.runtime
           m_MethodName: Delete
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionReference: {fileID: 2635774633146823351, guid: 652f98e79e85c94458c55e86289ddd10, type: 3}
+    OnPerformed:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3039324280211331704}
+          m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.EdgeView, org.kruzhok.talent.grapheditor.unity.runtime
+          m_MethodName: Duplicate
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1912,6 +1929,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _blockOtherHotkeys: 0
+  _isUnblockable: 0
   _bindings:
   - ActionReference: {fileID: 1418151547802526976, guid: 652f98e79e85c94458c55e86289ddd10, type: 3}
     OnPerformed:
