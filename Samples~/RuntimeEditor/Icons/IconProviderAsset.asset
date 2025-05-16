@@ -40,7 +40,7 @@ MonoBehaviour:
   - key: '!='
     icon: {fileID: 21300000, guid: ed094f415a8d35447b8c5fd73474d0bb, type: 3}
     OutlineColor: {r: 0.98039216, g: 0.8039216, b: 0.34509805, a: 1}
-  - key: "\u0421\u043A\u0430\u043D\u0435\u0440"
+  - key: "\u0421\u0435\u043D\u0441\u043E\u0440"
     icon: {fileID: 21300000, guid: c85a99432e58b0242987cde85ec4e22b, type: 3}
     OutlineColor: {r: 0.98039216, g: 0.8039216, b: 0.34509805, a: 1}
   - key: "\u0422\u0430\u0439\u043C\u0435\u0440"
