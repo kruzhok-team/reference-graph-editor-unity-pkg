@@ -898,7 +898,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7394052909579044318}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7394052910380003311}
+        m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.EditNodeNamePopUp,
+          org.kruzhok.talent.grapheditor.unity.runtime
+        m_MethodName: ApplyNodeName
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7394052909644440364
 GameObject:
   m_ObjectHideFlags: 0
@@ -1352,7 +1365,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 7394052910380003311}
+        m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.EditNodeNamePopUp,
+          org.kruzhok.talent.grapheditor.unity.runtime
+        m_MethodName: ApplyNodeName
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _blockOtherHotkeys: 1
+  _isUnblockable: 0
   _bindings:
   - ActionReference: {fileID: 8618714830587542737, guid: 652f98e79e85c94458c55e86289ddd10, type: 3}
     OnPerformed:
