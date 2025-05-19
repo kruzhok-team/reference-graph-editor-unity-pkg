@@ -77,6 +77,16 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         public void ApplyNodeName()
         {
+            if(!CheckAvailability())
+            {
+                if (string.IsNullOrEmpty(_desiredInitialName))
+                {
+                    _nodeView.Delete();
+                }
+
+                return;
+            }
+
             if (string.IsNullOrEmpty(_nodeNameInputField.text))
             {
                 return;
@@ -95,7 +105,24 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         public void Cancel()
         {
+            if (!CheckAvailability())
+            {
+                if (string.IsNullOrEmpty(_desiredInitialName))
+                {
+                    _nodeView.Delete();
+                }
+                else
+                {
+                    _nodeView.SetName(_desiredInitialName);
+                }
+            }
+
             _contextLayer.RemoveLayer();
+        }
+
+        public bool CheckAvailability() 
+        {
+            return !string.IsNullOrEmpty(_nodeNameInputField.text) && _nodeView.IsUniqueNodeName(_nodeNameInputField.text); 
         }
 
         private void OnInputFieldValueChanged(string value)
