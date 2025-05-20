@@ -458,7 +458,11 @@ PrefabInstance:
     - target: {fileID: 6099546687577074340, guid: 3e6ad29ec24fbc645a85a56637af059b, type: 3}
       propertyPath: localizationTable
       value: 
-      objectReference: {fileID: 11400000, guid: a8d46f6b9b6a4e24eb6a0ba2f0fbbaf3, type: 2}
+      objectReference: {fileID: 0}
+    - target: {fileID: 6099546687577074340, guid: 3e6ad29ec24fbc645a85a56637af059b, type: 3}
+      propertyPath: _localizationTable
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6099546687577074340, guid: 3e6ad29ec24fbc645a85a56637af059b, type: 3}
       propertyPath: _runtimeGraphEditor
       value: 
