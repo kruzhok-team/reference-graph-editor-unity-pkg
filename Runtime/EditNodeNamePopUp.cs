@@ -13,7 +13,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         private const string NotUniqueNameError = "Состояние с таким именем уже существует на этом уровне";
 
         [Header("Scene Context")]
-        [SerializeField] private SimpleContextLevel _contextLayer;
+        [SerializeField] private SimpleContextLayer _contextLayer;
         [SerializeField] private PanZoom _panZoom;
         [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
         [Header("Controls")]

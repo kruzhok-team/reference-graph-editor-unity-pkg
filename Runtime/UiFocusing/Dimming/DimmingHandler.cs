@@ -8,13 +8,13 @@ namespace UI.Focusing
     {
         private readonly DimmingObject _dimmingObject;
 
+        private IEnumerable<GameObject> _currentFocused;
+
         public DimmingHandler(DimmingObject dimmingObject)
         {
             _dimmingObject = GameObject.Instantiate(dimmingObject);
             _dimmingObject.gameObject.SetActive(false);
         }
-
-        private IEnumerable<GameObject> _currentFocused;
 
         public void EnableDimming(IEnumerable<GameObject> focusedElements)
         {

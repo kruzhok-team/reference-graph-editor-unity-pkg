@@ -6,10 +6,9 @@ using UnityEngine.InputSystem;
 
 namespace UI.Focusing
 {
-    public class SimpleContextLevel : MonoBehaviour, IContextLayer
+    public class SimpleContextLayer : MonoBehaviour, IContextLayer
     {
-        public UnityEvent Activated;
-        public UnityEvent Deactivated;
+        #region Hotkeys
 
         [Header("Hotkeys")]
         [SerializeField] private bool _blockOtherHotkeys;
@@ -20,6 +19,7 @@ namespace UI.Focusing
         [SerializeField] private HotkeyBinding[] _bindings = new HotkeyBinding[0];
 
         private readonly HashSet<HotkeyAction> _hotkeyActions = new();
+
         public IEnumerable<HotkeyAction> HotkeysMapping
         {
             get
@@ -42,10 +42,23 @@ namespace UI.Focusing
             }
         }
 
+        #endregion
+
+        #region Dimming
+
         [Header("Dimming")]
         [SerializeField] private GameObject[] _focusedElements = new GameObject[0];
         private readonly HashSet<GameObject> _cashedFocusedElements = new();
         private bool _isFocusedCached;
+
+        #endregion
+
+        #region Events
+
+        public UnityEvent Activated;
+        public UnityEvent Deactivated;
+
+        #endregion
 
         public IEnumerable<GameObject> FocusedElements
         {
@@ -69,11 +82,6 @@ namespace UI.Focusing
         {
             foreach (GameObject element in elements)
             {
-                if (_cashedFocusedElements.Contains(element))
-                {
-                    continue;
-                }
-
                 _cashedFocusedElements.Add(element);
             }
         }

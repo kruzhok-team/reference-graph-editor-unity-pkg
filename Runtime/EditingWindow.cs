@@ -14,7 +14,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// </summary>
     public class EditingWindow : MonoBehaviour, IUndoable
     {
-        [SerializeField] private SimpleContextLevel _context;
+        [SerializeField] private SimpleContextLayer _context;
 
         [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
         [SerializeField] private Button _saveButton;

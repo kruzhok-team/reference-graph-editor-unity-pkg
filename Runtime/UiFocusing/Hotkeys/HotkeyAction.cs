@@ -26,18 +26,18 @@ namespace UI.Focusing
                 return;
             }
 
-            void Callback(InputAction.CallbackContext ctx)
-            {
-                if (_shouldProcess())
-                {
-                    _hotkeyPressed?.Invoke();
-                }
-            }
-
             inputRef.action.performed += Callback;
             _callbacks[inputRef] = Callback;
 
             inputRef.action.Enable();
+        }
+
+        private void Callback(InputAction.CallbackContext ctx)
+        {
+            if (_shouldProcess())
+            {
+                _hotkeyPressed?.Invoke();
+            }
         }
 
         public void UnsubscribeFrom(InputActionReference inputRef)

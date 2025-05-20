@@ -23,8 +23,8 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private void Start()
         {
-            UIFocusingSystem.Instance.SelectionHandler.ElementSelected += OnElementSelected;
-            UIFocusingSystem.Instance.SelectionHandler.ElementDeselected += OnElementDeselected;
+            UIFocusingSystem.Instance.SelectionHandler.Selected += OnElementSelected;
+            UIFocusingSystem.Instance.SelectionHandler.Deselected += OnElementDeselected;
 
             _runtimeGraphEditor.StartEdgeEditing += OnStartEdgeEditing;
             _runtimeGraphEditor.EndEdgeEditing += OnEndEdgeEditing;
@@ -34,8 +34,8 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private void OnDestroy()
         {
-            UIFocusingSystem.Instance.SelectionHandler.ElementSelected -= OnElementSelected;
-            UIFocusingSystem.Instance.SelectionHandler.ElementDeselected -= OnElementDeselected;
+            UIFocusingSystem.Instance.SelectionHandler.Selected -= OnElementSelected;
+            UIFocusingSystem.Instance.SelectionHandler.Deselected -= OnElementDeselected;
 
             _runtimeGraphEditor.StartEdgeEditing -= OnStartEdgeEditing;
             _runtimeGraphEditor.EndEdgeEditing -= OnEndEdgeEditing;

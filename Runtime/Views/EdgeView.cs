@@ -28,7 +28,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         public bool IsDraggableMode { get; set; }
 
         [SerializeField] private SimpleSelectable _selectable;
-        [SerializeField] private SimpleContextLevel _contextMenuLevel;
+        [SerializeField] private SimpleContextLayer _contextMenuLevel;
 
         [SerializeField] private EdgeEditingButton _changeSourceConnection;
         [SerializeField] private EdgeEditingButton _changeTargetConnection;

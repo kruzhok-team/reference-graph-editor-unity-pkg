@@ -13,7 +13,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// </summary>
     public class NodeEventView : MonoBehaviour, INodeEventView
     {
-        [SerializeField] private SimpleContextLevel _context;
+        [SerializeField] private SimpleContextLayer _context;
 
         [SerializeField] private TextMeshProUGUI _triggerIDTMP;
         [SerializeField] private GridLayoutGroup _gridLayoutGroup;

@@ -8,21 +8,22 @@ namespace UI.Focusing
 {
     public class SimpleSelectable : MonoBehaviour, ISelectable, IPointerClickHandler
     {
-        public UnityEvent Selected;
-        public UnityEvent Deselected;
-
         [SerializeField] private SelectionBinding[] _bindings = new SelectionBinding[0];
         [SerializeField] private bool _isSingleSelection = true;
         [SerializeField] private GameObject _overrideSelectionObject;
 
+        public UnityEvent Selected;
+        public UnityEvent Deselected;
+
         public bool IsSingleSelection => _isSingleSelection;
         public GameObject Object => _overrideSelectionObject ?? gameObject;
 
-
-        private HashSet<SelectionBinding> _cashedBindings = new();
+        private HashSet<SelectionBinding> _cashedBindings;
 
         private void Awake()
         {
+            _cashedBindings = new();
+
             foreach (SelectionBinding binding in _bindings)
             {
                 _cashedBindings.Add(binding);

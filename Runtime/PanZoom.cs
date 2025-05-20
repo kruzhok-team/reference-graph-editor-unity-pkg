@@ -13,7 +13,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// </summary>
     public class PanZoom : MonoBehaviour
     {
-        [SerializeField] private SimpleContextLevel _context;
+        [SerializeField] private SimpleContextLayer _context;
 
         [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
         [SerializeField] private RenderController _renderController;
@@ -55,16 +55,16 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private void OnEnable()
         {
-            UIFocusingSystem.Instance.SelectionHandler.ElementSelected += ElementSelected;
-            UIFocusingSystem.Instance.SelectionHandler.ElementDeselected += ElementDeselected;
+            UIFocusingSystem.Instance.SelectionHandler.Selected += ElementSelected;
+            UIFocusingSystem.Instance.SelectionHandler.Deselected += ElementDeselected;
 
             _context.PushLayer();
         }
 
         private void OnDisable()
         {
-            UIFocusingSystem.Instance.SelectionHandler.ElementSelected -= ElementSelected;
-            UIFocusingSystem.Instance.SelectionHandler.ElementDeselected -= ElementDeselected;
+            UIFocusingSystem.Instance.SelectionHandler.Selected -= ElementSelected;
+            UIFocusingSystem.Instance.SelectionHandler.Deselected -= ElementDeselected;
 
             _context.RemoveLayer();
 
@@ -126,7 +126,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 return;
             }
             
-            if (Input.GetMouseButtonDown(0) && !UIFocusingSystem.Instance.ContextsInOrder.Last().BlockOtherHotkeys && (_selectedElement == null || _selectedElement?.Object == _background.gameObject ||
+            if (Input.GetMouseButtonDown(0) && !UIFocusingSystem.Instance.Contexts.First().BlockOtherHotkeys && (_selectedElement == null || _selectedElement?.Object == _background.gameObject ||
                     _selectedElement?.Object != null && !IsCursorOverElement(_selectedElement.Object)))
             {
                 _lastMousePos = Input.mousePosition;

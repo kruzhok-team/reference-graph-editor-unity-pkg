@@ -8,7 +8,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// </summary>
     public class UndoController : MonoBehaviour
     {
-        [SerializeField] private SimpleContextLevel _context;
+        [SerializeField] private SimpleContextLayer _context;
 
         private List<UndoAction> _undoList = new();
         private List<UndoAction> _redoList = new();

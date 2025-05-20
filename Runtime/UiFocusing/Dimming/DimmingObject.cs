@@ -64,7 +64,7 @@ namespace UI.Focusing
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            UIFocusingSystem.Instance.RemoveContextLayer(UIFocusingSystem.Instance.ContextsInOrder.Last());
+            UIFocusingSystem.Instance.RemoveContextLayer(UIFocusingSystem.Instance.Contexts.First());
         }
     }
 }

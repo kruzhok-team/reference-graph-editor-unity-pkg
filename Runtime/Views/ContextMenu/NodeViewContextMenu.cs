@@ -8,7 +8,7 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
     /// </summary>
     public class NodeViewContextMenu : MonoBehaviour
     {
-        [SerializeField] private SimpleContextLevel _context;
+        [SerializeField] private SimpleContextLayer _context;
         [SerializeField] private NodeView _nodeView;
 
         [Space]

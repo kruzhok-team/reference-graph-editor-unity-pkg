@@ -11,7 +11,7 @@ namespace UI.Focusing
         public ISelectionHandler SelectionHandler { get; private set; }
 
         private Stack<IContextLayer> _contextStack = new();
-        public IEnumerable<IContextLayer> ContextsInOrder => _contextStack.Reverse();
+        public IEnumerable<IContextLayer> Contexts => _contextStack;
 
         public static UIFocusingSystem Instance { get; private set; }
 
@@ -54,19 +54,18 @@ namespace UI.Focusing
 
             _dimmingHandler.DisableDimming();
 
-            while (_contextStack.Count > 0 && _contextStack.Peek() != context)
+            while (_contextStack.Count > 0)
             {
                 IContextLayer current = _contextStack.Pop();
 
                 current.Deactivate();
                 _hotkeyHandler.UnregisterHotkeysMapping(current);
+
+                if (current == context)
+                {
+                    break;
+                }
             }
-
-            _contextStack.Pop();
-
-            _hotkeyHandler.UnregisterHotkeysMapping(context);
-
-            context.Deactivate();
 
             if (_contextStack.Count > 0)
             {
@@ -76,11 +75,17 @@ namespace UI.Focusing
 
         public void GoToContextLayer(IContextLayer context)
         {
-            while (_contextStack.Count > 0 && _contextStack.Peek() != context)
+            while (_contextStack.Count > 0)
             {
                 IContextLayer current = _contextStack.Pop();
 
                 _hotkeyHandler.UnregisterHotkeysMapping(current);
+                context.Deactivate();
+
+                if (current == context)
+                {
+                    break;
+                }
             }
 
             PushContextLayer(context);

@@ -9,8 +9,8 @@ namespace UI.Focusing
     {
         private readonly HashSet<ISelectable> _selection = new();
 
-        public event Action<ISelectable> ElementSelected;
-        public event Action<ISelectable> ElementDeselected;
+        public event Action<ISelectable> Selected;
+        public event Action<ISelectable> Deselected;
         public event Action<IReadOnlyCollection<ISelectable>> SelectionChanged;
 
         public IReadOnlyCollection<ISelectable> CurrentSelection => _selection;
@@ -27,12 +27,9 @@ namespace UI.Focusing
                 ClearSelection();
             }
 
-            if (_selection.Add(selectable))
-            {
-                selectable.Select();
-                ElementSelected?.Invoke(selectable);
-                SelectionChanged?.Invoke(_selection);
-            }
+            selectable.Select();
+            Selected?.Invoke(selectable);
+            SelectionChanged?.Invoke(_selection);
         }
 
         public void Deselect(ISelectable selectable)
@@ -40,7 +37,7 @@ namespace UI.Focusing
             if (_selection.Remove(selectable))
             {
                 selectable.Deselect();
-                ElementDeselected?.Invoke(selectable);
+                Deselected?.Invoke(selectable);
                 SelectionChanged?.Invoke(_selection);
             }
         }
@@ -50,7 +47,7 @@ namespace UI.Focusing
             foreach (var item in _selection)
             {
                 item.Deselect();
-                ElementDeselected?.Invoke(item);
+                Deselected?.Invoke(item);
             }
 
             _selection.Clear();

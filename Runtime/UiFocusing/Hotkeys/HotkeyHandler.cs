@@ -46,7 +46,7 @@ public class HotkeyHandler : IHotkeyHandler
 
         _hotkeyChains.Clear();
 
-        foreach (IContextLayer ctx in UIFocusingSystem.Instance.ContextsInOrder)
+        foreach (IContextLayer ctx in UIFocusingSystem.Instance.Contexts.Reverse())
         {
             List<HotkeyAction> actions = _mappingToActions[ctx];
 
@@ -80,7 +80,7 @@ public class HotkeyHandler : IHotkeyHandler
             action.UnsubscribeFrom(inputRef);
         }
 
-        foreach (IContextLayer ctx in UIFocusingSystem.Instance.ContextsInOrder)
+        foreach (IContextLayer ctx in UIFocusingSystem.Instance.Contexts.Reverse())
         {
             if (!ctx.IsUnblockable)
             {
@@ -93,7 +93,7 @@ public class HotkeyHandler : IHotkeyHandler
             }
         }
 
-        foreach (IContextLayer ctx in Enumerable.Reverse(UIFocusingSystem.Instance.ContextsInOrder))
+        foreach (IContextLayer ctx in UIFocusingSystem.Instance.Contexts)
         {
             if (ctx.IsUnblockable)
             {
