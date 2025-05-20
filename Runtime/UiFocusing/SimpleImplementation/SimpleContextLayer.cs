@@ -28,7 +28,7 @@ namespace UI.Focusing
                 {
                     foreach (HotkeyBinding binding in _bindings)
                     {
-                        if (binding == null || binding.ActionReference == null)
+                        if (binding.ActionReference == null)
                         {
                             continue;
                         }
@@ -116,7 +116,7 @@ namespace UI.Focusing
     }
 
     [Serializable]
-    class HotkeyBinding
+    struct HotkeyBinding
     {
         public InputActionReference ActionReference;
         public UnityEvent OnPerformed;
