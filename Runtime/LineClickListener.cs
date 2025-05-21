@@ -51,7 +51,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 {
                     if (!IsPointerOverGraphElement(eventData))
                     {
-                        _edgeByLine[line].Select(false);
+                        _edgeByLine[line].Select();
                     }
                     else
                     {

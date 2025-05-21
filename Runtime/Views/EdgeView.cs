@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using Talent.GraphEditor.Core;
 using Talent.Graphs;
 using TMPro;
+using UI.Focusing;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 namespace Talent.GraphEditor.Unity.Runtime
 {
-    public class EdgeView : MonoBehaviour, IEdgeView, IElementSelectable, IPointerDownHandler, IPointerUpHandler
+    public class EdgeView : MonoBehaviour, IEdgeView
     {
         /// <summary>
         /// Начальное представление узла
@@ -25,6 +26,9 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// Возвращает true, если представление ребра находится в режиме перетаскивания, иначе false
         /// </summary>
         public bool IsDraggableMode { get; set; }
+
+        [SerializeField] private SimpleSelectable _selectable;
+        [SerializeField] private SimpleContextLayer _contextMenuLevel;
 
         [SerializeField] private EdgeEditingButton _changeSourceConnection;
         [SerializeField] private EdgeEditingButton _changeTargetConnection;
@@ -50,10 +54,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         [SerializeField] private Icon _singleIconPrefab;
         [SerializeField] private Icon _doubleIconPrefab;
 
-
-        [Header("Hotkeys")] [SerializeField] private KeyCode _cancelKeyCode = KeyCode.Escape;
-
-        [SerializeField] private KeyCode _deleteKeyCode = KeyCode.Delete;
 
         private RuntimeGraphEditor _runtimeGraphEditor;
 
@@ -97,37 +97,17 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public EdgeLine Line => _line;
 
-        /// <inheritdoc/>
-        public GameObject SelectedObject => _bodyArea.gameObject;
-
-        private SelectionContextSource _selectionContextSource;
-
         private LineClickListener _lineClickListener;
-        /// <inheritdoc/>
-        public ISelectionContextSource SelectionContextSource => _selectionContextSource;
-        
-        private void Awake()
-        {
-            _selectionContextSource = new SelectionContextSource();
-            _selectionContextSource.AddHotkeyAction(new HotkeyAction(OnCancelHotkeyPressed, _cancelKeyCode));
-            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Delete, _deleteKeyCode));
-            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Duplicate,  KeyCode.LeftControl, KeyCode.D));
-            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Focus, KeyCode.F));
-        }
 
         private void OnEnable()
         {
-            _bodyArea.RightClick += OnPointerUp;
             _bodyArea.BeginDrag += OnBeginDragElement;
             _bodyArea.Drag += OnDrag;
             _bodyArea.DoubleClick += OnDoubleClick;
-
-            SetSelection(false, false);
         }
 
         private void OnDisable()
         {
-            _bodyArea.RightClick -= OnPointerUp;
             _bodyArea.BeginDrag -= OnBeginDragElement;
             _bodyArea.Drag -= OnDrag;
             _bodyArea.DoubleClick -= OnDoubleClick;
@@ -140,11 +120,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 return;
             }
 
-            if (_runtimeGraphEditor.ElementSelectionProvider.CurrentSelectedElement != null && SelectedObject ==
-                _runtimeGraphEditor.ElementSelectionProvider.CurrentSelectedElement.SelectedObject)
-            {
-                OpenEdgeEditor();
-            }
+            OpenEdgeEditor();
         }
 
         private void OnBeginDragElement(PointerEventData eventData)
@@ -164,7 +140,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             _runtimeGraphEditor = runtimeGraphEditor;
             _line.Init(lineClickListener.transform);
-            SetSelection(true, false);
             IsPreview = true;
             _changeSourceConnection.Init(_runtimeGraphEditor);
             _changeTargetConnection.Init(_runtimeGraphEditor);
@@ -233,6 +208,14 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
             
             RecalculateParent();
+            RefreshtConnections(false);
+
+            _contextMenuLevel.AddFocusedElements(SourceView.gameObject, TargetView.gameObject, _line.gameObject);
+        }
+
+        public void Select()
+        {
+            UIFocusingSystem.Instance.Select(_selectable);
         }
 
         public void DrawLine()
@@ -425,6 +408,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             _runtimeGraphEditor.GraphEditor.RemoveEdge(this);
+
+            SourceView.RemoveEdge(this);
         }
 
         /// <summary>
@@ -476,7 +461,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             _changeTargetConnection.Deactivate();
             _changeSourceConnection.Deactivate();
             
-            _runtimeGraphEditor.ElementSelectionProvider.Select(this);
             _runtimeGraphEditor.EditingEdge = this;
             _runtimeGraphEditor.RequestCreateUndoState();
         }
@@ -490,12 +474,11 @@ namespace Talent.GraphEditor.Unity.Runtime
             _changeTargetConnection.Deactivate();
             _changeSourceConnection.Deactivate();
 
-            _runtimeGraphEditor.ElementSelectionProvider.Select(this);
             _runtimeGraphEditor.EditingEdge = this;
             _runtimeGraphEditor.RequestCreateUndoState();
         }
 
-        private void OnCancelHotkeyPressed()
+        public void OnCancelHotkeyPressed()
         {
             if (_runtimeGraphEditor.EditingEdge != this)
             {
@@ -515,6 +498,22 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             _runtimeGraphEditor.EditingEdge = null;
+        }
+
+        public void RefreshtConnections(bool isSelected)
+        {
+            if (isSelected && SourceView?.Vertex != NodeData.Vertex_Initial)
+            {
+                _changeSourceConnection.Activate();
+                _changeTargetConnection.Activate();
+            }
+            else
+            {
+                _changeSourceConnection.Deactivate();
+                _changeTargetConnection.Deactivate();
+            }
+
+            _line.SetColor(isSelected ? _edgeSelectedColor : _edgeUnselectedColor);
         }
 
         private void UpdateTriggerIcon(string id)
@@ -588,103 +587,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent.transform as RectTransform);
         }
 
-        /// <summary>
-        /// Функция обратного вызова, срабатывающая при нажатии указателя на элемент  
-        /// </summary>
-        /// <param name="eventData">Полезная нагрузка события связанного с указателем</param>
-        public void OnPointerDown(PointerEventData eventData)
-        {
-        }
-
-        /// <summary>
-        /// Функция обратного вызова, срабатывающая при отпускании указателя с элемента
-        /// </summary>
-        /// <param name="eventData">Полезная нагрузка события связанного с указателем</param>
-        public void OnPointerUp(PointerEventData eventData)
-        {
-            if (!IsCenterBlockVisible)
-            {
-                return;
-            }
-
-            if (eventData.dragging || eventData.delta.magnitude > 0)
-            {
-                return;
-            }
-
-            if (eventData.button == PointerEventData.InputButton.Left)
-            {
-                Select(false);
-            }
-
-            else if (eventData.button == PointerEventData.InputButton.Right)
-            {
-                Select(true);
-            }
-        }
-
-        /// <summary>
-        /// Выбирает представление ребра
-        /// </summary>
-        /// <param name="isContextSelection">Выбрано ли ребро с помощью контекстное меню</param>
-        public void Select(bool isContextSelection)
-        {
-            if (_runtimeGraphEditor.EditingEdge != null)
-            {
-                return;
-            }
-
-            transform.SetAsLastSibling();
-            _runtimeGraphEditor.ElementSelectionProvider.Select(isContextSelection ? null : this);
-            SetSelection(true, isContextSelection);
-        }
-
-        /// <summary>
-        /// Отменяет выбор представления ребра
-        /// </summary>
-        public void Unselect()
-        {
-            _runtimeGraphEditor.ElementSelectionProvider.Unselect(this);
-
-            if (this == null)
-            {
-                return;
-            }
-
-            SetSelection(false, false);
-        }
-
-        private void SetSelection(bool isSelected, bool isContextSelection)
-        {
-            _bodyArea.enabled = isSelected && !isContextSelection;
-            _bodyArea.gameObject.SetActive(isSelected);
-
-            _contextSelection.SetActive(isSelected && isContextSelection);
-
-            if (SourceView?.Vertex != NodeData.Vertex_Initial)
-            {
-                if (isSelected)
-                {
-                    _changeSourceConnection.Activate();
-                }
-                else
-                {
-                    _changeSourceConnection.Deactivate();
-                }
-            }
-
-            if (isSelected)
-            {
-                _changeTargetConnection.Activate();
-            }
-            else
-            {
-                _changeTargetConnection.Deactivate();
-            }
-        
-            _line.SetColor(isSelected ? _edgeSelectedColor : _edgeUnselectedColor);
-        }
-
         private void Focus()
         {
             _runtimeGraphEditor.PanZoom.FocusOnRectTransform(transform as RectTransform);
@@ -696,9 +598,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 _lineClickListener.RemoveLine(_line);
             }
-
+            
             Destroy(_line.gameObject);
-            Unselect();
         }
     }
 }
