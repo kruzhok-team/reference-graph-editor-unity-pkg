@@ -1,4 +1,5 @@
 using TMPro;
+using UI.Focusing;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,11 +8,12 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// <summary>
     /// Класс, отвечающий за редактор имени узла
     /// </summary>
-    public class EditNodeNamePopUp : MonoBehaviour, IUndoable, IElementSelectable
+    public class EditNodeNamePopUp : MonoBehaviour, IUndoable
     {
         private const string NotUniqueNameError = "Состояние с таким именем уже существует на этом уровне";
 
         [Header("Scene Context")]
+        [SerializeField] private SimpleContextLayer _contextLayer;
         [SerializeField] private PanZoom _panZoom;
         [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
         [Header("Controls")]
@@ -23,12 +25,9 @@ namespace Talent.GraphEditor.Unity.Runtime
         private NodeView _nodeView;
         private bool _needRebuild;
         private string _desiredInitialName;
-        private SelectionContextSource _selectionContextSource;
 
         public string GetUndoContext() => _desiredInitialName;
         public string GetCurrentContext() => _nodeNameInputField.text;
-        public GameObject SelectedObject => gameObject;
-        public ISelectionContextSource SelectionContextSource => _selectionContextSource;
 
         /// <summary>
         /// Инициализирует <see cref="EditNodeNamePopUp"/>
@@ -43,20 +42,14 @@ namespace Talent.GraphEditor.Unity.Runtime
             _needRebuild = needRebuild;
             _nodeNameInputField.text = desiredInitialName;
             OnInputFieldValueChanged(desiredInitialName);
-        }
 
-        private void Awake()
-        {
-            _selectionContextSource = new SelectionContextSource();
-            _selectionContextSource.AddHotkeyAction(new HotkeyAction(KeyCode.Escape, () => { gameObject.SetActive(false); }));
+            _contextLayer.PushLayer();
         }
 
         private void OnEnable()
         {
             _panZoom.FocusOnRectTransform(_nodeView.transform as RectTransform);
-            _applyButton.onClick.AddListener(ApplyNodeName);
             _nodeNameInputField.onValueChanged.AddListener(OnInputFieldValueChanged);
-            _runtimeGraphEditor.ElementSelectionProvider.Select(this);
             _runtimeGraphEditor.UndoController.CreateUndoState(this);
             _runtimeGraphEditor.UndoController.LockUndoable(this);
             _runtimeGraphEditor.LineClickListener.enabled = false;
@@ -64,13 +57,12 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private void OnDisable()
         {
-            _applyButton.onClick.RemoveListener(ApplyNodeName);
             _nodeNameInputField.onValueChanged.RemoveListener(OnInputFieldValueChanged);
-            _nodeView.Select(false);
+            _nodeView.Select();
             _runtimeGraphEditor.UndoController.LockUndoable(null);
             _runtimeGraphEditor.LineClickListener.enabled = true;
         }
-        
+
         /// <inheritdoc/>
         public void Undo(string context)
         {
@@ -83,22 +75,54 @@ namespace Talent.GraphEditor.Unity.Runtime
             _nodeNameInputField.text = context;
         }
 
-        /// <inheritdoc/>
-        public void Unselect()
+        public void ApplyNodeName()
         {
-            _runtimeGraphEditor.ElementSelectionProvider?.Unselect(this);
-        }
+            if(!CheckAvailability())
+            {
+                if (string.IsNullOrEmpty(_desiredInitialName))
+                {
+                    _nodeView.Delete();
+                }
 
-        private void ApplyNodeName()
-        {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(_nodeNameInputField.text))
+            {
+                return;
+            }
+
             _nodeView.SetName(_nodeNameInputField.text);
-            gameObject.SetActive(false);
-
+            
             if (_needRebuild)
             {
                 _runtimeGraphEditor.Rebuild();
-                _runtimeGraphEditor.ElementSelectionProvider.Select(_nodeView.ID);
+                _runtimeGraphEditor.Select(_nodeView.ID);
             }
+
+            _contextLayer.RemoveLayer();
+        }
+
+        public void Cancel()
+        {
+            if (!CheckAvailability())
+            {
+                if (string.IsNullOrEmpty(_desiredInitialName))
+                {
+                    _nodeView.Delete();
+                }
+                else
+                {
+                    _nodeView.SetName(_desiredInitialName);
+                }
+            }
+
+            _contextLayer.RemoveLayer();
+        }
+
+        public bool CheckAvailability() 
+        {
+            return !string.IsNullOrEmpty(_nodeNameInputField.text) && _nodeView.IsUniqueNodeName(_nodeNameInputField.text); 
         }
 
         private void OnInputFieldValueChanged(string value)

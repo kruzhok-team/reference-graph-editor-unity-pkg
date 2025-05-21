@@ -10,7 +10,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// </summary>
     public class EdgeActionView : MonoBehaviour, IEdgeActionView
     {
-        [SerializeField] private TextMeshProUGUI _actionIDTMP;
+        [SerializeField] private GameObject _parameterContainer;
         [SerializeField] private TextMeshProUGUI _parameterTMP;
         [Header("Icons")]
         [SerializeField] private Transform _iconsContainer;
@@ -46,11 +46,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             _runtimeGraphEditor = runtimeGraphEditor;
             _edgeView = edgeView;
             _iconProvider = iconProvider;
-
-            if (_actionIDTMP != null)
-            {
-                _actionIDTMP.text = _actionID;
-            }
+            _parameterContainer.SetActive(false);
 
             UpdateIcons(actionID);
         }
@@ -59,7 +55,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             if (_currentIcon != null)
             {
-                GameObject.Destroy(_currentIcon);
+                Destroy(_currentIcon);
             }
 
             if (id.Split('.').Length > 2)
@@ -87,7 +83,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             _parameterValue = parameters;
 
-            if (_parameterTMP != null)
+            if (_parameterTMP != null && parameters.Count > 0)
             {
                 string parameterValues = "";
 
@@ -102,6 +98,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 }
 
                 _parameterTMP.text = parameterValues;
+                _parameterContainer.SetActive(true);
             }
         }
     }

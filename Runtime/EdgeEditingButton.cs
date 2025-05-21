@@ -74,8 +74,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 _runtimeGraphEditor.UndoController.Undo();
             }
-        
-            _runtimeGraphEditor.EditingEdge.IsDraggableMode = false;
+            
+            _runtimeGraphEditor.EditingEdge = null;
         }
 
         /// <summary>

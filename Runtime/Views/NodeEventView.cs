@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Talent.GraphEditor.Core;
 using TMPro;
+using UI.Focusing;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,8 +11,10 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// <summary>
     /// Представление перехода в узле
     /// </summary>
-    public class NodeEventView : MonoBehaviour, INodeEventView, IElementSelectable, IPointerDownHandler, IPointerUpHandler
+    public class NodeEventView : MonoBehaviour, INodeEventView
     {
+        [SerializeField] private SimpleContextLayer _context;
+
         [SerializeField] private TextMeshProUGUI _triggerIDTMP;
         [SerializeField] private GridLayoutGroup _gridLayoutGroup;
         [SerializeField] private Transform _actionsContainer;
@@ -55,30 +59,13 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public IEnumerable<NodeActionView> ActionViews => _actionViews;
 
-        /// <inheritdoc/>
-        public GameObject SelectedObject => gameObject;
-
-        private SelectionContextSource _selectionContextSource;
-        /// <inheritdoc/>
-        public ISelectionContextSource SelectionContextSource => _selectionContextSource;
-
-        private void Awake()
-        {
-            _selectionContextSource = new SelectionContextSource();
-            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Delete, _deleteKeyCode));
-        }
-
         private void OnEnable()
         {
-            _bodyArea.RightClick += OnPointerUp;
             _bodyArea.DoubleClick += OnDoubleClick;
-
-            SetSelection(false, false);
         }
 
         private void OnDisable()
         {
-            _bodyArea.RightClick -= OnPointerUp;
             _bodyArea.DoubleClick -= OnDoubleClick;
         }
 
@@ -225,6 +212,11 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
         }
 
+        public void OpenContextMenu()
+        {
+            _nodeView.OpenEventContextMenu(this);
+        }
+
         private void UpdateConditionIcons(params string[] ids)
         {
             if (ids == null || ids.Length == 0)
@@ -245,68 +237,6 @@ namespace Talent.GraphEditor.Unity.Runtime
                 currentIcon.transform.SetParent(_conditionIconsContainer, false);
 
                 _currentIcons.Add(currentIcon);
-            }
-        }
-
-        /// <summary>
-        /// Функция обратного вызова, срабатывающая при нажатии указателя на элемент  
-        /// </summary>
-        /// <param name="eventData">Полезная нагрузка события связанного с указателем</param>
-        public void OnPointerDown(PointerEventData eventData) { }
-
-        /// <summary>
-        /// Функция обратного вызова, срабатывающая при отпускании указателя с элемента
-        /// </summary>
-        /// <param name="eventData">Полезная нагрузка события связанного с указателем</param>
-        public void OnPointerUp(PointerEventData eventData)
-        {
-            if (eventData.dragging || eventData.delta.magnitude > 0)
-            {
-                return;
-            }
-
-            if (eventData.button == PointerEventData.InputButton.Left)
-            {
-                Select(false);
-            }
-            else if (eventData.button == PointerEventData.InputButton.Right)
-            {
-                transform.SetAsLastSibling();
-                Select(true);
-            }
-        }
-
-        /// <summary>
-        /// Выбирает представление перехода
-        /// </summary>
-        /// <param name="isContextSelection">Выбран ли переход с помощью контекстное меню</param>
-        public void Select(bool isContextSelection)
-        {
-            _runtimeGraphEditor.ElementSelectionProvider.Select(isContextSelection ? null : this);
-
-            SetSelection(true, isContextSelection);
-        }
-
-        /// <summary>
-        /// Отменяет выбор представление перехода
-        /// </summary>
-        public void Unselect()
-        {
-            _runtimeGraphEditor.ElementSelectionProvider.Unselect(this);
-
-            SetSelection(false, false);
-        }
-
-        private void SetSelection(bool isSelected, bool isContextSelection)
-        {
-            if (_bodyArea != null)
-            {
-                _bodyArea.gameObject.SetActive(isSelected);
-            }
-
-            if (isSelected && isContextSelection)
-            {
-                _nodeView.OpenEventContextMenu(this);
             }
         }
     }

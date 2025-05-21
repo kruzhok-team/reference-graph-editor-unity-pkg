@@ -4,6 +4,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Talent.Graphs;
 using TMPro;
+using UI.Focusing;
 using UnityEngine;
 using UnityEngine.UI;
 namespace Talent.GraphEditor.Unity.Runtime
@@ -11,8 +12,10 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// <summary>
     /// Окно редактирования элементов графа
     /// </summary>
-    public class EditingWindow : MonoBehaviour, IElementSelectable, IUndoable
+    public class EditingWindow : MonoBehaviour, IUndoable
     {
+        [SerializeField] private SimpleContextLayer _context;
+
         [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
         [SerializeField] private Button _saveButton;
         [Header("Event")]
@@ -35,8 +38,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         [SerializeField] private GameObject _actionDropdownHeaders;
         [SerializeField] private Transform _actionsParent;
         [SerializeField] private ActionEditor _actionEditorPrefab;
-        [Header("Hotkeys")]
-        [SerializeField] private KeyCode _closeKeyCode = KeyCode.Escape;
 
         private IconSpriteProviderAsset _iconProvider;
         private string[] _conditionSymbols = new string[6] { "!=", ">=", "<=", ">", "<", "==" };
@@ -65,39 +66,8 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public const string NumberConditionName = "Число";
 
-        /// <inheritdoc/>
-        public GameObject SelectedObject => gameObject;
-
-        private SelectionContextSource _selectionContextSource;
-    
-        /// <inheritdoc/>
-        public ISelectionContextSource SelectionContextSource => _selectionContextSource;
-
-        private void Awake()
-        {
-            _selectionContextSource = new SelectionContextSource();
-            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Cancel, _closeKeyCode));
-        }
-
-        /// <inheritdoc/>
-        public void Unselect()
-        {
-            if (_runtimeGraphEditor.ElementSelectionProvider == null)
-            {
-                return;
-            }
-
-            _runtimeGraphEditor.ElementSelectionProvider.Unselect(this);
-        }
-
         private void OnEnable()
         {
-            if (_runtimeGraphEditor.ElementSelectionProvider == null)
-            {
-                return;
-            }
-
-            _runtimeGraphEditor.ElementSelectionProvider.Select(this);
             _runtimeGraphEditor.UndoController.LockUndoable(this);
             _runtimeGraphEditor.LineClickListener.enabled = false;
 
@@ -190,6 +160,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             OnSecondVariableTriggerChanged(_secondVariableDropdown.value);
 
             SaveCurrentUndoState();
+
+            _context.PushLayer();
         }
 
         /// <summary>
@@ -244,6 +216,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             OnSecondVariableTriggerChanged(_secondVariableDropdown.value);
 
             SaveCurrentUndoState();
+
+            _context.PushLayer();
         }
 
         /// <summary>
@@ -613,7 +587,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             string currentCondition = $"{firstVar} {_conditionSymbolsDropdown.captionText.text} {secondVar}";
 
-            _runtimeGraphEditor.CancelEdgeEditor();
+            _runtimeGraphEditor.CancelEditingWindow();
             switch (_editTarget)
             {
                 case EditTarget.Edge:
@@ -628,6 +602,8 @@ namespace Talent.GraphEditor.Unity.Runtime
 
                     break;
             }
+
+            _context.RemoveLayer();
         }
 
         /// <summary>
@@ -635,7 +611,15 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public void Cancel()
         {
-            _runtimeGraphEditor.CancelEdgeEditor();
+            if (_runtimeGraphEditor.EditingEdge != null && _runtimeGraphEditor.EditingEdge.IsPreview)
+            {
+                _runtimeGraphEditor.EditingEdge.Delete();
+                _runtimeGraphEditor.EditingEdge = null;
+            }
+            
+            _runtimeGraphEditor.CancelEditingWindow();
+
+            _context.RemoveLayer();
         }
 
         /// <summary>
@@ -665,7 +649,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                     break;
             }
 
-            _runtimeGraphEditor.CancelEdgeEditor();
+            _runtimeGraphEditor.CancelEditingWindow();
         }
 
         private void OnModuleChanged(int moduleIndex)

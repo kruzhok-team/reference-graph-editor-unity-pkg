@@ -5,6 +5,7 @@ using Talent.GraphEditor.Core;
 using Talent.GraphEditor.Unity.Runtime.ContextMenu;
 using Talent.Graphs;
 using TMPro;
+using UI.Focusing;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -13,30 +14,31 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// <summary>
     /// Представление узла
     /// </summary>
-    public class NodeView : MonoBehaviour, INodeView, IElementSelectable, IPointerDownHandler, IPointerUpHandler
+    public class NodeView : MonoBehaviour, INodeView
     {
+        [SerializeField] private SimpleSelectable _selectable;
+
+        [Space]
+
         [SerializeField] private TMP_InputField _nameTMP;
         [SerializeField] private InteractArea _bodyArea;
         [SerializeField] private RectTransform _childsContainer;
         [SerializeField] private Transform _triggersContainer;
-        [SerializeField] private CanvasGroup _buttonsCanvasGroup;
         [SerializeField] private GameObject _nameEditButton;
         [SerializeField] private EdgeCreationButton[] _connectionButtons;
-        [SerializeField] private Image _outline;
 
         [Header("ContextMenu")]
-        [SerializeField] private GameObject _contextSelection;
         [SerializeField] private NodeViewContextMenu _nodeViewContextMenu;
         [SerializeField] private ActionContextMenu _actionContextMenu;
-
-        [Header("Hotkeys")]
-        [SerializeField] private KeyCode _cancelKeyCode = KeyCode.Escape;
-        [SerializeField] private KeyCode _deleteKeyCode = KeyCode.Delete;
 
         private RuntimeGraphEditor _runtimeGraphEditor;
         private Transform _defaultParent;
         private List<EdgeView> _edgeViews = new();
 
+        /// <summary>
+        /// Список переходов из узла
+        /// </summary>
+        public IEnumerable<EdgeView> EdgeViews => _edgeViews;
         /// <summary>
         /// Контейнер дочерних элементов
         /// </summary>
@@ -58,13 +60,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// Уникальный идентификатор узла
         /// </summary>
         public string ID { get; set; }
-
-        /// <inheritdoc/>
-        public GameObject SelectedObject => _bodyArea.gameObject;
-
-        private SelectionContextSource _selectionContextSource;
-        /// <inheritdoc/>
-        public ISelectionContextSource SelectionContextSource => _selectionContextSource;
     
         /// <summary>
         /// Событие на запрос того, чтобы сделать узел родительским
@@ -84,36 +79,18 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public bool HasParent { get; private set; }
 
-        private void Awake()
-        {
-            _selectionContextSource = new SelectionContextSource();
-            _selectionContextSource.AddHotkeyAction(new HotkeyAction(OnCancelHotkeyPressed, _cancelKeyCode));
-            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Delete, _deleteKeyCode));
-            _selectionContextSource.AddHotkeyAction(new HotkeyAction(Duplicate,  KeyCode.LeftControl, KeyCode.D));
-        }
-
         private void OnEnable()
         {
             _defaultParent = transform.parent;
 
-            _bodyArea.Click += OnClicked;
-            _bodyArea.RightClick += OnPointerUp;
             _bodyArea.BeginDrag += OnBeginDragElement;
             _bodyArea.Drag += OnDragElement;
-            _bodyArea.EndDrag += OnEndDragElement;
-
-            SetSelection(false, false);
         }
 
         private void OnDisable()
         {
-            _bodyArea.Click -= OnClicked;
-            _bodyArea.RightClick -= OnPointerUp;
             _bodyArea.BeginDrag -= OnBeginDragElement;
             _bodyArea.Drag -= OnDragElement;
-            _bodyArea.EndDrag -= OnEndDragElement;
-        
-            _runtimeGraphEditor.ElementSelectionProvider.Unselect(this);
         }
 
         /// <summary>
@@ -210,8 +187,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 edge.UpdateSourceParent();
             }
-
-            parentGraphView.RebuildInLateUpdate = true;
         }
 
         /// <summary>
@@ -220,12 +195,15 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <param name="eventView">Представление перехода в узле</param>
         public void OpenEventContextMenu(NodeEventView eventView)
         {
-            _contextSelection.SetActive(true);
-
-            _nodeViewContextMenu.gameObject.SetActive(false);
-            _actionContextMenu.gameObject.SetActive(true);
-
             _actionContextMenu.Init(eventView);
+        }
+
+        /// <summary>
+        /// Открывает контекстное меню редактора ноды
+        /// </summary>
+        public void OpenNodeContextMenu()
+        {
+            _nodeViewContextMenu.Init();
         }
 
         /// <summary>
@@ -254,6 +232,8 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <param name="edgeView">Представление ребра</param>
         public void RemoveEdge(EdgeView edgeView)
         {
+            _nodeViewContextMenu.RemoveEdge(edgeView);
+
             _edgeViews.Remove(edgeView);
         }
 
@@ -291,6 +271,11 @@ namespace Talent.GraphEditor.Unity.Runtime
             _runtimeGraphEditor?.GraphEditor.RemoveNode(this);
         }
 
+        public void Select()
+        {
+            UIFocusingSystem.Instance.Select(_selectable);
+        }
+
         private void OnCancelHotkeyPressed()
         {
             NodeParentCanceled?.Invoke(this);
@@ -312,12 +297,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             _runtimeGraphEditor.RequestCreateUndoState();
-
-            if (_buttonsCanvasGroup != null)
-            {
-                _buttonsCanvasGroup.alpha = 0;
-                _buttonsCanvasGroup.interactable = false;
-            }
         }
 
         private void OnDragElement(PointerEventData eventData)
@@ -331,98 +310,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             VisualData.Position = transform.localPosition;
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent.transform as RectTransform);
-        }
-
-        private void OnEndDragElement(PointerEventData eventData)
-        {
-            if (eventData.button != PointerEventData.InputButton.Left)
-            {
-                return;
-            }
-
-            if (_buttonsCanvasGroup != null)
-            {
-                _buttonsCanvasGroup.alpha = 1;
-                _buttonsCanvasGroup.interactable = true;
-            }
-        }
-
-        /// <summary>
-        /// Функция обратного вызова, срабатывающая при нажатии указателя на элемент  
-        /// </summary>
-        /// <param name="eventData">Полезная нагрузка события связанного с указателем</param>
-        public void OnPointerDown(PointerEventData eventData)
-        {
-            _runtimeGraphEditor.OnClicked(this);
-        }
-
-        /// <summary>
-        /// Функция обратного вызова, срабатывающая при отпускании указателя с элемента
-        /// </summary>
-        /// <param name="eventData">Полезная нагрузка события связанного с указателем</param>
-        public void OnPointerUp(PointerEventData eventData)
-        {
-            if (eventData.dragging || eventData.delta.magnitude > 0)
-            {
-                return;
-            }
-
-            if (_runtimeGraphEditor.EditingEdge != null)
-            {
-                return;
-            }
-
-            if (eventData.button == PointerEventData.InputButton.Left)
-            {
-                Select(false);
-            }
-            else if (eventData.button == PointerEventData.InputButton.Right && _nodeViewContextMenu != null && _actionContextMenu != null)
-            {
-                transform.SetAsLastSibling();
-                Select(true);
-            }
-        }
-
-        /// <summary>
-        /// Выбирает представление узла
-        /// </summary>
-        /// <param name="isContextSelection">Выбран ли узел с помощью контекстное меню</param>
-        public void Select(bool isContextSelection)
-        {
-            _runtimeGraphEditor.ElementSelectionProvider.Select(isContextSelection ? null : this);
-
-            if (_nodeViewContextMenu != null)
-            {
-                _nodeViewContextMenu.gameObject.SetActive(true);
-            }
-
-            if (_actionContextMenu != null)
-            {
-                _actionContextMenu.gameObject.SetActive(false);
-            }
-
-            SetSelection(true, isContextSelection);
-        }
-
-        /// <summary>
-        /// Отменяет выбор представления узла
-        /// </summary>
-        public void Unselect()
-        {
-            _runtimeGraphEditor.ElementSelectionProvider.Unselect(this);
-            NodeParentCanceled?.Invoke(this);
-
-            if (_nodeViewContextMenu != null)
-            {
-                _nodeViewContextMenu.gameObject.SetActive(false);
-            }
-
-            if (_actionContextMenu != null)
-            {
-                _actionContextMenu.gameObject.SetActive(false);
-            }
-
-            SetSelection(false, false);
         }
 
         /// <summary>
@@ -465,7 +352,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <param name="isVisible">Нужно ли включить обводку</param>
         public void SetOutlineVisibility(bool isVisible)
         {
-            _outline.gameObject.SetActive(isVisible);
+
         }
 
         /// <summary>
@@ -487,36 +374,9 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             return childNodes.All(nodeView => nodeView.VisualData.Name != desiredName || nodeView == this);
-
         }
 
-        private void SetSelection(bool isSelected, bool isContextSelection)
-        {
-            if (_bodyArea != null)
-            {
-                _bodyArea.enabled = isSelected && !isContextSelection;
-                SetOutlineVisibility(isSelected);
-            }
-
-            if (_contextSelection != null)
-            {
-                _contextSelection.SetActive(isSelected && isContextSelection);
-            }
-
-            if (_buttonsCanvasGroup != null)
-            {
-                bool active = isSelected && !isContextSelection;
-                _buttonsCanvasGroup.alpha = active ? 1 : 0;
-                _buttonsCanvasGroup.interactable = active;
-            }
-
-            if (_nameEditButton != null)
-            {
-                _nameEditButton.SetActive(isSelected);
-            }
-        }
-
-        private void OnClicked(PointerEventData eventData)
+        public void OnClicked()
         {
             _runtimeGraphEditor.OnClicked(this);
         }

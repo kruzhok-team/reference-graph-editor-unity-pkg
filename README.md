@@ -20,12 +20,12 @@
 Версии пакетов представлены в таблице ниже.
 Также необходимо импортировать ```TMP Essential Resources``` для корректной работы редактора.
 Далее необходимо импортировать ```Runtime``` sample. Внутри него содержится вся логика работы редактора, а также дополнительные материалы.
-Внутри ```Assets\Samples\Reference Editor Package\0.0.1-dev\Runtime\Runtime Graph Editor``` будет находиться сцена с редактором графов.
+Внутри ```Assets\Samples\Reference Editor Package\x.x.x\Runtime\Runtime Graph Editor``` будет находиться сцена с редактором графов.
 
 ### Зависимости пакета
 | Название пакета                             | Версия пакета |
 |---------------------------------------------|---------------|
-| ```org.kruzhok.talent.logic```              | ```v1.0.0```  |
+| ```org.kruzhok.talent.logic```              | ```v1.0.1```  |
 | ```com.unity.ugui```                        | ```v1.0.0```  |
 | ```com.unity.textmeshpro```                 | ```v3.0.6```  |
 | ```com.unity.uiextensions.git```            | ```v2.3.2```  |

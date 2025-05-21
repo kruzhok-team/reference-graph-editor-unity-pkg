@@ -10,7 +10,7 @@ namespace Talent.GraphEditor.Unity.Runtime.Demo
     {
         [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
 
-        private void Awake()
+        private void Start()
         {
             CyberiadaGraphDocument graphDocument = new CyberiadaGraphDocument();
             graphDocument.RootGraph = new CyberiadaGraph("gMain", new GraphData());
