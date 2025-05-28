@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace UI.Focusing
 {
@@ -26,6 +24,8 @@ namespace UI.Focusing
             {
                 ClearSelection();
             }
+
+            _selection.Add(selectable);
 
             selectable.Select();
             Selected?.Invoke(selectable);
