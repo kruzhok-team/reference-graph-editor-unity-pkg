@@ -103,6 +103,8 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
 
         private void OnDeleteClicked()
         {
+            _context.RemoveLayer();
+
             _nodeView.Delete();
         }
     }
