@@ -680,6 +680,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             _runtimeGraphEditor.CancelEditingWindow();
+
+            _context.RemoveLayer();
         }
 
         private void OnModuleChanged(int moduleIndex)
