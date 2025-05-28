@@ -1060,9 +1060,12 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             _iconProvider.TryGetIcon(NumberConditionName, out var numberSprite);
 
-            var data = new LocalizedOptionData();
-            data.text = NumberConditionName;
-            data.image = numberSprite;
+            var data = new LocalizedOptionData
+            {
+                text = NumberConditionName,
+                OriginalText = NumberConditionName,
+                image = numberSprite
+            };
 
             var variableModuleOptions2 = new List<TMP_Dropdown.OptionData>() { data };
 
