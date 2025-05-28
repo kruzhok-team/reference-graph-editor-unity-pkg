@@ -628,6 +628,11 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private LocalizedOptionData GetLocalizedData(TMP_Dropdown dropdown)
         {
+            if (dropdown.options.Count == 0)
+            {
+                return new LocalizedOptionData();
+            }
+
             return dropdown.options[dropdown.value] as LocalizedOptionData;
         }
 
@@ -968,7 +973,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             if (includeEmptyModule)
             {
-                moduleOptions.Add(new LocalizedOptionData());
+                moduleOptions.Add(new LocalizedOptionData { OriginalText = "", text = ""});
             }
 
             foreach (string module in _triggerModules.Keys)
@@ -989,6 +994,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             _moduleDropdown.ClearOptions();
             _moduleDropdown.AddOptions(moduleOptions);
+
             _moduleDropdown.value = GetDropdownOptionIndex(_moduleDropdown, firstTriggerModule);
             _moduleDropdown.onValueChanged.AddListener(OnModuleChanged);
 
