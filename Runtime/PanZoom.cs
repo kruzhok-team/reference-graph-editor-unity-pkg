@@ -120,7 +120,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private void HandlePan()
         {
-            if (Input.GetMouseButtonUp(0) || _runtimeGraphEditor.EditingEdge != null && _runtimeGraphEditor.EditingEdge.IsDraggableMode)
+            if (Input.GetMouseButtonUp(0) || _runtimeGraphEditor.EditingEdge != null && _runtimeGraphEditor.EditingEdge.IsDraggableMode || UIFocusingSystem.Instance.Contexts.First().BlockOtherHotkeys)
             {
                 _isPanning = false;
                 return;
