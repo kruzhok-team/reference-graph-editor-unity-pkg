@@ -712,13 +712,13 @@ namespace Talent.GraphEditor.Unity.Runtime
                 {
                     _iconProvider.TryGetIcon(trigger, out var sprite);
 
-                    string localizedTrigger = GetLocalized(trigger);
+                    string localizedTrigger = GetLocalized($"{module}.{trigger}");
 
-                    if (localizedTrigger == "entry")
+                    if (localizedTrigger == "System.entry")
                     {
                         localizedTrigger = "Вход";
                     }
-                    else if (localizedTrigger == "exit")
+                    else if (localizedTrigger == "System.exit")
                     {
                         localizedTrigger = "Выход";
                     }
@@ -1000,7 +1000,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             if (includeEmptyModule)
             {
-                moduleOptions.Add(new LocalizedOptionData { OriginalText = "", text = ""});
+                moduleOptions.Add(new LocalizedOptionData { OriginalText = "", text = "" });
             }
 
             foreach (string module in _triggerModules.Keys)
@@ -1031,13 +1031,13 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 _iconProvider.TryGetIcon(trigger, out var sprite);
 
-                string localizedTrigger = GetLocalized(trigger);
+                string localizedTrigger = GetLocalized($"{firstTriggerModule}.{trigger}");
 
-                if (localizedTrigger == "entry")
+                if (localizedTrigger == "System.entry")
                 {
                     localizedTrigger = "Вход";
                 }
-                else if (localizedTrigger == "exit")
+                else if (localizedTrigger == "System.exit")
                 {
                     localizedTrigger = "Выход";
                 }
