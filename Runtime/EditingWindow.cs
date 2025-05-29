@@ -445,7 +445,21 @@ namespace Talent.GraphEditor.Unity.Runtime
                     {
                         parameterContainer.ParameterValueDropdown.gameObject.SetActive(true);
                         parameterContainer.ParameterValueDropdown.ClearOptions();
-                        parameterContainer.ParameterValueDropdown.AddOptions(actionParameter.Values.ToList());
+
+                        List<TMP_Dropdown.OptionData> options = new();
+
+                        foreach (var value in actionParameter.Values)
+                        {
+                            var data = new LocalizedOptionData
+                            {
+                                OriginalText = value,
+                                text = GetLocalized(value)
+                            };
+
+                            options.Add(data);
+                        }
+
+                        parameterContainer.ParameterValueDropdown.AddOptions(options);
                         parameterContainer.ParameterValueDropdown.value = defaultValue != null ? GetDropdownOptionIndex(parameterContainer.ParameterValueDropdown, defaultValue.Item2) : 0;
                     }
                     break;
@@ -494,7 +508,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                             parameter = parameterContainer.ParameterValueInputField.text;
                             break;
                         case "enum":
-                            parameter = parameterContainer.ParameterValueDropdown.captionText.text;
+                            parameter = GetLocalizedData(parameterContainer.ParameterValueDropdown).OriginalText;
                             break;
                     }
                 }
@@ -568,7 +582,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                                 parameter = string.IsNullOrEmpty(parameterContainer.ParameterValueInputField.text) ? "0" : parameterContainer.ParameterValueInputField.text;
                                 break;
                             case "enum":
-                                parameter = parameterContainer.ParameterValueDropdown.captionText.text;
+                                parameter = GetLocalizedData(parameterContainer.ParameterValueDropdown).OriginalText;
                                 break;
                         }
 
@@ -698,10 +712,21 @@ namespace Talent.GraphEditor.Unity.Runtime
                 {
                     _iconProvider.TryGetIcon(trigger, out var sprite);
 
+                    string localizedTrigger = GetLocalized(trigger);
+
+                    if (localizedTrigger == "entry")
+                    {
+                        localizedTrigger = "Вход";
+                    }
+                    else if (localizedTrigger == "exit")
+                    {
+                        localizedTrigger = "Выход";
+                    }
+
                     var data = new LocalizedOptionData
                     {
                         OriginalText = trigger,
-                        text = GetLocalized($"{module}.{trigger}"),
+                        text = localizedTrigger,
                         image = sprite
                     };
 
