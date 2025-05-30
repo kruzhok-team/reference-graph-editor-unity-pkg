@@ -289,8 +289,8 @@ namespace Talent.GraphEditor.Unity.Runtime
 
                 var data = new LocalizedOptionData
                 {
-                    OriginalText = GetLocalized($"{module}.{actionTrigger}"),
-                    text = actionTrigger,
+                    OriginalText = actionTrigger,
+                    text = GetLocalized($"{module}.{actionTrigger}"),
                     image = sprite
                 };
 
