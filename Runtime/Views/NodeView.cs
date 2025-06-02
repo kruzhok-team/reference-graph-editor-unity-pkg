@@ -203,6 +203,8 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public void OpenNodeContextMenu()
         {
+            _runtimeGraphEditor.CancelEditingEdge(this);
+
             _nodeViewContextMenu.Init();
         }
 
