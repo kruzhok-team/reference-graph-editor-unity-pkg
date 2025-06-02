@@ -1122,7 +1122,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 {
                     OriginalText = variable,
                     text = GetLocalized($"{firstVariableModule}.{variable}"),
-                    image = numberSprite
+                    image = sprite
                 };
 
                 variableOptions.Add(data);
