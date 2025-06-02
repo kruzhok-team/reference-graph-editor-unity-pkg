@@ -285,7 +285,10 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string actionTrigger in _actionModules[module])
             {
-                _iconProvider.TryGetIcon(actionTrigger, out var sprite);
+                if (!_iconProvider.TryGetIcon($"{module}.{actionTrigger}", out var sprite))
+                {
+                    _iconProvider.TryGetIcon(actionTrigger, out sprite);
+                }
 
                 var data = new LocalizedOptionData
                 {
@@ -344,7 +347,10 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string actionTrigger in _actionModules[module])
             {
-                _iconProvider.TryGetIcon(actionTrigger, out var sprite);
+                if (!_iconProvider.TryGetIcon($"{module}.{actionTrigger}", out var sprite))
+                {
+                    _iconProvider.TryGetIcon(actionTrigger, out sprite);
+                }
 
                 var data = new LocalizedOptionData
                 {
@@ -781,7 +787,10 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string variable in _variableModules[module])
             {
-                _iconProvider.TryGetIcon(variable, out var sprite);
+                if (!_iconProvider.TryGetIcon($"{module}.{variable}", out var sprite))
+                {
+                    _iconProvider.TryGetIcon(variable, out sprite);
+                }
 
                 var data = new LocalizedOptionData();
                 data.OriginalText = variable;
@@ -841,7 +850,10 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string variable in _variableModules[module])
             {
-                _iconProvider.TryGetIcon(variable, out var sprite);
+                if (!_iconProvider.TryGetIcon($"{module}.{variable}", out var sprite))
+                {
+                    _iconProvider.TryGetIcon(variable, out sprite);
+                }
 
                 var data = new LocalizedOptionData();
                 data.OriginalText = variable;
@@ -1116,7 +1128,10 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string variable in _variableModules[firstVariableModule])
             {
-                _iconProvider.TryGetIcon(variable, out var sprite);
+                if (!_iconProvider.TryGetIcon($"{firstVariableModule}.{variable}", out var sprite))
+                {
+                    _iconProvider.TryGetIcon(variable, out sprite);
+                }
 
                 data = new LocalizedOptionData
                 {
