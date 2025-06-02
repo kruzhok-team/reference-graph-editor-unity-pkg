@@ -29,6 +29,14 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
                 _context.AddFocusedElements(edgeView.gameObject, edgeView.Line.gameObject);
             }
 
+            foreach (NodeView nodeView in _nodeView.ChildsContainer.GetComponentsInChildren<NodeView>())
+            {
+                foreach (EdgeView edgeView in nodeView.EdgeViews)
+                {
+                    _context.AddFocusedElements(edgeView.gameObject, edgeView.Line.gameObject);
+                }
+            }
+
             _context.PushLayer();
         }
 

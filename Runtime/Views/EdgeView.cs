@@ -209,8 +209,35 @@ namespace Talent.GraphEditor.Unity.Runtime
             
             RecalculateParent();
             RefreshtConnections(false);
+        }
 
+        public void SetupMenuContextFocusing()
+        {
             _contextMenuLevel.AddFocusedElements(SourceView.gameObject, TargetView.gameObject, _line.gameObject);
+
+            AddNodeFocusing(SourceView);
+            AddNodeFocusing(TargetView);
+        }
+
+        private void AddNodeFocusing(NodeView nodeView)
+        {
+            foreach (EdgeView edgeView in nodeView.EdgeViews)
+            {
+                _contextMenuLevel.AddFocusedElements(edgeView.gameObject, edgeView.Line.gameObject);
+            }
+
+            if (nodeView.ChildsContainer == null)
+            {
+                return;
+            }
+
+            foreach (NodeView node in nodeView.ChildsContainer.GetComponentsInChildren<NodeView>())
+            {
+                foreach (EdgeView edgeView in node.EdgeViews)
+                {
+                    _contextMenuLevel.AddFocusedElements(edgeView.gameObject, edgeView.Line.gameObject);
+                }
+            }
         }
 
         public void Select()
