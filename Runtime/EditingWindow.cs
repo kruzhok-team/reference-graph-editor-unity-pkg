@@ -263,7 +263,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 var data = new LocalizedOptionData
                 {
                     OriginalText = actionModule,
-                    text = LocalizationSettings.StringDatabase.GetLocalizedString(_localizationTable.TableCollectionName, actionModule),
+                    text = GetLocalized(actionModule),
                     image = sprite
                 };
 
@@ -285,12 +285,15 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string actionTrigger in _actionModules[module])
             {
-                _iconProvider.TryGetIcon(actionTrigger, out var sprite);
+                if (!_iconProvider.TryGetIcon($"{module}.{actionTrigger}", out var sprite))
+                {
+                    _iconProvider.TryGetIcon(actionTrigger, out sprite);
+                }
 
                 var data = new LocalizedOptionData
                 {
-                    OriginalText = LocalizationSettings.StringDatabase.GetLocalizedString(_localizationTable.TableCollectionName, $"{module}.{actionTrigger}"),
-                    text = actionTrigger,
+                    OriginalText = actionTrigger,
+                    text = GetLocalized($"{module}.{actionTrigger}"),
                     image = sprite
                 };
 
@@ -344,12 +347,15 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string actionTrigger in _actionModules[module])
             {
-                _iconProvider.TryGetIcon(actionTrigger, out var sprite);
+                if (!_iconProvider.TryGetIcon($"{module}.{actionTrigger}", out var sprite))
+                {
+                    _iconProvider.TryGetIcon(actionTrigger, out sprite);
+                }
 
                 var data = new LocalizedOptionData
                 {
                     OriginalText = actionTrigger,
-                    text = LocalizationSettings.StringDatabase.GetLocalizedString(_localizationTable.TableCollectionName, $"{module}.{actionTrigger}"),
+                    text = GetLocalized($"{module}.{actionTrigger}"),
                     image = sprite
                 };
 
@@ -445,7 +451,21 @@ namespace Talent.GraphEditor.Unity.Runtime
                     {
                         parameterContainer.ParameterValueDropdown.gameObject.SetActive(true);
                         parameterContainer.ParameterValueDropdown.ClearOptions();
-                        parameterContainer.ParameterValueDropdown.AddOptions(actionParameter.Values.ToList());
+
+                        List<TMP_Dropdown.OptionData> options = new();
+
+                        foreach (var value in actionParameter.Values)
+                        {
+                            var data = new LocalizedOptionData
+                            {
+                                OriginalText = value,
+                                text = GetLocalized(value)
+                            };
+
+                            options.Add(data);
+                        }
+
+                        parameterContainer.ParameterValueDropdown.AddOptions(options);
                         parameterContainer.ParameterValueDropdown.value = defaultValue != null ? GetDropdownOptionIndex(parameterContainer.ParameterValueDropdown, defaultValue.Item2) : 0;
                     }
                     break;
@@ -494,7 +514,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                             parameter = parameterContainer.ParameterValueInputField.text;
                             break;
                         case "enum":
-                            parameter = parameterContainer.ParameterValueDropdown.captionText.text;
+                            parameter = GetLocalizedData(parameterContainer.ParameterValueDropdown).OriginalText;
                             break;
                     }
                 }
@@ -568,7 +588,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                                 parameter = string.IsNullOrEmpty(parameterContainer.ParameterValueInputField.text) ? "0" : parameterContainer.ParameterValueInputField.text;
                                 break;
                             case "enum":
-                                parameter = parameterContainer.ParameterValueDropdown.captionText.text;
+                                parameter = GetLocalizedData(parameterContainer.ParameterValueDropdown).OriginalText;
                                 break;
                         }
 
@@ -628,6 +648,11 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private LocalizedOptionData GetLocalizedData(TMP_Dropdown dropdown)
         {
+            if (dropdown.options.Count == 0)
+            {
+                return new LocalizedOptionData();
+            }
+
             return dropdown.options[dropdown.value] as LocalizedOptionData;
         }
 
@@ -641,7 +666,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 _runtimeGraphEditor.EditingEdge.Delete();
                 _runtimeGraphEditor.EditingEdge = null;
             }
-            
+
             _runtimeGraphEditor.CancelEditingWindow();
 
             _context.RemoveLayer();
@@ -675,6 +700,8 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             _runtimeGraphEditor.CancelEditingWindow();
+
+            _context.RemoveLayer();
         }
 
         private void OnModuleChanged(int moduleIndex)
@@ -691,10 +718,21 @@ namespace Talent.GraphEditor.Unity.Runtime
                 {
                     _iconProvider.TryGetIcon(trigger, out var sprite);
 
+                    string localizedTrigger = GetLocalized($"{module}.{trigger}");
+
+                    if (localizedTrigger == "System.entry")
+                    {
+                        localizedTrigger = "Вход";
+                    }
+                    else if (localizedTrigger == "System.exit")
+                    {
+                        localizedTrigger = "Выход";
+                    }
+
                     var data = new LocalizedOptionData
                     {
                         OriginalText = trigger,
-                        text = LocalizationSettings.StringDatabase.GetLocalizedString(_localizationTable.TableCollectionName, $"{module}.{trigger}"),
+                        text = localizedTrigger,
                         image = sprite
                     };
 
@@ -749,11 +787,14 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string variable in _variableModules[module])
             {
-                _iconProvider.TryGetIcon(variable, out var sprite);
+                if (!_iconProvider.TryGetIcon($"{module}.{variable}", out var sprite))
+                {
+                    _iconProvider.TryGetIcon(variable, out sprite);
+                }
 
                 var data = new LocalizedOptionData();
                 data.OriginalText = variable;
-                data.text = LocalizationSettings.StringDatabase.GetLocalizedString(_localizationTable.TableCollectionName, $"{module}.{variable}");
+                data.text = GetLocalized($"{module}.{variable}");
                 data.image = sprite;
 
                 variableOptions.Add(data);
@@ -809,11 +850,14 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string variable in _variableModules[module])
             {
-                _iconProvider.TryGetIcon(variable, out var sprite);
+                if (!_iconProvider.TryGetIcon($"{module}.{variable}", out var sprite))
+                {
+                    _iconProvider.TryGetIcon(variable, out sprite);
+                }
 
                 var data = new LocalizedOptionData();
                 data.OriginalText = variable;
-                data.text = LocalizationSettings.StringDatabase.GetLocalizedString(_localizationTable.TableCollectionName,$"{module}.{variable}");
+                data.text = GetLocalized($"{module}.{variable}");
                 data.image = sprite;
 
                 variableOptions.Add(data);
@@ -940,7 +984,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             _conditionSettingsToggle.onValueChanged.RemoveListener(OnConditionToggleChanged);
             _secondVariableInputField.onValueChanged.RemoveListener(OnConditionInputsChanged);
         }
-        
+
         private void ResetAllSettings(bool includeEmptyModule = false)
         {
             //Triggers
@@ -953,7 +997,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             foreach (string trigger in _runtimeGraphEditor.Triggers)
             {
                 GetModuleAndID(trigger, out string moduleKey, out string triggerKey);
-                
+
                 if (!_triggerModules.ContainsKey(moduleKey))
                 {
                     _triggerModules.Add(moduleKey, new List<string>());
@@ -961,21 +1005,21 @@ namespace Talent.GraphEditor.Unity.Runtime
 
                 _triggerModules[moduleKey].Add(triggerKey);
             }
-            
+
             string firstTriggerModule = _triggerModules.Keys.First();
 
             var moduleOptions = new List<TMP_Dropdown.OptionData>();
 
             if (includeEmptyModule)
             {
-                moduleOptions.Add(new LocalizedOptionData());
+                moduleOptions.Add(new LocalizedOptionData { OriginalText = "", text = "" });
             }
 
             foreach (string module in _triggerModules.Keys)
             {
                 _iconProvider.TryGetIcon(module, out var sprite);
 
-                string localizedModule = LocalizationSettings.StringDatabase.GetLocalizedString(_localizationTable.TableCollectionName, module);
+                string localizedModule = GetLocalized(module);
 
                 var optionData = new LocalizedOptionData
                 {
@@ -989,6 +1033,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             _moduleDropdown.ClearOptions();
             _moduleDropdown.AddOptions(moduleOptions);
+
             _moduleDropdown.value = GetDropdownOptionIndex(_moduleDropdown, firstTriggerModule);
             _moduleDropdown.onValueChanged.AddListener(OnModuleChanged);
 
@@ -998,13 +1043,13 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 _iconProvider.TryGetIcon(trigger, out var sprite);
 
-                string localizedTrigger = LocalizationSettings.StringDatabase.GetLocalizedString(_localizationTable.TableCollectionName, trigger);
+                string localizedTrigger = GetLocalized($"{firstTriggerModule}.{trigger}");
 
-                if (localizedTrigger == "entry")
+                if (localizedTrigger == "System.entry")
                 {
                     localizedTrigger = "Вход";
                 }
-                else if (localizedTrigger == "exit")
+                else if (localizedTrigger == "System.exit")
                 {
                     localizedTrigger = "Выход";
                 }
@@ -1052,9 +1097,12 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             _iconProvider.TryGetIcon(NumberConditionName, out var numberSprite);
 
-            var data = new LocalizedOptionData();
-            data.text = NumberConditionName;
-            data.image = numberSprite;
+            var data = new LocalizedOptionData
+            {
+                text = NumberConditionName,
+                OriginalText = NumberConditionName,
+                image = numberSprite
+            };
 
             var variableModuleOptions2 = new List<TMP_Dropdown.OptionData>() { data };
 
@@ -1068,7 +1116,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 data = new LocalizedOptionData
                 {
                     OriginalText = variableModule,
-                    text = LocalizationSettings.StringDatabase.GetLocalizedString(_localizationTable.TableCollectionName, variableModule),
+                    text = GetLocalized(variableModule),
                     image = sprite
                 };
 
@@ -1080,13 +1128,16 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string variable in _variableModules[firstVariableModule])
             {
-                _iconProvider.TryGetIcon(variable, out var sprite);
+                if (!_iconProvider.TryGetIcon($"{firstVariableModule}.{variable}", out var sprite))
+                {
+                    _iconProvider.TryGetIcon(variable, out sprite);
+                }
 
                 data = new LocalizedOptionData
                 {
                     OriginalText = variable,
-                    text = LocalizationSettings.StringDatabase.GetLocalizedString(_localizationTable.TableCollectionName, $"{firstVariableModule}.{variable}"),
-                    image = numberSprite
+                    text = GetLocalized($"{firstVariableModule}.{variable}"),
+                    image = sprite
                 };
 
                 variableOptions.Add(data);
@@ -1182,7 +1233,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
                     return;
                 }
-                
+
                 string[] splitted = stringToSplit.Split('.');
                 moduleKey = splitted.Length < 2 ? "System" : splitted[0];
                 actionKey = splitted.Length < 2 ? splitted[0] : splitted[1];
@@ -1209,7 +1260,20 @@ namespace Talent.GraphEditor.Unity.Runtime
             return -1;
         }
 
-    #region Undo
+        string GetLocalized(string input)
+        {
+            if (_localizationTable != null)
+            {
+                // TODO does not look like a proper way to lozalize dynamic string, should check documentation..
+                return LocalizationSettings.StringDatabase.GetLocalizedString(_localizationTable.TableCollectionName, input);
+            }
+            else
+            {
+                return input;
+            }
+        }
+
+        #region Undo
 
         private UndoState _currentUndoState;
 
@@ -1243,7 +1307,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             SubscribeListeners();
         }
-    
+
         /// <inheritdoc/>
         public string GetUndoContext()
         {
@@ -1404,6 +1468,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             public List<Tuple<string, List<Tuple<string, string>>>> currentActions { get; set; }
         }
 
-    #endregion
+        #endregion
     }
 }

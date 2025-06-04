@@ -42,6 +42,10 @@ namespace Talent.GraphEditor.Unity.Runtime
         private GameObject _currentIcon;
         
         /// <summary>
+        /// Родительский узел
+        /// </summary>
+        public NodeView NodeView => _nodeView;
+        /// <summary>
         /// Идентификатор события
         /// </summary>
         public string TriggerID => _triggerID;

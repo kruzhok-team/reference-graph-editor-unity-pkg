@@ -396,6 +396,26 @@ namespace Talent.GraphEditor.Unity.Runtime
         }
 
         /// <summary>
+        /// Отменяет состояние редактирования перехода
+        /// </summary>
+        public void CancelEditingEdge(NodeView nodeView)
+        {
+            if (EditingEdge != null)
+            {
+                if (EditingEdge.IsPreview)
+                {
+                    EditingEdge.Delete();
+                }
+                else
+                {
+                    OnClicked(nodeView);
+                }
+
+                EditingEdge = null;
+            }
+        }
+
+        /// <summary>
         /// Функция обратного вызова, срабатывающая при нажатии на представление узла
         /// </summary>
         /// <param name="nodeView">Представление узла, по которому произошло нажатие</param>

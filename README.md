@@ -30,6 +30,8 @@
 | ```com.unity.textmeshpro```                 | ```v3.0.6```  |
 | ```com.unity.uiextensions.git```            | ```v2.3.2```  |
 | ```com.unity.nuget.newtonsoft-json```       | ```v3.2.1```  |
+| ```com.unity.localization```                | ```v1.5.4```  |
+
 
 ## © 2025 Кружковое движение  
 
