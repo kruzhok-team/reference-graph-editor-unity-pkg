@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using UI.Focusing;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -11,7 +13,10 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// </summary>
     public class PanZoom : MonoBehaviour
     {
+        [SerializeField] private SimpleContextLayer _context;
+
         [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
+        [SerializeField] private RectTransform _viewportRectTransform;
         [SerializeField] private RenderController _renderController;
         [SerializeField] private TextMeshProUGUI _zoomValueText;
         [SerializeField] private RectTransform _targetRectTransform;
@@ -24,14 +29,8 @@ namespace Talent.GraphEditor.Unity.Runtime
         [SerializeField] private Vector2 _leftBottomSizeBorders = new Vector2(1500, 1000);
         [SerializeField] private Vector2 _leftBottomSizeOffsets = new Vector2(600, 400);
 
-        [Header("Hotkeys")]
-        [SerializeField] private KeyCode _focusHotkey = KeyCode.F;
-        [SerializeField] private KeyCode _focusGraph = KeyCode.LeftShift;
-
         private RectTransform _backgroundRectTransform;
         private Vector2 _defaultScale;
-        private float _defaultWidth;
-        private float _defaultHeight;
         private float _defaultBackgroundWidth;
         private float _defaultBackgroundHeight;
 
@@ -40,12 +39,10 @@ namespace Talent.GraphEditor.Unity.Runtime
         private Vector2 _defaultMinMaxZoom;
         private Canvas _canvas;
 
-        private IElementSelectable _selectedElement;
-
         private bool _isPanning;
         private bool _isAnimating;
 
-        private const string BlockZoomTag = "BlockZoom";
+        private ISelectable _selectedElement;
 
         private void Start()
         {
@@ -55,12 +52,27 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
         }
 
+        private void OnEnable()
+        {
+            UIFocusingSystem.Instance.SelectionHandler.Selected += ElementSelected;
+            UIFocusingSystem.Instance.SelectionHandler.Deselected += ElementDeselected;
+
+            _context.PushLayer();
+        }
+
+        private void OnDisable()
+        {
+            UIFocusingSystem.Instance.SelectionHandler.Selected -= ElementSelected;
+            UIFocusingSystem.Instance.SelectionHandler.Deselected -= ElementDeselected;
+
+            _context.RemoveLayer();
+
+            _isAnimating = false;
+        }
         private void Init()
         {
             _canvas = GetComponentInParent<Canvas>();
             _backgroundRectTransform = _background.GetComponent<RectTransform>();
-            _defaultWidth = _targetRectTransform.rect.width;
-            _defaultHeight = _targetRectTransform.rect.height;
             _defaultBackgroundWidth = _background.uvRect.width;
             _defaultBackgroundHeight = _background.uvRect.height;
             _defaultScale = _targetRectTransform.localScale;
@@ -68,35 +80,24 @@ namespace Talent.GraphEditor.Unity.Runtime
             _defaultPosition = _targetRectTransform.localPosition;
 
             _defaultMinMaxZoom = _minMaxZoom;
-
-            _runtimeGraphEditor.ElementSelectionProvider.Selected += OnElementSelected;
-            _runtimeGraphEditor.ElementSelectionProvider.Deselected += OnElementDeselected;
         }
 
-        private void OnDisable()
-        {
-            _isAnimating = false;
-        }
-
-        private void OnDestroy()
-        {
-            _runtimeGraphEditor.ElementSelectionProvider.Selected -= OnElementSelected;
-            _runtimeGraphEditor.ElementSelectionProvider.Deselected -= OnElementDeselected;
-        }
-
-        private void OnElementSelected(IElementSelectable element)
+        private void ElementSelected(ISelectable element)
         {
             _selectedElement = element;
         }
 
-        private void OnElementDeselected(IElementSelectable element)
+        private void ElementDeselected(ISelectable element)
         {
-            _selectedElement = null;
+            if (_selectedElement == element)
+            {
+                _selectedElement = null;
+            }
         }
 
         private void Update()
         {
-            if (!Application.isFocused || _isAnimating || _selectedElement is IPanZoomIgnorer)
+            if (!Application.isFocused || _isAnimating)
             {
                 return;
             }
@@ -104,16 +105,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             if (!IsCursorWithinScreen(Input.mousePosition))
             {
                 return;
-            }
-
-            if (Input.GetKeyDown(_focusHotkey))
-            {
-                if (_selectedElement == null || _selectedElement?.SelectedObject == _background.gameObject || Input.GetKey(_focusGraph))
-                {
-                    AdjustView();
-
-                    return;
-                }
             }
 
             HandlePan();
@@ -126,15 +117,14 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private void HandlePan()
         {
-            if (Input.GetMouseButtonUp(0) || _runtimeGraphEditor.EditingEdge != null && _runtimeGraphEditor.EditingEdge.IsDraggableMode)
+            if (Input.GetMouseButtonUp(0) || _runtimeGraphEditor.EditingEdge != null && _runtimeGraphEditor.EditingEdge.IsDraggableMode || UIFocusingSystem.Instance.Contexts.First().BlockOtherHotkeys)
             {
                 _isPanning = false;
                 return;
             }
-
-            if (Input.GetMouseButtonDown(0) && !IsCursorOverBlockZoomElement() &&
-                (_selectedElement == null || _selectedElement?.SelectedObject == _background.gameObject ||
-                    _selectedElement?.SelectedObject != null && !IsCursorOverElement(_selectedElement.SelectedObject)))
+            
+            if (Input.GetMouseButtonDown(0) && !UIFocusingSystem.Instance.Contexts.First().BlockOtherHotkeys && (_selectedElement == null || _selectedElement?.Object == _background.gameObject ||
+                    _selectedElement?.Object != null && !IsCursorOverElement(_selectedElement.Object)))
             {
                 _lastMousePos = Input.mousePosition;
 
@@ -163,28 +153,6 @@ namespace Talent.GraphEditor.Unity.Runtime
                 foreach (RaycastResult raycastResult in raycastResults)
                 {
                     if (raycastResult.gameObject == element)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        private bool IsCursorOverBlockZoomElement()
-        {
-            PointerEventData pointer = new(EventSystem.current);
-            pointer.position = Input.mousePosition;
-
-            List<RaycastResult> raycastResults = new();
-            EventSystem.current.RaycastAll(pointer, raycastResults);
-
-            if (raycastResults.Count > 0)
-            {
-                foreach (RaycastResult raycastResult in raycastResults)
-                {
-                    if (raycastResult.gameObject.CompareTag(BlockZoomTag))
                     {
                         return true;
                     }
@@ -236,11 +204,57 @@ namespace Talent.GraphEditor.Unity.Runtime
             _background.uvRect = backgroundUVRect;
         }
 
-        public void AdjustView()
+        public void AdjustView(bool overrideFocusOnGraph = false)
         {
             if (_canvas == null)
             {
                 Init();
+            }
+
+            if (_selectedElement != null && _selectedElement.Object != _background.gameObject && !overrideFocusOnGraph && _selectedElement.Object.TryGetComponent(out RectTransform rectTransform))
+            {
+                if (_selectedElement.Object.TryGetComponent(out EdgeView edge))
+                {
+                    FocusOnRectTransform(rectTransform, edge.TargetView.transform as RectTransform, edge.SourceView.transform as RectTransform);
+
+                    return;
+                }
+
+                if (_selectedElement.Object.TryGetComponent(out NodeEventView nodeEventView))
+                {
+                    FocusOnRectTransform(nodeEventView.NodeView.transform as RectTransform);
+                    return;
+                }
+
+                if (_selectedElement.Object.TryGetComponent(out NodeView nodeView))
+                {
+                    List<RectTransform> rectTransforms = new() { rectTransform };
+
+                    foreach (EdgeView edgeView in nodeView.EdgeViews)
+                    {
+                        rectTransforms.Add(edgeView.transform as RectTransform);
+                    }
+
+                    if (nodeView.ChildsContainer != null)
+                    {
+                        foreach (NodeView childNode in nodeView.ChildsContainer.GetComponentsInChildren<NodeView>())
+                        {
+                            foreach (EdgeView childEdge in childNode.EdgeViews)
+                            {
+                                rectTransforms.Add(childEdge.SourceView.transform as RectTransform);
+                                rectTransforms.Add(childEdge.TargetView.transform as RectTransform);
+                            }
+                        }
+                    }
+
+                    FocusOnRectTransform(rectTransforms.ToArray());
+
+                    return;
+                }
+
+                FocusOnRectTransform(rectTransform);
+
+                return;
             }
 
             _isAnimating = false;
@@ -248,32 +262,36 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             if (_graphLayoutGroup.GetRectChildrenCount() >= 1)
             {
-                Vector3 currentScale = _targetRectTransform.localScale;
-                Vector3 currentPos = _targetRectTransform.localPosition;
+                Bounds totalBounds = RectTransformUtility.CalculateRelativeRectTransformBounds(_targetRectTransform, _targetRectTransform);
 
-                _targetRectTransform.pivot = Vector2.one * 0.5f;
+                float bbWidth = totalBounds.size.x;
+                float bbHeight = totalBounds.size.y;
 
-                _targetRectTransform.localScale = _defaultScale;
-                _targetRectTransform.localPosition = _defaultPosition;
+                if (bbWidth < _leftBottomSizeBorders.x)
+                {
+                    bbWidth = _leftBottomSizeBorders.x;
+                }
 
-                _graphLayoutGroup.GetGraphCorners(out float left, out float top, out float right, out float bottom);
+                if (bbHeight < _leftBottomSizeBorders.y)
+                {
+                    bbHeight = _leftBottomSizeBorders.y;
+                }
 
-                CalculateFocusWithResolutionFactor(ref left, ref bottom, ref right, ref top, out float resolutionFactor);
+                float contentWidth = bbWidth + 2f * _leftBottomSizeOffsets.x;
+                float contentHeight = bbHeight + 2f * _leftBottomSizeOffsets.y;
 
-                Vector2 position = new Vector2((right + left) / 2, (top + bottom) / 2);
-                Vector2 size = new Vector2(Mathf.Abs(right - left), Mathf.Abs(bottom - top));
+                Vector2 viewportSize = _viewportRectTransform.rect.size;
 
-                float newScale = 1 / Mathf.Max(size.x / (_defaultWidth * resolutionFactor) / _canvas.transform.localScale.x,
-                    size.y / (_defaultHeight * resolutionFactor) / _canvas.transform.localScale.x);
-                newScale = Mathf.Clamp01(newScale);
+                float scaleX = viewportSize.x / contentWidth;
+                float scaleY = viewportSize.y / contentHeight;
+                float newScale = Mathf.Min(scaleX, scaleY);
 
-                _targetRectTransform.localScale = currentScale;
-                _targetRectTransform.localPosition = currentPos;
+                newScale = Mathf.Clamp(newScale, _minMaxZoom.x, _minMaxZoom.y);
 
-                StartCoroutine(Focus(newScale, -position * newScale));
+                Vector3 localCenter = totalBounds.center;
+                Vector3 newPos = -localCenter * newScale;
 
-                _minMaxZoom.x = Mathf.Min(_defaultMinMaxZoom.x, newScale);
-                _minMaxZoom.y = Mathf.Max(_defaultMinMaxZoom.y, newScale);
+                StartCoroutine(Focus(newScale, newPos));
             }
 
             UpdateBackground();
@@ -293,68 +311,63 @@ namespace Talent.GraphEditor.Unity.Runtime
             _isAnimating = false;
             StopAllCoroutines();
 
-            Vector3 minCorner = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            Vector3 maxCorner = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+            Bounds totalBounds = new();
+            bool firstBounds = true;
 
-            foreach (var element in uiElements)
+            foreach (var elem in uiElements)
             {
-                if (element == null)
-                    continue;
+                if (elem == null) continue;
 
-                Vector3[] corners = new Vector3[4];
-                element.GetWorldCorners(corners);
+                Bounds b = RectTransformUtility.CalculateRelativeRectTransformBounds(
+                    _targetRectTransform, elem);
 
-                foreach (var corner in corners)
+                if (firstBounds)
                 {
-                    minCorner = Vector3.Min(minCorner, corner);
-                    maxCorner = Vector3.Max(maxCorner, corner);
+                    totalBounds = b;
+                    firstBounds = false;
+                }
+                else
+                {
+                    totalBounds.Encapsulate(b.min);
+                    totalBounds.Encapsulate(b.max);
                 }
             }
 
-            Vector3[] worldCorners = new Vector3[4];
-            worldCorners[0] = new Vector3(minCorner.x, minCorner.y, minCorner.z);
-            worldCorners[1] = new Vector3(minCorner.x, maxCorner.y, minCorner.z);
-            worldCorners[2] = new Vector3(maxCorner.x, maxCorner.y, maxCorner.z);
-            worldCorners[3] = new Vector3(maxCorner.x, minCorner.y, maxCorner.z);
-
-            for (int i = 0; i < 4; i++)
+            if (firstBounds)
             {
-                worldCorners[i] = _targetRectTransform.InverseTransformPoint(worldCorners[i]);
+                return;
             }
 
-            float left = worldCorners[0].x;
-            float bottom = worldCorners[0].y;
-            float right = worldCorners[2].x;
-            float top = worldCorners[2].y;
+            float bbWidth = totalBounds.size.x;
+            float bbHeight = totalBounds.size.y;
 
-            CalculateFocusWithResolutionFactor(ref left, ref bottom, ref right, ref top, out float resolutionFactor);
+            if (uiElements.Length > 1)
+            {
+                if (bbWidth < _leftBottomSizeBorders.x) bbWidth = _leftBottomSizeBorders.x;
+                if (bbHeight < _leftBottomSizeBorders.y) bbHeight = _leftBottomSizeBorders.y;
 
-            Vector2 position = new Vector2((left + right) / 2, (top + bottom) / 2);
-            Vector2 size = new Vector2(Mathf.Abs(right - left), Mathf.Abs(top - bottom));
+                bbWidth += 2f * _leftBottomSizeOffsets.x;
+                bbHeight += 2f * _leftBottomSizeOffsets.y;
+            }
+            else
+            {
+                bbWidth += 2f * _leftBottomSizeOffsets.x;
+                bbHeight += 2f * _leftBottomSizeOffsets.y;
+            }
 
-            float newScale = 1 / Mathf.Max(size.x / (_defaultWidth * resolutionFactor) / _canvas.transform.localScale.x,
-                size.y / (_defaultHeight * resolutionFactor) / _canvas.transform.localScale.x);
-            newScale = Mathf.Clamp(newScale, _minMaxZoom.x, 1);
+            Vector2 viewportSize = _viewportRectTransform.rect.size;
 
-            StartCoroutine(Focus(newScale, -position * newScale));
+            float scaleX = viewportSize.x / bbWidth;
+            float scaleY = viewportSize.y / bbHeight;
+            float newScale = Mathf.Min(scaleX, scaleY);
 
+            newScale = Mathf.Clamp(newScale, _minMaxZoom.x, _minMaxZoom.y);
+
+            Vector3 localCenter = totalBounds.center;
+            Vector3 newPos = -localCenter * newScale;
+
+            StartCoroutine(Focus(newScale, newPos));
             UpdateBackground();
-        }
-
-        private void CalculateFocusWithResolutionFactor(ref float left, ref float bottom, ref float right, ref float top, out float resolutionFactor)
-        {
-            resolutionFactor = Mathf.Min(Screen.width / 1920f, Screen.height / 1080f);
-
-            if (Mathf.Abs(right - left) >= _leftBottomSizeBorders.x * resolutionFactor)
-            {
-                left -= _leftBottomSizeOffsets.x * resolutionFactor;
-            }
-
-            if (Mathf.Abs(bottom - top) >= _leftBottomSizeBorders.y * resolutionFactor)
-            {
-                top += _leftBottomSizeOffsets.y * resolutionFactor;
-                bottom -= _leftBottomSizeOffsets.y * resolutionFactor;
-            }
         }
 
         private IEnumerator Focus(float scale, Vector3 pos)

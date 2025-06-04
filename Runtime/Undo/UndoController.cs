@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UI.Focusing;
 using UnityEngine;
 namespace Talent.GraphEditor.Unity.Runtime
 {
@@ -7,6 +8,8 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// </summary>
     public class UndoController : MonoBehaviour
     {
+        [SerializeField] private SimpleContextLayer _context;
+
         private List<UndoAction> _undoList = new();
         private List<UndoAction> _redoList = new();
 
@@ -16,7 +19,17 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// Блокирована ли операция отмены
         /// </summary>
         public bool IsLocked => _lockedUndoable != null;
-    
+
+        private void OnEnable()
+        {
+            _context.PushLayer();
+        }
+
+        private void OnDisable()
+        {
+            _context.RemoveLayer();
+        }
+
         /// <summary>
         /// Создает предыдущее состояние для объекта, реализующего <see cref="IUndoable"/>
         /// </summary>

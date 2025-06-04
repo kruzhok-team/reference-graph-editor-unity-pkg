@@ -6,9 +6,18 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// </summary>
     public class WorldScaler : MonoBehaviour
     {
-        [SerializeField] private Vector3 _targetLossyScale;
+        [SerializeField] private Vector3 _targetLossyScale = Vector3.one;
+
+        private Canvas _parentCanvas;
 
         private void Awake()
+        {
+            _parentCanvas = GetComponentInParent<Canvas>();
+
+            AdjustScale();
+        }
+
+        private void OnEnable()
         {
             AdjustScale();
         }
@@ -20,13 +29,27 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         private void AdjustScale()
         {
-            Vector3 currentLossyScale = transform.lossyScale.x * Vector3.one;
+            float currentLossy = transform.lossyScale.x;
+            float desired = _targetLossyScale.x;
 
-            if (!Mathf.Approximately(currentLossyScale.x, _targetLossyScale.x))
+            if (!Mathf.Approximately(currentLossy, desired))
             {
-                Vector3 parentLossyScale = transform.parent.lossyScale.x * Vector3.one;
+                float parentLossy = 1f;
 
-                transform.localScale = Vector3.one * _targetLossyScale.x / parentLossyScale.x;
+                if (transform.parent != null)
+                {
+                    parentLossy = transform.parent.lossyScale.x;
+                }
+
+                float canvasScale = 1f;
+
+                if (_parentCanvas != null)
+                {
+                    canvasScale = _parentCanvas.scaleFactor;
+                }
+
+                float newLocal = desired / (parentLossy / canvasScale);
+                transform.localScale = Vector3.one * newLocal;
             }
         }
     }

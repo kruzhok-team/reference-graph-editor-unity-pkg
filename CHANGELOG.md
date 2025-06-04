@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- Headers should be listed in this order: Added, Changed, Deprecated, Removed, Fixed, Security -->
 
+## [1.1.0] - 22.05.2025
+### Added
+ - Partial support for localization (for diagram code only for now)
+### Changed
+ - Refactored layering, dimming and hotkey management
+
 ## [1.0.2] - 20.03.2025
 ### Added
  - Edge duplication action

@@ -1,3 +1,4 @@
+using UI.Focusing;
 using UnityEngine;
 using UnityEngine.UI;
 namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
@@ -7,6 +8,7 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
     /// </summary>
     public class NodeViewContextMenu : MonoBehaviour
     {
+        [SerializeField] private SimpleContextLayer _context;
         [SerializeField] private NodeView _nodeView;
 
         [Space]
@@ -19,6 +21,29 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
         [SerializeField] private Button _childNodeButton;
         [SerializeField] private Button _dublicateButton;
         [SerializeField] private Button _deleteButton;
+
+        public void Init()
+        {
+            foreach (EdgeView edgeView in _nodeView.EdgeViews)
+            {
+                _context.AddFocusedElements(edgeView.gameObject, edgeView.Line.gameObject);
+            }
+
+            foreach (NodeView nodeView in _nodeView.ChildsContainer.GetComponentsInChildren<NodeView>())
+            {
+                foreach (EdgeView edgeView in nodeView.EdgeViews)
+                {
+                    _context.AddFocusedElements(edgeView.gameObject, edgeView.Line.gameObject);
+                }
+            }
+
+            _context.PushLayer();
+        }
+
+        public void RemoveEdge(EdgeView edgeView)
+        {
+            _context.RemoveFocusedElements(edgeView.gameObject, edgeView.Line.gameObject);
+        }
 
         private void OnEnable()
         {
@@ -44,40 +69,51 @@ namespace Talent.GraphEditor.Unity.Runtime.ContextMenu
 
         private void OnNewActionClicked()
         {
+            _context.RemoveLayer();
+
             _nodeView.AddEvent();
-            _nodeView.Select(false);
+            _nodeView.Select();
         }
 
         private void OnUnparentClicked()
         {
+            _context.RemoveLayer();
+
             _nodeView.Unparent();
-            _nodeView.Select(false);
+            _nodeView.Select();
         }
 
         private void OnParentClicked()
         {
+            _context.RemoveLayer();
+
             _nodeView.ConnectParent();
-            _nodeView.Select(false);
+            _nodeView.Select();
             gameObject.SetActive(false);
             _container.SetActive(false);
         }
 
         private void OnChildNodeClicked()
         {
+            _context.RemoveLayer();
+
             _nodeView.AddChildNode();
-            _nodeView.Select(false);
+            _nodeView.Select();
         }
 
         private void OnDublicateClicked()
         {
+            _context.RemoveLayer();
+
             _nodeView.Duplicate();
-            _nodeView.Select(false);
+            _nodeView.Select();
         }
 
         private void OnDeleteClicked()
         {
+            _context.RemoveLayer();
+
             _nodeView.Delete();
-            _nodeView.Unselect();
         }
     }
 }

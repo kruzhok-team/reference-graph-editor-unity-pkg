@@ -42,10 +42,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public CyberiadaGraphDocument GraphDocument => GraphEditor.GraphDocument;
         /// <summary>
-        /// Объект, дающий возможность выбирать активный элемент
-        /// </summary>
-        public IElementSelectionProvider ElementSelectionProvider { get; private set; }
-        /// <summary>
         /// Объект, дающий возможность отменять предыдущее действие
         /// </summary>
         public UndoController UndoController => _undoController;
@@ -100,35 +96,12 @@ namespace Talent.GraphEditor.Unity.Runtime
     
         private void Awake()
         {
-            ElementSelectionProvider = new ElementSelectionProvider(this);
             _converter = new CyberiadaGraphMLConverter(Application.productName, Application.version);
         }
 
         void Start()
         {
             _edgeEditorWindow.gameObject.SetActive(false);
-        }
-        
-        private void Update()
-        {
-#pragma warning disable CS0252
-            if (EditingEdge != null && !EditingEdge.IsDraggableMode && ElementSelectionProvider.CurrentSelectedElement == EditingEdge && Input.GetMouseButton(0))
-#pragma warning restore CS0252
-            {
-                if (EditingEdge.FindOtherNode() == null)
-                {
-                    if (EditingEdge.IsPreview)
-                    {
-                        DestroyElementView(EditingEdge);
-                    }
-                    else
-                    {
-                        UndoController.Undo();
-                    }
-
-                    EditingEdge = null;
-                }
-            }
         }
 
         /// <summary>
@@ -190,7 +163,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             NodeView view = (NodeView)GraphEditor.CreateNewNode("Новое состояние");
             if (EditingEdge == null)
             {
-                view.Select(false);
+                view.Select();
             }
 
             OpenNodeNamePopUp(view.ID);
@@ -221,11 +194,25 @@ namespace Talent.GraphEditor.Unity.Runtime
             if (nodeView.IsUniqueNodeName(nodeView.VisualData.Name))
             {
                 Rebuild();
-                ElementSelectionProvider.Select(nodeView.ID);
+                Select(nodeView.ID);
             }
             else
             {
                 OpenNodeNamePopUp(nodeView.ID, nodeView.VisualData.Name, true);
+            }
+        }
+
+        /// <inheritdoc/>
+        public void Select(string id)
+        {
+            if (TryGetEdgeViewById(id, out EdgeView edgeView))
+            {
+                edgeView.Select();
+            }
+
+            if (TryGetNodeViewById(id, out NodeView nodeView))
+            {
+                nodeView.Select();
             }
         }
 
@@ -314,7 +301,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                     end, trigger, condition,
                     _iconSpriteProviderAsset, _lineClickListener);
                 EditingEdge = null;
-                edgeView.Select(false);
+                edgeView.Select();
             }
 
             GraphEditor.ChangeEdgeTrigger(edgeView, trigger);
@@ -340,7 +327,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         public void CancelEditingWindow()
         {
             _edgeEditorWindow.gameObject.SetActive(false);
-            ElementSelectionProvider.Unselect(_edgeEditorWindow);
             UndoController.DeleteAllUndo(_edgeEditorWindow);
         }
 
@@ -358,7 +344,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             _editNodeNamePopUp.Init(nodeView, desiredInitialName, needRebuild);
-            _editNodeNamePopUp.gameObject.SetActive(true);
         }
 
         /// <summary>
@@ -408,7 +393,26 @@ namespace Talent.GraphEditor.Unity.Runtime
             EditingEdge.ConnectSourceView(sourceView);
             LayoutRebuilder.ForceRebuildLayoutImmediate(EditingEdge.transform as RectTransform);
             EditingEdge.transform.position = position;
-            ElementSelectionProvider.Select(EditingEdge);
+        }
+
+        /// <summary>
+        /// Отменяет состояние редактирования перехода
+        /// </summary>
+        public void CancelEditingEdge(NodeView nodeView)
+        {
+            if (EditingEdge != null)
+            {
+                if (EditingEdge.IsPreview)
+                {
+                    EditingEdge.Delete();
+                }
+                else
+                {
+                    OnClicked(nodeView);
+                }
+
+                EditingEdge = null;
+            }
         }
 
         /// <summary>
@@ -508,7 +512,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             if (ParentingingNode == nodeView)
             {
                 ParentingingNode = null;
-                nodeView.Unselect();
             }
         }
 

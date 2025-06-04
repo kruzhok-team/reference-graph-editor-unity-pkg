@@ -7,7 +7,6 @@ namespace Talent.GraphEditor.Unity.Runtime
     /// </summary>
     public class EdgeCreationButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler
     {
-        [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private NodeView _sourceNode;
         [SerializeField] private Vector2 _edgeSpawnOffset;
 
@@ -37,11 +36,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <param name="eventData">Полезная нагрузка события связанного с указателем</param>
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (!_canvasGroup.interactable)
-            {
-                return;
-            }
-        
+
             if (_runtimeGraphEditor.EditingEdge != null)
             {
                 return;
@@ -93,11 +88,6 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <param name="eventData">Полезная нагрузка события связанного с указателем</param>
         public void OnPointerUp(PointerEventData eventData)
         {
-            if (!_canvasGroup.interactable)
-            {
-                return;
-            }
-        
             if (_runtimeGraphEditor.EditingEdge != null && _runtimeGraphEditor.EditingEdge.IsDraggableMode)
             {
                 return;
