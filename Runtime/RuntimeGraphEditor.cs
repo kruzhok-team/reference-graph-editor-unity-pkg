@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using Talent.GraphEditor.Core;
 using Talent.Graphs;
 using TMPro;
+using UI.Focusing;
 using UnityEngine;
 using UnityEngine.UI;
 using Action = System.Action;
@@ -61,6 +62,11 @@ namespace Talent.GraphEditor.Unity.Runtime
                 
                 if (_editingEdge != null)
                 {
+                    if (_editingEdge.TryGetComponent(out SimpleContextLayer contextLayer))
+                    {
+                        contextLayer.PushLayer();
+                    }
+
                     StartEdgeEditing?.Invoke();
                 }
                 else
@@ -410,6 +416,16 @@ namespace Talent.GraphEditor.Unity.Runtime
                 {
                     OnClicked(nodeView);
                 }
+
+                EditingEdge = null;
+            }
+        }
+
+        public void CancelPreviewEditingEdge()
+        {
+            if (EditingEdge != null && EditingEdge.IsPreview)
+            {
+                EditingEdge.Delete();
 
                 EditingEdge = null;
             }
