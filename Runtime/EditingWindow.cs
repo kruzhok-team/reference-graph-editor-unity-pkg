@@ -293,7 +293,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 var data = new LocalizedOptionData
                 {
                     OriginalText = actionTrigger,
-                    text = GetLocalized($"{module}.{actionTrigger}"),
+                    text = GetLocalized($"{module}.{actionTrigger}", actionTrigger),
                     image = sprite
                 };
 
@@ -355,7 +355,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 var data = new LocalizedOptionData
                 {
                     OriginalText = actionTrigger,
-                    text = GetLocalized($"{module}.{actionTrigger}"),
+                    text = GetLocalized($"{module}.{actionTrigger}", actionTrigger),
                     image = sprite
                 };
 
@@ -718,13 +718,13 @@ namespace Talent.GraphEditor.Unity.Runtime
                 {
                     _iconProvider.TryGetIcon(trigger, out var sprite);
 
-                    string localizedTrigger = GetLocalized($"{module}.{trigger}");
+                    string localizedTrigger = GetLocalized($"{module}.{trigger}", trigger);
 
-                    if (localizedTrigger == "System.entry")
+                    if (localizedTrigger == "System.entry" || localizedTrigger == "entry")
                     {
                         localizedTrigger = "Вход";
                     }
-                    else if (localizedTrigger == "System.exit")
+                    else if (localizedTrigger == "System.exit" || localizedTrigger == "exit")
                     {
                         localizedTrigger = "Выход";
                     }
@@ -794,7 +794,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
                 var data = new LocalizedOptionData();
                 data.OriginalText = variable;
-                data.text = GetLocalized($"{module}.{variable}");
+                data.text = GetLocalized($"{module}.{variable}", variable);
                 data.image = sprite;
 
                 variableOptions.Add(data);
@@ -857,7 +857,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
                 var data = new LocalizedOptionData();
                 data.OriginalText = variable;
-                data.text = GetLocalized($"{module}.{variable}");
+                data.text = GetLocalized($"{module}.{variable}", variable);
                 data.image = sprite;
 
                 variableOptions.Add(data);
@@ -1043,13 +1043,13 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 _iconProvider.TryGetIcon(trigger, out var sprite);
 
-                string localizedTrigger = GetLocalized($"{firstTriggerModule}.{trigger}");
+                string localizedTrigger = GetLocalized($"{firstTriggerModule}.{trigger}", trigger);
 
-                if (localizedTrigger == "System.entry")
+                if (localizedTrigger == "System.entry" || localizedTrigger == "entry")
                 {
                     localizedTrigger = "Вход";
                 }
-                else if (localizedTrigger == "System.exit")
+                else if (localizedTrigger == "System.exit" || localizedTrigger == "exit")
                 {
                     localizedTrigger = "Выход";
                 }
@@ -1136,7 +1136,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 data = new LocalizedOptionData
                 {
                     OriginalText = variable,
-                    text = GetLocalized($"{firstVariableModule}.{variable}"),
+                    text = GetLocalized($"{firstVariableModule}.{variable}", variable),
                     image = sprite
                 };
 
@@ -1260,7 +1260,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             return -1;
         }
 
-        string GetLocalized(string input)
+        string GetLocalized(string input, string fallbackOverride = null)
         {
             if (_localizationTable != null)
             {
@@ -1269,7 +1269,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
             else
             {
-                return input;
+                return string.IsNullOrEmpty(fallbackOverride) ? input : fallbackOverride;
             }
         }
 
