@@ -109,7 +109,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 if (string.IsNullOrEmpty(_desiredInitialName))
                 {
-                    _nodeView.Delete();
+                    _nodeView.Delete(false);
                 }
                 else
                 {

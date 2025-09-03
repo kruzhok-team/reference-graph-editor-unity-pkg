@@ -86,7 +86,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 return;
             }
-
+            
             CreateUndoState(undoAction.Undoable, false);
 
             undoAction.Undoable.Redo(undoAction.Context);
@@ -137,6 +137,19 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <param name="undoable">Объект, для которого будет заблокирована операция отмены предыдущего действия</param>
         public void LockUndoable(IUndoable undoable)
         {
+            if (undoable == null && _lockedUndoable != null)
+            {
+                foreach (UndoAction undo in _undoList)
+                {
+                    if (undo.Undoable == _lockedUndoable)
+                    {
+                        _undoList.Remove(undo);
+
+                        break;
+                    }
+                }
+            }
+
             _lockedUndoable = undoable;
         }
 
