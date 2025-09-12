@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
-  m_sharedMaterial: {fileID: 8107093715635093364, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
+  m_sharedMaterial: {fileID: 8107093715635093364, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -299,7 +299,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: "+ \u0434\u043E\u0447\u0435\u0440\u043D\u0435\u0435\n\u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
   m_sharedMaterial: {fileID: 8107093715635093364, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -365,7 +365,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &468889723010047181
@@ -436,8 +436,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
-  m_sharedMaterial: {fileID: 8107093715635093364, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
+  m_sharedMaterial: {fileID: 8107093715635093364, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -689,6 +689,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32f0fecd4e233a14186825b1b4fe0e21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _blockOtherHotkeys: 0
+  _isUnblockable: 0
+  _bindings:
+  - ActionReference: {fileID: 1418151547802526976, guid: 652f98e79e85c94458c55e86289ddd10, type: 3}
+    OnPerformed:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8890170388854110824}
+          m_TargetAssemblyTypeName: UI.Focusing.SimpleContextLevel, UiFocusing
+          m_MethodName: RemoveLayer
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionReference: {fileID: -8471510705306056717, guid: 652f98e79e85c94458c55e86289ddd10, type: 3}
+    OnPerformed:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8890170388854110824}
+          m_TargetAssemblyTypeName: UI.Focusing.SimpleContextLevel, UiFocusing
+          m_MethodName: RemoveLayer
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 6696858662858092613}
+          m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.NodeView, org.kruzhok.talent.grapheditor.unity.runtime
+          m_MethodName: Delete
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  _focusedElements:
+  - {fileID: 6696858662858092609}
   Activated:
     m_PersistentCalls:
       m_Calls:
@@ -743,55 +792,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _blockOtherHotkeys: 0
-  _isUnblockable: 0
-  _bindings:
-  - ActionReference: {fileID: 1418151547802526976, guid: 652f98e79e85c94458c55e86289ddd10, type: 3}
-    OnPerformed:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 8890170388854110824}
-          m_TargetAssemblyTypeName: UI.Focusing.SimpleContextLevel, UiFocusing
-          m_MethodName: RemoveLayer
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - ActionReference: {fileID: -8471510705306056717, guid: 652f98e79e85c94458c55e86289ddd10, type: 3}
-    OnPerformed:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 8890170388854110824}
-          m_TargetAssemblyTypeName: UI.Focusing.SimpleContextLevel, UiFocusing
-          m_MethodName: RemoveLayer
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 6696858662858092613}
-          m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.NodeView, org.kruzhok.talent.grapheditor.unity.runtime
-          m_MethodName: Delete
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  _focusedElements:
-  - {fileID: 6696858662858092609}
 --- !u!1 &2041471229770076497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1280,6 +1280,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32f0fecd4e233a14186825b1b4fe0e21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _blockOtherHotkeys: 0
+  _isUnblockable: 0
+  _bindings:
+  - ActionReference: {fileID: 1418151547802526976, guid: 652f98e79e85c94458c55e86289ddd10, type: 3}
+    OnPerformed:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6195486582631305283}
+          m_TargetAssemblyTypeName: UI.Focusing.SimpleContextLevel, UiFocusing
+          m_MethodName: RemoveLayer
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionReference: {fileID: -8471510705306056717, guid: 652f98e79e85c94458c55e86289ddd10, type: 3}
+    OnPerformed:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6195486582631305283}
+          m_TargetAssemblyTypeName: UI.Focusing.SimpleContextLevel, UiFocusing
+          m_MethodName: RemoveLayer
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 6696858662858092613}
+          m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.NodeView, org.kruzhok.talent.grapheditor.unity.runtime
+          m_MethodName: Delete
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  _focusedElements:
+  - {fileID: 6696858662858092609}
   Activated:
     m_PersistentCalls:
       m_Calls:
@@ -1334,55 +1383,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _blockOtherHotkeys: 0
-  _isUnblockable: 0
-  _bindings:
-  - ActionReference: {fileID: 1418151547802526976, guid: 652f98e79e85c94458c55e86289ddd10, type: 3}
-    OnPerformed:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 6195486582631305283}
-          m_TargetAssemblyTypeName: UI.Focusing.SimpleContextLevel, UiFocusing
-          m_MethodName: RemoveLayer
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - ActionReference: {fileID: -8471510705306056717, guid: 652f98e79e85c94458c55e86289ddd10, type: 3}
-    OnPerformed:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 6195486582631305283}
-          m_TargetAssemblyTypeName: UI.Focusing.SimpleContextLevel, UiFocusing
-          m_MethodName: RemoveLayer
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 6696858662858092613}
-          m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.NodeView, org.kruzhok.talent.grapheditor.unity.runtime
-          m_MethodName: Delete
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  _focusedElements:
-  - {fileID: 6696858662858092609}
 --- !u!1 &4256269511231542241
 GameObject:
   m_ObjectHideFlags: 0
@@ -2044,7 +2044,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u0441\u0434\u0435\u043B\u0430\u0442\u044C\n\u0434\u043E\u0447\u0435\u0440\u043D\u0438\u043C"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
   m_sharedMaterial: {fileID: 8107093715635093364, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -2110,7 +2110,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &5934303582256578584
@@ -2553,6 +2553,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e600ea56bf0e9fe43990069b08333ff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _bindings:
+  - MouseButton: 0
+    Mode: 0
+    OnPerformed:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6696858662858092613}
+          m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.NodeView, org.kruzhok.talent.grapheditor.unity.runtime
+          m_MethodName: OnClicked
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - MouseButton: 1
+    Mode: 0
+    OnPerformed:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6696858662858092613}
+          m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.NodeView, org.kruzhok.talent.grapheditor.unity.runtime
+          m_MethodName: OpenNodeContextMenu
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  _isSingleSelection: 1
+  _overrideSelectionObject: {fileID: 6696858662858092609}
   Selected:
     m_PersistentCalls:
       m_Calls:
@@ -2655,41 +2692,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _bindings:
-  - MouseButton: 0
-    OnPerformed:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 6696858662858092613}
-          m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.NodeView, org.kruzhok.talent.grapheditor.unity.runtime
-          m_MethodName: OnClicked
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - MouseButton: 1
-    OnPerformed:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 6696858662858092613}
-          m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.NodeView, org.kruzhok.talent.grapheditor.unity.runtime
-          m_MethodName: OpenNodeContextMenu
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-  _isSingleSelection: 1
-  _overrideSelectionObject: {fileID: 6696858662858092609}
 --- !u!1 &6696858662154763882
 GameObject:
   m_ObjectHideFlags: 0
@@ -3147,12 +3149,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32f0fecd4e233a14186825b1b4fe0e21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Activated:
-    m_PersistentCalls:
-      m_Calls: []
-  Deactivated:
-    m_PersistentCalls:
-      m_Calls: []
   _blockOtherHotkeys: 0
   _isUnblockable: 0
   _bindings:
@@ -3191,14 +3187,14 @@ MonoBehaviour:
         - m_Target: {fileID: 6696858662858092613}
           m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.NodeView, org.kruzhok.talent.grapheditor.unity.runtime
           m_MethodName: Delete
-          m_Mode: 1
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
-            m_BoolArgument: 0
+            m_BoolArgument: 1
           m_CallState: 2
   - ActionReference: {fileID: 2635774633146823351, guid: 652f98e79e85c94458c55e86289ddd10, type: 3}
     OnPerformed:
@@ -3229,6 +3225,12 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   _focusedElements: []
+  Activated:
+    m_PersistentCalls:
+      m_Calls: []
+  Deactivated:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6698537307480113346
 GameObject:
   m_ObjectHideFlags: 0
@@ -3445,7 +3447,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 0}
+  m_GlobalFontAsset: {fileID: 11400000, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_KeepTextSelectionVisible: 0
@@ -3698,7 +3700,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: INIT
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
   m_sharedMaterial: {fileID: 8107093715635093364, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -4205,8 +4207,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
-  m_sharedMaterial: {fileID: 8107093715635093364, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
+  m_sharedMaterial: {fileID: 8107093715635093364, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4236,7 +4238,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -4304,7 +4306,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5455428707178832464, guid: 5ec3fab43361d4c41b635e736cc198fa, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5455428707178832464, guid: 5ec3fab43361d4c41b635e736cc198fa, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -4313,18 +4315,18 @@ PrefabInstance:
     - target: {fileID: 5455428707178832464, guid: 5ec3fab43361d4c41b635e736cc198fa, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 797723609219059921}
     - target: {fileID: 5455428707178832464, guid: 5ec3fab43361d4c41b635e736cc198fa, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5455428707178832464, guid: 5ec3fab43361d4c41b635e736cc198fa, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnDuplicateButtonPressed
+      value: RemoveLayer
       objectReference: {fileID: 0}
     - target: {fileID: 5455428707178832464, guid: 5ec3fab43361d4c41b635e736cc198fa, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ButtonsBlocksController, Assembly-CSharp
+      value: UI.Focusing.SimpleContextLayer, UiFocusing
       objectReference: {fileID: 0}
     - target: {fileID: 5455428707178832464, guid: 5ec3fab43361d4c41b635e736cc198fa, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
