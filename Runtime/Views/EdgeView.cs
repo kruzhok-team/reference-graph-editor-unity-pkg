@@ -529,9 +529,13 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         public void RefreshtConnections(bool isSelected)
         {
-            if (isSelected && SourceView?.Vertex != NodeData.Vertex_Initial)
+            if (isSelected)
             {
-                _changeSourceConnection.Activate();
+                if (SourceView?.Vertex != NodeData.Vertex_Initial)
+                {
+                    _changeSourceConnection.Activate();
+                }
+
                 _changeTargetConnection.Activate();
             }
             else

@@ -470,6 +470,8 @@ namespace Talent.GraphEditor.Unity.Runtime
                     if (EditingEdge.TargetView == null && EditingEdge.SourceView.Vertex == NodeData.Vertex_Initial)
                     {
                         GraphEditor.ConnectToInitialNode(nodeView);
+                        EditingEdge = null;
+
                         return;
                     }
 
