@@ -9,6 +9,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     public class UndoController : MonoBehaviour
     {
         [SerializeField] private SimpleContextLayer _context;
+        [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
 
         private List<UndoAction> _undoList = new();
         private List<UndoAction> _redoList = new();
@@ -60,6 +61,11 @@ namespace Talent.GraphEditor.Unity.Runtime
             if (_lockedUndoable != null && undoAction.Undoable != _lockedUndoable)
             {
                 return;
+            }
+
+            if (_runtimeGraphEditor.EditingEdge != null)
+            {
+                _runtimeGraphEditor.EditingEdge = null;
             }
 
             UndoAction redoAction = new (undoAction.Undoable, undoAction.Undoable.GetCurrentContext());

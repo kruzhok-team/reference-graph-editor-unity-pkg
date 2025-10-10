@@ -199,6 +199,9 @@ namespace Talent.GraphEditor.Unity.Runtime
         public void UnParentNode(NodeView nodeView)
         {
             RequestCreateUndoState();
+
+            ShiftNodeAwayFromNearestEdge(nodeView, nodeView.ParentGraph.ParentNode.transform, TargetRectTransform);
+
             GraphEditor.SetParent(nodeView, null, false);
 
             if (nodeView.IsUniqueNodeName(nodeView.VisualData.Name))
@@ -210,6 +213,55 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 OpenNodeNamePopUp(nodeView.ID, false, nodeView.VisualData.Name, true);
             }
+        }
+
+        private void ShiftNodeAwayFromNearestEdge(NodeView nodeView, Transform parentTransform, RectTransform targetRect, float padding = 10f, float snapFraction = 1f)
+        {
+            RectTransform parentRect = parentTransform as RectTransform;
+            if (parentRect == null)
+            {
+                parentRect = parentTransform.GetComponent<RectTransform>();
+
+                if (parentRect == null)
+                {
+                    return;
+                }
+            }
+
+            Bounds totalBounds = RectTransformUtility.CalculateRelativeRectTransformBounds(parentRect, targetRect);
+
+            Vector3 nodeLocal = parentRect.InverseTransformPoint(nodeView.transform.position);
+
+            float distToBottom = Mathf.Abs(nodeLocal.y - totalBounds.min.y);
+            float distToTop = Mathf.Abs(nodeLocal.y - totalBounds.max.y);
+
+            RectTransform nodeRect = nodeView.GetComponent<RectTransform>();
+            float offset = padding;
+
+            if (nodeRect != null)
+            {
+                offset += nodeRect.rect.height * 0.5f;
+            }
+
+            float targetLocalY;
+
+            if (distToBottom <= distToTop)
+            {
+                targetLocalY = totalBounds.min.y - offset;
+            }
+            else
+            {
+                targetLocalY = totalBounds.max.y + offset;
+            }
+
+            float finalLocalY = Mathf.Lerp(nodeLocal.y, targetLocalY, Mathf.Clamp01(snapFraction));
+
+            Vector3 finalWorld = parentRect.TransformPoint(new Vector3(nodeLocal.x, finalLocalY, nodeLocal.z));
+
+            Vector3 newPos = new(nodeView.transform.position.x, finalWorld.y, nodeView.transform.position.z);
+            
+            nodeView.transform.position = newPos;
+            nodeView.VisualData.Position = nodeView.transform.position;
         }
 
         /// <inheritdoc/>
@@ -606,6 +658,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         [Header("Containers")]
         [SerializeField] private LineClickListener _lineClickListener;
         [field:SerializeField] public GraphLayoutGroup GraphElementViewsContainer { get; private set; }
+        [field:SerializeField] public RectTransform TargetRectTransform { get; private set; }
 
         /// <summary>
         /// Создает новое представление графа
@@ -642,7 +695,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 {
                     worldPoint += GraphElementViewsContainer.transform.TransformVector(_initialNodeOffset);
                 }
-                
+
                 view.transform.position = worldPoint;
                 nodeVisualData.Position = view.transform.localPosition;
             }
