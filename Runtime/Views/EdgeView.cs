@@ -242,7 +242,10 @@ namespace Talent.GraphEditor.Unity.Runtime
 
         public void Select()
         {
-            UIFocusingSystem.Instance.Select(_selectable);
+            if (_runtimeGraphEditor.EditingEdge == null)
+            {
+                UIFocusingSystem.Instance.Select(_selectable);
+            }
         }
 
         public void DrawLine()
