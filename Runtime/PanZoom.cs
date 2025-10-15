@@ -189,6 +189,28 @@ namespace Talent.GraphEditor.Unity.Runtime
             _background.uvRect = backgroundUVRect;
         }
 
+        public void KeyZoom(int axis)
+        {
+            if (!Application.isFocused || _isAnimating)
+            {
+                return;
+            }
+
+            float currentScale = _targetRectTransform.localScale.x;
+            float newScale = Mathf.Clamp(currentScale + axis * _speed, _minMaxZoom.x, _minMaxZoom.y);
+
+            Vector2 center = new Vector2(Screen.width / 2f, Screen.height / 2f);
+
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(_targetRectTransform, center, null, out Vector2 localMousePositionBefore);
+
+            _targetRectTransform.localScale = Vector3.one * newScale;
+
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(_targetRectTransform, center, null, out Vector2 localMousePositionAfter);
+
+            Vector2 offset = localMousePositionAfter - localMousePositionBefore;
+            _targetRectTransform.anchoredPosition += offset * newScale;
+        }
+
         public void HandleZoom()
         {
             if (!Application.isFocused || _isAnimating)
