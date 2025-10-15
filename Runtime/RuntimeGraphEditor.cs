@@ -778,7 +778,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             NodeView view = nodeView as NodeView;
 
-            NodeEventView eventView = Instantiate(_nodeEventPrefab, view.TriggersContainer);
+            NodeEventView eventView = Instantiate(_nodeEventPrefab, triggerID != "exit" ? view.TriggersContainer : view.ExitTriggerContainer);
             eventView.Init(triggerID, @event, view, this, _iconSpriteProviderAsset);
 
             return eventView;

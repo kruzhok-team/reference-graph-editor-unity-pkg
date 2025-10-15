@@ -24,6 +24,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         [SerializeField] private InteractArea _bodyArea;
         [SerializeField] private RectTransform _childsContainer;
         [SerializeField] private Transform _triggersContainer;
+        [SerializeField] private Transform _exitTriggerContainer;
         [SerializeField] private GameObject _nameEditButton;
         [SerializeField] private EdgeCreationButton[] _connectionButtons;
 
@@ -47,6 +48,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// Контейнер событий
         /// </summary>
         public Transform TriggersContainer => _triggersContainer;
+        public Transform ExitTriggerContainer => _exitTriggerContainer;
         /// <summary>
         /// Вершина
         /// </summary>
