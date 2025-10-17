@@ -832,7 +832,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             NodeView sourceNodeView = (NodeView)sourceView;
             EdgeView view = Instantiate(_edgePrefab, GraphElementViewsContainer.transform);
             view.gameObject.name = $"Edge View ({sourceNodeView.VisualData.Name})";
-            view.Init(this, _lineClickListener);
+            view.Init(this, _lineClickListener, sourceNodeView.HasParent ? sourceNodeView.ParentGraph.ParentNode : null);
             return view;
         }
 

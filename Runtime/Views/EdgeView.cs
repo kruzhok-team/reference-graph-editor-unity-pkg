@@ -62,6 +62,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         private GameObject _currentTriggerIcon;
     
         private NodeView _otherNode;
+        private NodeView _parentNode;
 
 
         private List<GameObject> _currentIcons = new();
@@ -136,8 +137,10 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         /// <param name="runtimeGraphEditor">Редактор графоа</param>
         /// <param name="lineClickListener">Слушатель кликов на линии</param>
-        public void Init(RuntimeGraphEditor runtimeGraphEditor, LineClickListener lineClickListener)
+        public void Init(RuntimeGraphEditor runtimeGraphEditor, LineClickListener lineClickListener, NodeView parentNode)
         {
+            _parentNode = parentNode;
+
             _runtimeGraphEditor = runtimeGraphEditor;
             _line.Init(lineClickListener.transform);
             IsPreview = true;
@@ -340,9 +343,18 @@ namespace Talent.GraphEditor.Unity.Runtime
 
                 if (tempNode != null && tempNode.Vertex != NodeData.Vertex_Initial && tempNode != currentNode)
                 {
-                    return tempNode;
+                    if (tempNode != _parentNode)
+                    {
+                        _parentNode = null;
+
+                        return tempNode;
+                    }
+
+                    return null;
                 }
             }
+
+            _parentNode = null;
 
             return null;
         }
