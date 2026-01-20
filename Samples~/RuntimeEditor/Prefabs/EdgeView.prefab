@@ -930,36 +930,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32f0fecd4e233a14186825b1b4fe0e21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Activated:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3039324280211331704}
-        m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.EdgeView, org.kruzhok.talent.grapheditor.unity.runtime
-        m_MethodName: RefreshtConnections
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  Deactivated:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3039324280211331704}
-        m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.EdgeView, org.kruzhok.talent.grapheditor.unity.runtime
-        m_MethodName: RefreshtConnections
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   _blockOtherHotkeys: 0
   _isUnblockable: 0
   _bindings:
@@ -1024,6 +994,36 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   _focusedElements: []
+  Activated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3039324280211331704}
+        m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.EdgeView, org.kruzhok.talent.grapheditor.unity.runtime
+        m_MethodName: RefreshtConnections
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  Deactivated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3039324280211331704}
+        m_TargetAssemblyTypeName: Talent.GraphEditor.Unity.Runtime.EdgeView, org.kruzhok.talent.grapheditor.unity.runtime
+        m_MethodName: RefreshtConnections
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &4025403916329038593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1898,36 +1898,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32f0fecd4e233a14186825b1b4fe0e21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Activated:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7046251825495558065}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  Deactivated:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7046251825495558065}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   _blockOtherHotkeys: 0
   _isUnblockable: 0
   _bindings:
@@ -1965,6 +1935,36 @@ MonoBehaviour:
           m_CallState: 2
   _focusedElements:
   - {fileID: 3039324280211331702}
+  Activated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7046251825495558065}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  Deactivated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7046251825495558065}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7825024878957485497
 GameObject:
   m_ObjectHideFlags: 0
@@ -2188,6 +2188,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e600ea56bf0e9fe43990069b08333ff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _bindings:
+  - MouseButton: 0
+    OnPerformed:
+      m_PersistentCalls:
+        m_Calls: []
+  - MouseButton: 1
+    OnPerformed:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4590249038348451815}
+          m_TargetAssemblyTypeName: UI.Focusing.SimpleContextLevel, UiFocusing
+          m_MethodName: PushLayer
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  _isSingleSelection: 1
+  _overrideSelectionObject: {fileID: 3039324280211331702}
   Selected:
     m_PersistentCalls:
       m_Calls:
@@ -2266,29 +2289,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _bindings:
-  - MouseButton: 0
-    OnPerformed:
-      m_PersistentCalls:
-        m_Calls: []
-  - MouseButton: 1
-    OnPerformed:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 4590249038348451815}
-          m_TargetAssemblyTypeName: UI.Focusing.SimpleContextLevel, UiFocusing
-          m_MethodName: PushLayer
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  _isSingleSelection: 1
-  _overrideSelectionObject: {fileID: 3039324280211331702}
 --- !u!1 &8641892578856148790
 GameObject:
   m_ObjectHideFlags: 0
@@ -2356,7 +2356,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: INIT
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
   m_sharedMaterial: {fileID: 8107093715635093364, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}

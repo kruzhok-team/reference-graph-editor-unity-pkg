@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 namespace UI.Focusing
 {
-    public class SimpleSelectable : MonoBehaviour, ISelectable, IPointerClickHandler
+    public class SimpleSelectable : MonoBehaviour, ISelectable, IPointerClickHandler, IPointerDownHandler
     {
         [SerializeField] private SelectionBinding[] _bindings = new SelectionBinding[0];
         [SerializeField] private bool _isSingleSelection = true;
@@ -59,15 +60,33 @@ namespace UI.Focusing
 
             foreach (SelectionBinding binding in _cashedBindings)
             {
-                if (eventData.button == binding.MouseButton)
+                if (eventData.button == binding.MouseButton && binding.Mode == SelectionMode.PointerClick)
                 {
-                    UIFocusingSystem.Instance.Select(this);
+                    InvokeBinding(binding);
 
-                    binding.OnPerformed?.Invoke();
-                    
                     break;
                 }
             }
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            foreach (SelectionBinding binding in _cashedBindings)
+            {
+                if (eventData.button == binding.MouseButton && binding.Mode == SelectionMode.PointerDown)
+                {
+                    InvokeBinding(binding);
+
+                    break;
+                }
+            }
+        }
+
+        private void InvokeBinding(SelectionBinding binding)
+        {
+            UIFocusingSystem.Instance.Select(this);
+
+            binding.OnPerformed?.Invoke();
         }
     }
 
@@ -75,6 +94,13 @@ namespace UI.Focusing
     class SelectionBinding
     {
         public PointerEventData.InputButton MouseButton;
+        public SelectionMode Mode;
         public UnityEvent OnPerformed;
+    }
+
+    public enum SelectionMode
+    {
+        PointerClick,
+        PointerDown
     }
 }

@@ -9,6 +9,7 @@ namespace Talent.GraphEditor.Unity.Runtime
     public class UndoController : MonoBehaviour
     {
         [SerializeField] private SimpleContextLayer _context;
+        [SerializeField] private RuntimeGraphEditor _runtimeGraphEditor;
 
         private List<UndoAction> _undoList = new();
         private List<UndoAction> _redoList = new();
@@ -62,6 +63,11 @@ namespace Talent.GraphEditor.Unity.Runtime
                 return;
             }
 
+            if (_runtimeGraphEditor.EditingEdge != null)
+            {
+                _runtimeGraphEditor.EditingEdge = null;
+            }
+
             UndoAction redoAction = new (undoAction.Undoable, undoAction.Undoable.GetCurrentContext());
             _redoList.Add(redoAction);
 
@@ -86,7 +92,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 return;
             }
-
+            
             CreateUndoState(undoAction.Undoable, false);
 
             undoAction.Undoable.Redo(undoAction.Context);
@@ -137,6 +143,19 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <param name="undoable">Объект, для которого будет заблокирована операция отмены предыдущего действия</param>
         public void LockUndoable(IUndoable undoable)
         {
+            if (undoable == null && _lockedUndoable != null)
+            {
+                foreach (UndoAction undo in _undoList)
+                {
+                    if (undo.Undoable == _lockedUndoable)
+                    {
+                        _undoList.Remove(undo);
+
+                        break;
+                    }
+                }
+            }
+
             _lockedUndoable = undoable;
         }
 

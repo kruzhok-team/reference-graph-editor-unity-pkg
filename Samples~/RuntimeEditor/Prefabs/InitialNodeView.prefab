@@ -143,8 +143,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u0412\u0425\u041E\u0414"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
-  m_sharedMaterial: {fileID: 8107093715635093364, guid: 6da7b9b8247a22049b3f3d25faf0fc6b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
+  m_sharedMaterial: {fileID: 8107093715635093364, guid: 48fae17442a19e545b021d509673b5cc, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -271,8 +271,6 @@ MonoBehaviour:
   _connectionButtons: []
   _nodeViewContextMenu: {fileID: 0}
   _actionContextMenu: {fileID: 0}
-  _cancelKeyCode: 27
-  _deleteKeyCode: 127
 --- !u!1 &7507044604885906043
 GameObject:
   m_ObjectHideFlags: 0
@@ -396,6 +394,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e600ea56bf0e9fe43990069b08333ff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _bindings:
+  - MouseButton: 0
+    OnPerformed:
+      m_PersistentCalls:
+        m_Calls: []
+  _isSingleSelection: 1
+  _overrideSelectionObject: {fileID: 7507044604885906043}
   Selected:
     m_PersistentCalls:
       m_Calls:
@@ -450,13 +455,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _bindings:
-  - MouseButton: 0
-    OnPerformed:
-      m_PersistentCalls:
-        m_Calls: []
-  _isSingleSelection: 1
-  _overrideSelectionObject: {fileID: 7507044604885906043}
 --- !u!1 &8800135468754673974
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,6 +24,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         [SerializeField] private InteractArea _bodyArea;
         [SerializeField] private RectTransform _childsContainer;
         [SerializeField] private Transform _triggersContainer;
+        [SerializeField] private Transform _exitTriggerContainer;
         [SerializeField] private GameObject _nameEditButton;
         [SerializeField] private EdgeCreationButton[] _connectionButtons;
 
@@ -47,6 +48,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// Контейнер событий
         /// </summary>
         public Transform TriggersContainer => _triggersContainer;
+        public Transform ExitTriggerContainer => _exitTriggerContainer;
         /// <summary>
         /// Вершина
         /// </summary>
@@ -214,7 +216,11 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <param name="newName">Новое имя</param>
         public void SetName(string newName)
         {
-            _runtimeGraphEditor.RequestCreateUndoState();
+            if (newName == VisualData.Name)
+            {
+                return;
+            }
+
             VisualData.Name = newName;
             _nameTMP.text = newName;
         }
@@ -266,9 +272,12 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <summary>
         /// Удаляет представление узла
         /// </summary>
-        public void Delete()
+        public void Delete(bool createUndo = true)
         {
-            _runtimeGraphEditor.RequestCreateUndoState();
+            if (createUndo)
+            {
+                _runtimeGraphEditor.RequestCreateUndoState();
+            }
 
             _runtimeGraphEditor?.GraphEditor.RemoveNode(this);
         }
@@ -319,7 +328,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// </summary>
         public void StartEditName()
         {
-            _runtimeGraphEditor.OpenNodeNamePopUp(ID, VisualData.Name);
+            _runtimeGraphEditor.OpenNodeNamePopUp(ID, true, VisualData.Name);
         }
 
         /// <summary>

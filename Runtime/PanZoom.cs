@@ -22,6 +22,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         [SerializeField] private RectTransform _targetRectTransform;
         [SerializeField] private GraphLayoutGroup _graphLayoutGroup;
         [SerializeField] private RawImage _background;
+        [SerializeField] private GameObject[] _panBlockingElements = new GameObject[0]; 
         [SerializeField] private Vector2 _minMaxZoom = new Vector2(0.1f, 2f);
         [SerializeField] private float _speed = 0.1f;
         [SerializeField] private float _focusAnimatingSpeed;
@@ -108,7 +109,6 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
 
             HandlePan();
-            HandleZoom();
 
             UpdateBackground();
 
@@ -126,6 +126,15 @@ namespace Talent.GraphEditor.Unity.Runtime
             if (Input.GetMouseButtonDown(0) && !UIFocusingSystem.Instance.Contexts.First().BlockOtherHotkeys && (_selectedElement == null || _selectedElement?.Object == _background.gameObject ||
                     _selectedElement?.Object != null && !IsCursorOverElement(_selectedElement.Object)))
             {
+                foreach (GameObject element in _panBlockingElements)
+                {
+                    if (IsCursorOverElement(element))
+                    {
+                        _isPanning = false;
+                        return;
+                    }
+                }
+
                 _lastMousePos = Input.mousePosition;
 
                 _isPanning = true;
@@ -162,8 +171,58 @@ namespace Talent.GraphEditor.Unity.Runtime
             return false;
         }
 
-        private void HandleZoom()
+        private void UpdateBackground()
         {
+            float currentScale = _targetRectTransform.localScale.x;
+            Vector2 currentPosition = _targetRectTransform.localPosition;
+            float width = _backgroundRectTransform.rect.width;
+            float height = _backgroundRectTransform.rect.height;
+
+            var backgroundUVRect = _background.uvRect;
+
+            backgroundUVRect.width = _defaultBackgroundWidth / currentScale;
+            backgroundUVRect.height = _defaultBackgroundHeight / currentScale;
+
+            backgroundUVRect.x = _defaultBackgroundWidth / 2 - (currentPosition.x + width / 2) * backgroundUVRect.width / width;
+            backgroundUVRect.y = _defaultBackgroundHeight / 2 - (currentPosition.y + height / 2) * backgroundUVRect.height / height;
+
+            _background.uvRect = backgroundUVRect;
+        }
+
+        public void KeyZoom(int axis)
+        {
+            if (!Application.isFocused || _isAnimating)
+            {
+                return;
+            }
+
+            float currentScale = _targetRectTransform.localScale.x;
+            float newScale = Mathf.Clamp(currentScale + axis * _speed, _minMaxZoom.x, _minMaxZoom.y);
+
+            Vector2 center = new Vector2(Screen.width / 2f, Screen.height / 2f);
+
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(_targetRectTransform, center, null, out Vector2 localMousePositionBefore);
+
+            _targetRectTransform.localScale = Vector3.one * newScale;
+
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(_targetRectTransform, center, null, out Vector2 localMousePositionAfter);
+
+            Vector2 offset = localMousePositionAfter - localMousePositionBefore;
+            _targetRectTransform.anchoredPosition += offset * newScale;
+        }
+
+        public void HandleZoom()
+        {
+            if (!Application.isFocused || _isAnimating)
+            {
+                return;
+            }
+
+            if (!IsCursorWithinScreen(Input.mousePosition))
+            {
+                return;
+            }
+
             float scrollValue = Input.mouseScrollDelta.y * _speed;
 
             if (scrollValue == 0)
@@ -185,24 +244,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             Vector2 offset = localMousePositionAfter - localMousePositionBefore;
             _targetRectTransform.anchoredPosition += offset * newScale;
         }
-
-        private void UpdateBackground()
-        {
-            float currentScale = _targetRectTransform.localScale.x;
-            Vector2 currentPosition = _targetRectTransform.localPosition;
-            float width = _backgroundRectTransform.rect.width;
-            float height = _backgroundRectTransform.rect.height;
-
-            var backgroundUVRect = _background.uvRect;
-
-            backgroundUVRect.width = _defaultBackgroundWidth / currentScale;
-            backgroundUVRect.height = _defaultBackgroundHeight / currentScale;
-
-            backgroundUVRect.x = _defaultBackgroundWidth / 2 - (currentPosition.x + width / 2) * backgroundUVRect.width / width;
-            backgroundUVRect.y = _defaultBackgroundHeight / 2 - (currentPosition.y + height / 2) * backgroundUVRect.height / height;
-
-            _background.uvRect = backgroundUVRect;
-        }
+        
 
         public void AdjustView(bool overrideFocusOnGraph = false)
         {

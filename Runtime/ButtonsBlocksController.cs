@@ -139,12 +139,22 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             if (TryGetView(out NodeView nodeView))
             {
+                if (nodeView.TryGetComponent(out SimpleContextLayer contextLayer))
+                {
+                    contextLayer.RemoveLayer();
+                }
+
                 nodeView.Duplicate();
 
                 return;
             }
             if (TryGetView(out EdgeView edgeView))
             {
+                if (edgeView.TryGetComponent(out SimpleContextLayer contextLayer))
+                {
+                    contextLayer.RemoveLayer();
+                }
+
                 edgeView.Duplicate();
 
                 return;
