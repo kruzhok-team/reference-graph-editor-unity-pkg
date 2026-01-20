@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using Talent.GraphEditor.Core;
 using Talent.Graphs;
 using TMPro;
+using UI.Focusing;
 using UnityEngine;
 using UnityEngine.UI;
 using Action = System.Action;
@@ -61,6 +62,11 @@ namespace Talent.GraphEditor.Unity.Runtime
                 
                 if (_editingEdge != null)
                 {
+                    if (_editingEdge.TryGetComponent(out SimpleContextLayer contextLayer))
+                    {
+                        contextLayer.PushLayer();
+                    }
+
                     StartEdgeEditing?.Invoke();
                 }
                 else
@@ -93,6 +99,8 @@ namespace Talent.GraphEditor.Unity.Runtime
     
         private CyberiadaGraphMLConverter _converter;
         private EdgeView _editingEdge;
+
+        public const string NewNodeName = "Новое состояние";
     
         private void Awake()
         {
@@ -150,6 +158,8 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <param name="name">Новое имя</param>
         public void SetGraphDocumentName(string name)
         {
+            RequestCreateUndoState();
+
             GraphDocument.Name = name;
         }
 
@@ -160,13 +170,13 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             RequestCreateUndoState();
 
-            NodeView view = (NodeView)GraphEditor.CreateNewNode("Новое состояние");
+            NodeView view = (NodeView)GraphEditor.CreateNewNode(NewNodeName);
             if (EditingEdge == null)
             {
                 view.Select();
             }
 
-            OpenNodeNamePopUp(view.ID);
+            OpenNodeNamePopUp(view.ID, false);
         }
 
         /// <summary>
@@ -179,7 +189,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             INodeView child = GraphEditor.CreateNewNode("Дочернее состояние");
             GraphEditor.SetParent(child, parent, true);
-            OpenNodeNamePopUp(child.ID);
+            OpenNodeNamePopUp(child.ID, false);
         }
 
         /// <summary>
@@ -189,6 +199,9 @@ namespace Talent.GraphEditor.Unity.Runtime
         public void UnParentNode(NodeView nodeView)
         {
             RequestCreateUndoState();
+
+            ShiftNodeAwayFromNearestEdge(nodeView, nodeView.ParentGraph.ParentNode.transform, TargetRectTransform);
+
             GraphEditor.SetParent(nodeView, null, false);
 
             if (nodeView.IsUniqueNodeName(nodeView.VisualData.Name))
@@ -198,8 +211,57 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
             else
             {
-                OpenNodeNamePopUp(nodeView.ID, nodeView.VisualData.Name, true);
+                OpenNodeNamePopUp(nodeView.ID, false, nodeView.VisualData.Name, true);
             }
+        }
+
+        private void ShiftNodeAwayFromNearestEdge(NodeView nodeView, Transform parentTransform, RectTransform targetRect, float padding = 10f, float snapFraction = 1f)
+        {
+            RectTransform parentRect = parentTransform as RectTransform;
+            if (parentRect == null)
+            {
+                parentRect = parentTransform.GetComponent<RectTransform>();
+
+                if (parentRect == null)
+                {
+                    return;
+                }
+            }
+
+            Bounds totalBounds = RectTransformUtility.CalculateRelativeRectTransformBounds(parentRect, targetRect);
+
+            Vector3 nodeLocal = parentRect.InverseTransformPoint(nodeView.transform.position);
+
+            float distToBottom = Mathf.Abs(nodeLocal.y - totalBounds.min.y);
+            float distToTop = Mathf.Abs(nodeLocal.y - totalBounds.max.y);
+
+            RectTransform nodeRect = nodeView.GetComponent<RectTransform>();
+            float offset = padding;
+
+            if (nodeRect != null)
+            {
+                offset += nodeRect.rect.height * 0.5f;
+            }
+
+            float targetLocalY;
+
+            if (distToBottom <= distToTop)
+            {
+                targetLocalY = totalBounds.min.y - offset;
+            }
+            else
+            {
+                targetLocalY = totalBounds.max.y + offset;
+            }
+
+            float finalLocalY = Mathf.Lerp(nodeLocal.y, targetLocalY, Mathf.Clamp01(snapFraction));
+
+            Vector3 finalWorld = parentRect.TransformPoint(new Vector3(nodeLocal.x, finalLocalY, nodeLocal.z));
+
+            Vector3 newPos = new(nodeView.transform.position.x, finalWorld.y, nodeView.transform.position.z);
+            
+            nodeView.transform.position = newPos;
+            nodeView.VisualData.Position = nodeView.transform.position;
         }
 
         /// <inheritdoc/>
@@ -336,11 +398,16 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <param name="nodeViewId">Уникальный идентификатор представления узла</param>
         /// <param name="desiredInitialName">Желаемое начальное имя</param>
         /// <param name="needRebuild">Необходимо, ли перестраивать граф после закрытия окна</param>
-        public void OpenNodeNamePopUp(string nodeViewId, string desiredInitialName = "", bool needRebuild = false)
+        public void OpenNodeNamePopUp(string nodeViewId, bool requestUndo = true, string desiredInitialName = "", bool needRebuild = false)
         {
             if (!TryGetNodeViewById(nodeViewId, out NodeView nodeView))
             {
                 return;
+            }
+
+            if (requestUndo)
+            {
+                RequestCreateUndoState();
             }
 
             _editNodeNamePopUp.Init(nodeView, desiredInitialName, needRebuild);
@@ -415,6 +482,16 @@ namespace Talent.GraphEditor.Unity.Runtime
             }
         }
 
+        public void CancelPreviewEditingEdge()
+        {
+            if (EditingEdge != null && EditingEdge.IsPreview)
+            {
+                EditingEdge.Delete();
+
+                EditingEdge = null;
+            }
+        }
+
         /// <summary>
         /// Функция обратного вызова, срабатывающая при нажатии на представление узла
         /// </summary>
@@ -445,6 +522,8 @@ namespace Talent.GraphEditor.Unity.Runtime
                     if (EditingEdge.TargetView == null && EditingEdge.SourceView.Vertex == NodeData.Vertex_Initial)
                     {
                         GraphEditor.ConnectToInitialNode(nodeView);
+                        EditingEdge = null;
+
                         return;
                     }
 
@@ -496,7 +575,7 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             if (!ParentingingNode.IsUniqueNodeName(ParentingingNode.VisualData.Name))
             {
-                OpenNodeNamePopUp(ParentingingNode.ID, ParentingingNode.VisualData.Name);
+                OpenNodeNamePopUp(ParentingingNode.ID, false, ParentingingNode.VisualData.Name);
             }
 
             foreach (EdgeView edgeView in GraphEditor.GetAdjacentEdges(ParentingingNode))
@@ -579,6 +658,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         [Header("Containers")]
         [SerializeField] private LineClickListener _lineClickListener;
         [field:SerializeField] public GraphLayoutGroup GraphElementViewsContainer { get; private set; }
+        [field:SerializeField] public RectTransform TargetRectTransform { get; private set; }
 
         /// <summary>
         /// Создает новое представление графа
@@ -615,7 +695,7 @@ namespace Talent.GraphEditor.Unity.Runtime
                 {
                     worldPoint += GraphElementViewsContainer.transform.TransformVector(_initialNodeOffset);
                 }
-                
+
                 view.transform.position = worldPoint;
                 nodeVisualData.Position = view.transform.localPosition;
             }
@@ -636,13 +716,13 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <param name="layoutAutomatically"></param>
         public void DuplicateNodeView(NodeView nodeView, bool layoutAutomatically)
         {
+            RequestCreateUndoState();
+
             if (!GraphEditor.TryDuplicateNode(nodeView, out INodeView temp))
             {
                 return;
             }
-            
-            RequestCreateUndoState();
-            
+
             NodeView duplicatedNode = temp as NodeView;
 
             if (duplicatedNode == null)
@@ -664,7 +744,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             duplicatedNode.transform.localPosition += (Vector3)offset;
             duplicatedNode.VisualData.Position += offset;
 
-            OpenNodeNamePopUp(duplicatedNode.ID, duplicatedNode.VisualData.Name, true);
+            OpenNodeNamePopUp(duplicatedNode.ID, false, duplicatedNode.VisualData.Name, true);
         }
         
         /// <summary>
@@ -698,7 +778,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             NodeView view = nodeView as NodeView;
 
-            NodeEventView eventView = Instantiate(_nodeEventPrefab, view.TriggersContainer);
+            NodeEventView eventView = Instantiate(_nodeEventPrefab, triggerID != "exit" ? view.TriggersContainer : view.ExitTriggerContainer);
             eventView.Init(triggerID, @event, view, this, _iconSpriteProviderAsset);
 
             return eventView;
@@ -752,7 +832,7 @@ namespace Talent.GraphEditor.Unity.Runtime
             NodeView sourceNodeView = (NodeView)sourceView;
             EdgeView view = Instantiate(_edgePrefab, GraphElementViewsContainer.transform);
             view.gameObject.name = $"Edge View ({sourceNodeView.VisualData.Name})";
-            view.Init(this, _lineClickListener);
+            view.Init(this, _lineClickListener, sourceNodeView.HasParent ? sourceNodeView.ParentGraph.ParentNode : null);
             return view;
         }
 

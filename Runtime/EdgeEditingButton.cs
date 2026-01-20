@@ -119,6 +119,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             _canvasGroup.alpha = 1;
             _canvasGroup.interactable = true;
+            _canvasGroup.blocksRaycasts = true;
         }
 
         /// <summary>
@@ -128,6 +129,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         {
             _canvasGroup.alpha = 0;
             _canvasGroup.interactable = false;
+            _canvasGroup.blocksRaycasts = false;
         }
     }
 }

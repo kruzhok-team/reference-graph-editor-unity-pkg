@@ -6,9 +6,9 @@ using Talent.Graphs;
 using TMPro;
 using UI.Focusing;
 using UnityEngine;
-using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
 using UnityEngine.UI;
+
 namespace Talent.GraphEditor.Unity.Runtime
 {
     /// <summary>
@@ -44,7 +44,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         [Header("Hotkeys")]
         [SerializeField] private KeyCode _closeKeyCode = KeyCode.Escape;
         [Header("Localization")]
-        [SerializeField] private LocalizationTable _localizationTable;
+        [SerializeField] private StringTable _localizationTable;
 
         private IconSpriteProviderAsset _iconProvider;
         private string[] _conditionSymbols = new string[6] { "!=", ">=", "<=", ">", "<", "==" };
@@ -71,7 +71,7 @@ namespace Talent.GraphEditor.Unity.Runtime
         /// <summary>
         /// Название числового условия
         /// </summary>
-        public const string NumberConditionName = "Число";
+        public const string NumberConditionName = "Number";
 
         private void OnEnable()
         {
@@ -285,16 +285,11 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string actionTrigger in _actionModules[module])
             {
-                if (!_iconProvider.TryGetIcon($"{module}.{actionTrigger}", out var sprite))
-                {
-                    _iconProvider.TryGetIcon(actionTrigger, out sprite);
-                }
-
                 var data = new LocalizedOptionData
                 {
                     OriginalText = actionTrigger,
-                    text = GetLocalized($"{module}.{actionTrigger}"),
-                    image = sprite
+                    text = GetLocalized($"{module}.{actionTrigger}", actionTrigger),
+                    image = FindIcon(module, actionTrigger)
                 };
 
                 actionTriggerOptions.Add(data);
@@ -347,16 +342,11 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string actionTrigger in _actionModules[module])
             {
-                if (!_iconProvider.TryGetIcon($"{module}.{actionTrigger}", out var sprite))
-                {
-                    _iconProvider.TryGetIcon(actionTrigger, out sprite);
-                }
-
                 var data = new LocalizedOptionData
                 {
                     OriginalText = actionTrigger,
-                    text = GetLocalized($"{module}.{actionTrigger}"),
-                    image = sprite
+                    text = GetLocalized($"{module}.{actionTrigger}", actionTrigger),
+                    image = FindIcon(module, actionTrigger),
                 };
 
                 actionTriggerOptions.Add(data);
@@ -716,24 +706,13 @@ namespace Talent.GraphEditor.Unity.Runtime
             {
                 foreach (string trigger in _triggerModules[module])
                 {
-                    _iconProvider.TryGetIcon(trigger, out var sprite);
-
-                    string localizedTrigger = GetLocalized($"{module}.{trigger}");
-
-                    if (localizedTrigger == "System.entry")
-                    {
-                        localizedTrigger = "Вход";
-                    }
-                    else if (localizedTrigger == "System.exit")
-                    {
-                        localizedTrigger = "Выход";
-                    }
-
+                    string localizedTrigger = GetLocalized($"{module}.{trigger}", trigger);
+                    
                     var data = new LocalizedOptionData
                     {
                         OriginalText = trigger,
                         text = localizedTrigger,
-                        image = sprite
+                        image = FindIcon(module, trigger),
                     };
 
                     triggerOptions.Add(data);
@@ -787,15 +766,10 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string variable in _variableModules[module])
             {
-                if (!_iconProvider.TryGetIcon($"{module}.{variable}", out var sprite))
-                {
-                    _iconProvider.TryGetIcon(variable, out sprite);
-                }
-
                 var data = new LocalizedOptionData();
                 data.OriginalText = variable;
-                data.text = GetLocalized($"{module}.{variable}");
-                data.image = sprite;
+                data.text = GetLocalized($"{module}.{variable}", variable);
+                data.image = FindIcon(module, variable);
 
                 variableOptions.Add(data);
             }
@@ -850,15 +824,10 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string variable in _variableModules[module])
             {
-                if (!_iconProvider.TryGetIcon($"{module}.{variable}", out var sprite))
-                {
-                    _iconProvider.TryGetIcon(variable, out sprite);
-                }
-
                 var data = new LocalizedOptionData();
                 data.OriginalText = variable;
-                data.text = GetLocalized($"{module}.{variable}");
-                data.image = sprite;
+                data.text = GetLocalized($"{module}.{variable}", variable);
+                data.image = FindIcon(module, variable);
 
                 variableOptions.Add(data);
             }
@@ -1041,24 +1010,13 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string trigger in _triggerModules[firstTriggerModule])
             {
-                _iconProvider.TryGetIcon(trigger, out var sprite);
-
-                string localizedTrigger = GetLocalized($"{firstTriggerModule}.{trigger}");
-
-                if (localizedTrigger == "System.entry")
-                {
-                    localizedTrigger = "Вход";
-                }
-                else if (localizedTrigger == "System.exit")
-                {
-                    localizedTrigger = "Выход";
-                }
+                string localizedTrigger = GetLocalized($"{firstTriggerModule}.{trigger}", trigger);
 
                 var optionData = new LocalizedOptionData
                 {
                     OriginalText = trigger,
                     text = localizedTrigger,
-                    image = sprite
+                    image = FindIcon(firstTriggerModule, trigger),
                 };
 
                 triggerOptions.Add(optionData);
@@ -1128,16 +1086,11 @@ namespace Talent.GraphEditor.Unity.Runtime
 
             foreach (string variable in _variableModules[firstVariableModule])
             {
-                if (!_iconProvider.TryGetIcon($"{firstVariableModule}.{variable}", out var sprite))
-                {
-                    _iconProvider.TryGetIcon(variable, out sprite);
-                }
-
                 data = new LocalizedOptionData
                 {
                     OriginalText = variable,
-                    text = GetLocalized($"{firstVariableModule}.{variable}"),
-                    image = sprite
+                    text = GetLocalized($"{firstVariableModule}.{variable}", variable),
+                    image = FindIcon(firstVariableModule, variable),
                 };
 
                 variableOptions.Add(data);
@@ -1260,17 +1213,29 @@ namespace Talent.GraphEditor.Unity.Runtime
             return -1;
         }
 
-        string GetLocalized(string input)
+        private string GetLocalized(string input, string fallbackOverride = null)
         {
             if (_localizationTable != null)
             {
-                // TODO does not look like a proper way to lozalize dynamic string, should check documentation..
-                return LocalizationSettings.StringDatabase.GetLocalizedString(_localizationTable.TableCollectionName, input);
+                StringTableEntry entry = _localizationTable.GetEntry(input);
+
+                if (entry != null)
+                {
+                    return entry.GetLocalizedString();    
+                }
             }
-            else
+
+            return string.IsNullOrEmpty(fallbackOverride) ? input : fallbackOverride;
+        }
+
+        private Sprite FindIcon(string module, string moduleMember)
+        {
+            if (!_iconProvider.TryGetIcon($"{module}.{moduleMember}", out var result))
             {
-                return input;
+                _iconProvider.TryGetIcon(moduleMember, out result);
             }
+
+            return result;
         }
 
         #region Undo
